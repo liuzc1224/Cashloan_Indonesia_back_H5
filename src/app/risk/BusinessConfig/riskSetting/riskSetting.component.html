@@ -1,0 +1,178 @@
+<div class="c-content-wrap">
+  <div class="c-search-group">
+    <div class="c-search-item">
+      <div class="c-search-itemLeft">
+        {{ "reviewRiskList.riskSetting.table.type" | translate}}:
+      </div>
+      <div class="c-search-itemRight">
+        <nz-select
+          [nzPlaceHolder]="'reviewRiskList.riskSetting.prompt.type' | translate"
+          [(ngModel)]="searchModel.businessId"
+          style="width: 150px"
+        >
+          <div *ngFor="let item of 'reviewRiskList.riskSetting.type' | translate">
+            <nz-option [nzValue]="item.value" [nzLabel]="item.desc">
+            </nz-option>
+          </div>
+        </nz-select>
+      </div>
+    </div>
+    <div class="c-search-item">
+      <div class="c-search-itemLeft">
+        {{ "reviewRiskList.riskSetting.table.required" | translate}}:
+      </div>
+      <div class="c-search-itemRight">
+        <nz-select
+          [nzPlaceHolder]="'reviewRiskList.riskSetting.prompt.required' | translate"
+          [(ngModel)]="searchModel.status"
+          style="width: 150px"
+        >
+          <div *ngFor="let item of 'reviewRiskList.riskSetting.required' | translate">
+            <nz-option [nzValue]="item.value" [nzLabel]="item.desc">
+            </nz-option>
+          </div>
+        </nz-select>
+      </div>
+    </div>
+    <div class="c-search-item">
+      <div class="c-search-itemLeft">
+        {{ "reviewRiskList.riskSetting.table.status" | translate}}:
+      </div>
+      <div class="c-search-itemRight">
+        <nz-select
+          [nzPlaceHolder]="'reviewRiskList.riskSetting.prompt.status' | translate"
+          [(ngModel)]="searchModel.activate"
+          style="width: 150px"
+        >
+          <div *ngFor="let item of 'reviewRiskList.riskSetting.status' | translate">
+            <nz-option [nzValue]="item.value" [nzLabel]="item.desc">
+            </nz-option>
+          </div>
+        </nz-select>
+      </div>
+    </div>
+  </div>
+  <div class="c-search-group">
+    <div class="c-search-item">
+      <button nz-button nzType="primary"  (click) = 'search() '>
+        {{ "common.search" | translate}}
+      </button>
+      <button style="margin-left: 20px;" nz-button (click) = 'reset()'>
+        {{ "common.reset" | translate}}
+      </button>
+    </div>
+  </div>
+  <c-table [tableData] = 'tableData'>
+  </c-table>
+</div>
+
+
+
+<nz-modal [(nzVisible)]="riskSetMark" [nzTitle]="modalTitle" [nzFooter]="modalFooter" [nzContent]="modalContent" (nzOnCancel)="riskSetMark = false">
+
+    <ng-template #modalTitle>
+        <span>
+            {{"reviewRiskList.manageModule.riskSetting" | translate }}
+        </span>
+    </ng-template>
+
+    <ng-template #modalContent>
+        <form nz-form [nzLayout]="'inline'" [formGroup]="validateForm">
+            <!-- 是否开启 -->
+            <nz-form-item class='c-formSec'>
+                <nz-form-label [nzSm]="11" nzRequired>
+                    {{"reviewRiskList.manageModule.isopen" | translate }}
+                </nz-form-label>
+                <nz-form-control [nzSm]="12"  [nzOffset]='1'>
+                    <nz-select
+                        formControlName="activate"
+                        id="activate"
+                    >
+                        <div>
+                            <nz-option [nzValue]="1" [nzLabel]=" 'reviewRiskList.manageModule.open' | translate "></nz-option>
+                            <nz-option [nzValue]="0" [nzLabel]=" 'reviewRiskList.manageModule.close' | translate "></nz-option>
+                        </div>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+          <!-- 是否必填 -->
+          <nz-form-item class='c-formSec' *ngIf="validateForm.value['id']==5">
+            <nz-form-label [nzSm]="11" nzRequired>
+              {{"reviewRiskList.manageModule.required" | translate }}
+            </nz-form-label>
+            <nz-form-control [nzSm]="12"  [nzOffset]='1'>
+              <nz-select
+                formControlName="status"
+                id="status"
+              >
+                <div>
+                  <nz-option [nzValue]="1" [nzLabel]=" 'reviewRiskList.manageModule.true' | translate "></nz-option>
+                  <nz-option [nzValue]="0" [nzLabel]=" 'reviewRiskList.manageModule.false' | translate "></nz-option>
+                  {{validateForm.value.id}}
+                </div>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+          <!-- 信审订单有效天数 -->
+          <nz-form-item class='c-formSec' *ngIf="validateForm.value['id']==8">
+            <nz-form-label nzRequired [nzSm]="11"  nzFor="exemptionDays">
+              {{"reviewRiskList.manageModule.expirationDate" | translate }}
+            </nz-form-label>
+            <nz-form-control [nzSm]="12"  [nzOffset]='1'>
+              <input nz-input formControlName="exemptionDays" id="expirationDate" (keyup)="setInput(validateForm.value['exemptionDays'])" />
+              <span style="position: absolute;top: -10px; margin-left: 5px">{{'reviewRiskList.manageModule.day' | translate}}</span>
+            </nz-form-control>
+          </nz-form-item>
+          <!-- 免检天数显示 -->
+<!--          <nz-form-item class='c-formSec' *ngIf="validateForm.value['id']==8">-->
+<!--            <nz-form-label [nzSm]="11">-->
+<!--              {{"reviewRiskList.manageModule.uncheck" | translate }}-->
+<!--            </nz-form-label>-->
+<!--            <nz-form-control [nzSm]="12"  [nzOffset]='1'>-->
+<!--              <input nz-input readonly="readonly" [value]="uncheck" />-->
+<!--              <span style="position: absolute;top: -10px; margin-left: 5px">{{'reviewRiskList.manageModule.day' | translate}}</span>-->
+<!--            </nz-form-control>-->
+<!--          </nz-form-item>-->
+
+          <!-- 活体识别显示 -->
+<!--          <nz-form-item class='c-formSec' *ngIf="validateForm.value['id']==8">-->
+<!--            <nz-form-label [nzSm]="11">-->
+<!--              {{"reviewRiskList.manageModule.face" | translate }}-->
+<!--            </nz-form-label>-->
+<!--            <nz-form-control [nzSm]="12"  [nzOffset]='1'>-->
+<!--              <input nz-input readonly="readonly" [value]="faceType" />-->
+<!--            </nz-form-control>-->
+<!--          </nz-form-item>-->
+
+          <!-- 免检天数 -->
+          <nz-form-item class='c-formSec' *ngIf="validateForm.value['id']==6">
+              <nz-form-label nzRequired [nzSm]="11"  nzFor="exemptionDays">
+                  {{"reviewRiskList.manageModule.uncheck" | translate }}
+              </nz-form-label>
+              <nz-form-control [nzSm]="12"  [nzOffset]='1'>
+                  <input nz-input formControlName="exemptionDays" id="exemptionDays" (keyup)="setInputDay(validateForm.value['exemptionDays'])" />
+                  <span style="position: absolute;top: -10px; margin-left: 5px">{{'reviewRiskList.manageModule.day' | translate}}</span>
+              </nz-form-control>
+          </nz-form-item>
+          <!-- 活体识别 -->
+          <nz-form-item class='c-formSec' *ngIf="validateForm.value['id']==7">
+            <nz-form-label nzRequired [nzSm]="11"  nzFor="exemptionDays">
+              {{"reviewRiskList.manageModule.face" | translate }}
+            </nz-form-label>
+            <nz-form-control [nzSm]="12"  [nzOffset]='1'>
+              <nz-select formControlName="exemptionDays">
+                <nz-option *ngFor="let option of 'reviewRiskList.manageModule.faceType' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+    </ng-template>
+    <ng-template #modalFooter>
+        <button nz-button nzType="primary" (click)='makeNew($event)'>
+        {{ "common.operate.sure" | translate }}
+        </button>
+        <button nz-button nzType="default" (click)='riskSetMark = false'>
+        {{ "common.operate.close" | translate }}
+        </button>
+    </ng-template>
+</nz-modal>

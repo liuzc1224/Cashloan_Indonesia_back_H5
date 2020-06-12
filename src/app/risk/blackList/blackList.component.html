@@ -1,0 +1,92 @@
+<div class="c-content-wrap" style="padding-bottom: 50px">
+  <div class="c-search-wrap">
+    <div class="c-search-group">
+      <!-- 落库时间 -->
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "blackList.updateTime" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-date-picker [(ngModel)]="searchModel.createTimeStart"></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker [(ngModel)]="searchModel.createTimeEnd"></nz-date-picker>
+        </div>
+      </div>
+      <!-- 征信状态 -->
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "blackList.creditStatus" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="padding-left: 10px;width: 150px" [(ngModel)]="searchModel.creditStatus">
+            <nz-option *ngFor="let option of 'blackList.status' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <!-- 手机号 -->
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "blackList.phone" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" [placeholder]="'common.please' | translate" [(ngModel)]='searchModel.phoneNumber' (keyup)="num('phoneNumber')">
+        </div>
+      </div>
+      <!-- KTP -->
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "blackList.ktp" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" [placeholder]="'common.please' | translate" [(ngModel)]='searchModel.ktp'>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-btnGroup">
+      <button nz-button nzType="primary" (click)='search() '>
+        {{ "common.search" | translate}}
+      </button>
+      <button style="margin:0 20px;" nz-button (click)='reset() '>
+        {{ "common.reset" | translate}}
+      </button>
+      <button nz-button (click)='exportData()' [disabled]="totalSize===0" style="margin-bottom: 10px">
+        {{ "common.ex" | translate}}
+      </button>
+    </div>
+  </div>
+  <div class="c-search-wrap" style="margin-bottom: 0">
+    <div class="c-search-group" style="margin-bottom: 0;border-radius: 0">
+      <button nz-button (click)='downTemplate() '>
+        {{ "blackList.down" | translate}}
+      </button>
+      <button style="margin:0 20px;" nz-button (click)='importList() '>
+        {{ "blackList.import" | translate}}
+        <input type="file" id="file" accept=".xls,.xlsx" (change)="upLoad()" />
+      </button>
+    </div>
+  </div>
+
+  <c-table [tableData]='tableData'>
+  </c-table>
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange)='pageChange($event , "size")'
+      [nzPageIndex]="searchModel.currentPage" [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+      <span>
+        {{ "common.total" | translate }}
+      </span>
+      <span>
+        {{ totalSize }}
+      </span>
+      <span>
+        {{ "common.pageUnit" | translate }}
+      </span>
+    </ng-template>
+  </div>
+  <nz-modal [(nzVisible)]="isDelete" [nzTitle]="'common.deleteToast.title' | translate" (nzOnCancel)="deleteCancel()" (nzOnOk)="deleteOk()" [nzOkLoading]="isDeleteLoading">
+    <p>{{"common.deleteToast.tip"  | translate }}！</p>
+  </nz-modal>
+</div>
+

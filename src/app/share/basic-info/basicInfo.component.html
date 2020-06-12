@@ -1,0 +1,130 @@
+<div class="c-content-wrap" *ngIf = 'userInfo'>
+  <img [src]="userInfo['headPortrait']===null ? '../../../assets/img/defaultHead.jpg' :userInfo['headPortrait']" style="width:100px;height:100px;"><!-- 默认头像 -->
+  <div nz-row>
+    <div nz-col  nzSpan="12">
+      <div class="c-flex-row-start c-info-wrap">
+        <div class="c-info-title">
+          {{ "orderModule.order.basicInfo.registerDate" | translate }} :
+        </div>
+        <div class="c-info-content">
+          <!-- {{ userInfo['createTime'] | dateFormat }} -->
+          {{ userInfo['createTime']}}
+        </div>
+      </div>
+
+      <div class="c-flex-row-start c-info-wrap">
+        <div class="c-info-title">
+          {{ "orderModule.order.basicInfo.userId" | translate }} :
+        </div>
+        <div class="c-info-content">
+          {{ userInfo['id'] }}
+          <nz-tag [nzColor]='("usrModule.list.creditStatus" | translate)[userInfo["creditStatus"]===null ? 0 : userInfo["creditStatus"]]["color"]'>{{ ("usrModule.list.creditStatus" | translate)[userInfo["creditStatus"]===null ? 0 : userInfo["creditStatus"]]['name'] }}</nz-tag>
+        </div>
+      </div>
+
+      <div class="c-flex-row-start c-info-wrap">
+        <div class="c-info-title">
+          {{ "orderModule.order.basicInfo.mobile" | translate }} :
+        </div>
+        <div class="c-info-content">
+          {{ userInfo['phoneNumber'] }}
+        </div>
+      </div>
+
+      <div class="c-flex-row-start c-info-wrap">
+        <div class="c-info-title">
+          {{ "orderModule.order.basicInfo.email" | translate }} :
+        </div>
+        <div class="c-info-content">
+          {{ userInfo['email'] }}
+        </div>
+      </div>
+    </div>
+
+    <!--
+        <div class="c-flex-row-start c-info-wrap">
+            <div class="c-info-title">
+                {{ "orderModule.order.basicInfo.sex" | translate }} :
+            </div>
+            <div class="c-info-content">
+                {{ userInfo.gender | SexPipe }}
+            </div>
+        </div> -->
+    <!--
+        <div class="c-flex-row-start c-info-wrap">
+            <div class="c-info-title">
+                {{ "orderModule.order.basicInfo.marray" | translate }} :
+            </div>
+            <div class="c-info-content">
+                {{ userInfo.maritalStatus | MarryPipe }}
+            </div>
+        </div> -->
+    <!--
+        <div class="c-flex-row-start c-info-wrap">
+            <div class="c-info-title">
+                {{ "orderModule.order.basicInfo.degree" | translate }} :
+            </div>
+            <div class="c-info-content">
+                {{ userInfo.educationBackground | EduPipe }}
+            </div>
+        </div> -->
+    <div nz-col  nzSpan="12">
+      <div class="c-flex-row-start c-info-wrap">
+        <div class="c-info-title">
+          {{ "usrModule.list.table.loginSource" | translate }} :
+        </div>
+        <div class="c-info-content">
+          {{ userInfo['registerSource'] }}
+        </div>
+      </div>
+
+      <div class="c-flex-row-start c-info-wrap">
+        <div class="c-info-title">
+          {{ "usrModule.list.table.userLevel" | translate }} :
+        </div>
+        <div class="c-info-content">
+          <!-- {{ ("usrModule.list.grade" | translate)[userInfo['grade']] }} -->
+          {{ userInfo['grade'] }}
+        </div>
+      </div>
+
+      <!--<div class="c-flex-row-start c-info-wrap">-->
+        <!--<div class="c-info-title">-->
+          <!--{{ "usrModule.list.table.CPF" | translate }} :-->
+        <!--</div>-->
+        <!--<div class="c-info-content">-->
+          <!--{{ userInfo['cpf']}}-->
+        <!--</div>-->
+      <!--</div>-->
+
+      <div class="c-flex-row-start c-info-wrap">
+        <div class="c-info-title">
+          {{ "usrModule.list.table.userAuthentication" | translate }} :
+        </div>
+        <div style="color: #1890ff ; cursor: pointer;" class="c-info-content" (click) = 'goToAuth()'>
+          {{ "orderModule.order.approveInfo.checkUp" | translate }}{{ "orderModule.order.approveInfo.auth" | translate }}
+        </div>
+      </div>
+
+      <div class="c-flex-row-start c-info-wrap">
+        <div class="c-info-title">
+          {{ "usrModule.list.table.bankAccount" | translate }} :
+        </div>
+        <div style="color: #1890ff ; cursor: pointer;" class="c-info-content" (click) = 'goToBank()'>
+          {{ "orderModule.order.approveInfo.checkUp" | translate }}{{ "orderModule.order.approveInfo.bank" | translate }}
+        </div>
+      </div>
+
+
+      <!-- <div class="c-flex-row-start c-info-wrap">
+        <div class="c-info-title">
+          {{ "usrModule.list.table.userAccount" | translate }} :
+        </div>
+        <div class="c-info-content">
+          {{ userInfo['bankCardNum'] }}
+        </div>
+      </div> -->
+    </div>
+  </div>
+
+</div>

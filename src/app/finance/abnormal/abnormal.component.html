@@ -1,0 +1,81 @@
+<div class="c-content-wrap">
+  <div class="c-search-wrap">
+    <div class="c-search-group c-search-border">
+      <div class="c-search-itemRight">
+        <ul class="sectionList c-flex-row-start" style="flex-wrap:wrap;height: auto;">
+          <li
+            *ngFor = 'let item of abnormalType'
+            (click) = 'changeStatus(item["value"])'
+            [ngClass]='{"active-tag" : (item.value == chType)}'
+            style="white-space:nowrap;margin-bottom: 10px;">
+            {{ item['desc'] }}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "financeModule.abnormal.createTime" | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <nz-date-picker [(ngModel)]='searchModel.minPlanRepaymentDate'></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker [(ngModel)]='searchModel.maxPlanRepaymentDate'></nz-date-picker>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          <nz-select
+            [(ngModel)]="selectModel"
+            style="width: 200px"
+          >
+            <div *ngFor='let item of serchEnum'>
+              <nz-option
+                [nzValue]="item['desc']"
+                [nzLabel]="item['name']"
+              >
+              </nz-option>
+            </div>
+          </nz-select>
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input [(ngModel)]="inputContent" [placeholder]=' "financeModule.list.center" | translate ' style="width: 200px" >
+        </div>
+      </div>
+    </div>
+    <div class="c-search-btnGroup">
+      <button nz-button nzType="primary" (click)='search() '>
+        {{ "common.search" | translate}}
+      </button>
+      <button style="margin-left: 20px;" nz-button (click)='reset() '>
+        {{ "common.reset" | translate}}
+      </button>
+      <button style="margin-left: 20px;" nz-button (click)='export() '>
+        {{ "financeModule.abnormal.export" | translate}}
+      </button>
+    </div>
+  </div>
+
+  <c-table [tableData]='tableData'>
+  </c-table>
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")'
+                   (nzPageSizeChange)='pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"
+                   [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+            <span>
+                {{ "common.total" | translate }}
+            </span>
+      <span>
+                {{ totalSize }}
+            </span>
+      <span>
+                {{ "common.pageUnit" | translate }}
+            </span>
+    </ng-template>
+  </div>
+</div>
+

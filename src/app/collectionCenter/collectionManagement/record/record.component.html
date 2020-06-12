@@ -1,0 +1,96 @@
+<div class="c-content-wrap">
+  <div class="half-block">
+    <div class="c-search-group c-search-border">
+      <div class="c-search-itemRight">
+        <ul class="sectionList c-flex-row-start" style="flex-wrap:wrap;height: auto;">
+          <li
+            *ngFor = 'let item of recordType'
+            (click) = 'changeStatus(item["value"])'
+            [ngClass]='{"active-tag" : (item.value == chType)}'
+            style="white-space:nowrap;margin-bottom: 10px;">
+            {{ item['desc'] }}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'collectionManagement.record.searchModel.collectionTime' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <nz-date-picker
+            style="width: 150px"
+            [nzShowToday]="'false'"
+            [nzDisabledDate]=""
+            [(ngModel)]="searchModel.startTime"
+            [nzFormat]="'dd-MM-yyyy'"
+          ></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker
+            style="width: 150px"
+            [nzShowToday]="'false'"
+            [nzDisabledDate]=""
+            [(ngModel)]="searchModel.endTime"
+            [nzFormat]="'dd-MM-yyyy'"
+          ></nz-date-picker>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item" *ngIf="chType==1">
+        <div class="c-search-itemLeft">
+          {{ 'collectionManagement.record.searchModel.callNumber' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input [placeholder] = '"collectionManagement.record.prompt.callNumber" | translate' type="text" [(ngModel)] ='searchModel.callTo'>
+        </div>
+      </div>
+      <div class="c-search-item" *ngIf="chType==1">
+        <div class="c-search-itemLeft">
+          {{ 'collectionManagement.record.searchModel.callingSeat' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input [placeholder] = '"collectionManagement.record.prompt.callingSeat" | translate' type="text" [(ngModel)] ='searchModel.callFrom'>
+        </div>
+      </div>
+      <div class="c-search-item" *ngIf="chType==2">
+        <div class="c-search-itemLeft">
+          {{ 'collectionManagement.record.searchModel.send' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input [placeholder] = '"collectionManagement.record.prompt.send" | translate' type="text" [(ngModel)] ='searchModel.receiver'>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <button nz-button nzType="primary"  (click) = 'search() '>
+          {{ "common.search" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button (click) = 'reset() '>
+          {{ "common.reset" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button [disabled]="totalSize===0" (click) = 'exportData() '>
+          {{ "common.ex" | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+  <c-table [tableData] = 'tableData' style="margin-top: 20px">
+  </c-table>
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+      <span>
+        {{ "common.total" | translate }}
+      </span>
+      <span>
+        {{ totalSize }}
+      </span>
+      <span>
+        {{ "common.pageUnit" | translate }}
+      </span>
+    </ng-template>
+  </div>
+</div>

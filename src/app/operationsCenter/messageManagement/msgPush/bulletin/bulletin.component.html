@@ -1,0 +1,196 @@
+<div class="c-content-wrap">
+  <div class="c-search-wrap">
+    <div class="c-search-group" style="margin-top: 20px">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "msgCenter.bulletin.sendDate" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-range-picker [(ngModel)]="searchModel.rangeDate"></nz-range-picker>
+          <!-- <nz-date-picker [(ngModel)]="searchModel.pushStatus"></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker [(ngModel)]="searchModel.pushStatus"></nz-date-picker> -->
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "msgCenter.bulletin.state" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select
+            [nzPlaceHolder]="'msgCenter.bulletin.prompt.state' | translate"
+            nzAllowClear=false
+            [(ngModel)]="searchModel.noticeStatus"
+            style="width: 150px"
+          >
+            <div *ngFor="let item of postStatus">
+              <nz-option [nzValue]="item['value']" [nzLabel]="item['desc']">
+              </nz-option>
+            </div>
+          </nz-select>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group" style="margin-top: 20px">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "msgCenter.bulletin.theme" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" [(ngModel)]="searchModel.subject" [placeholder]="'msgCenter.bulletin.prompt.theme' | translate" />
+        </div>
+      </div>
+    </div>
+    <div class="c-btn-group" style="margin-bottom: 20px">
+      <button nz-button  nzType="primary" (click) = 'search() '>
+        {{ "common.search" | translate}}
+      </button>
+      <button nz-button class="left" (click) = 'reset() '>
+        {{ "channel.btn.reset" | translate}}
+      </button>
+    </div>
+  </div>
+  <div class="c-btn-group" style="margin-bottom: 20px">
+    <button nz-button  nzType="primary" (click) = 'add() '>
+      {{ "msgCenter.bulletin.add" | translate }}
+    </button>
+  </div>
+  <c-table [tableData] = 'tableData' style="margin-top: 20px">
+  </c-table>
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+  <span>
+  {{ "common.total" | translate }}
+  </span>
+      <span>
+  {{ totalSize }}
+  </span>
+      <span>
+  {{ "common.pageUnit" | translate }}
+  </span>
+    </ng-template>
+  </div>
+
+  <nz-modal [(nzVisible)]="isDelete" [nzTitle]="'common.deleteToast.title' | translate" (nzOnCancel)="deleteCancel()" (nzOnOk)="deleteOk()" [nzOkLoading]="isDeleteLoading">
+    <p>{{"common.deleteToast.tip"  | translate }}！</p>
+  </nz-modal>
+
+  <nz-modal
+    [(nzVisible)]="isVisible"
+    [nzTitle]='title'
+    [nzOkText]='canRefer===true ? ("common.operate.save" | translate) : null'
+    [nzCancelText]='"common.operate.cancel" | translate'
+    (nzOnOk)="handleOk()"
+    (nzOnCancel)="handleCancel()"
+    [nzOkLoading]="isOkLoading"
+    [nzWidth]="800"
+    nzMaskClosable=false
+  >
+    <div class="formChannel">
+      <form nz-form [nzLayout]="'block'" [formGroup]="validForm">
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="6" nzRequired nzFor="subject">
+            {{ "msgCenter.bulletin.theme" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <input
+              type="text"
+              nz-input
+              formControlName="subject"
+              id="subject"
+              [placeholder] = '"msgCenter.bulletin.prompt.theme" | translate'
+              maxlength="50"
+              [readonly]="!canRefer"
+            >
+            <div style="pointer-events: none" class="input-length">{{validForm['value']['subject'] && validForm['value']['subject']['length'] ? validForm['value']['subject']['length'] : 0}}/50</div>
+            <nz-form-explain *ngIf="validForm.get('subject').dirty && validForm.get('subject').errors">
+              <span>
+                {{ "msgCenter.bulletin.prompt.theme" | translate}}
+              </span>
+              <span>
+                {{ "common.validator.notEmpty" | translate }}
+              </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="6" nzRequired nzFor="pushContent">
+            {{ "msgCenter.bulletin.content" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <textarea
+              nz-input
+              formControlName="pushContent"
+              [placeholder] = '"msgCenter.bulletin.prompt.content" | translate'
+              rows="4"
+              style="resize: none;"
+              maxlength="500"
+              [readonly]="!canRefer"
+            ></textarea>
+            <div style="pointer-events: none" class="input-length">{{validForm['value']['pushContent'] && validForm['value']['pushContent']['length'] ? validForm['value']['pushContent']['length'] : 0}}/500</div>
+            <nz-form-explain *ngIf="validForm.get('pushContent').dirty && validForm.get('pushContent').errors">
+              <span>
+                {{ "msgCenter.bulletin.prompt.content" | translate}}
+              </span>
+              <span>
+                {{ "common.validator.notEmpty" | translate }}
+              </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="6" nzRequired>
+            {{ "msgCenter.bulletin.showTime" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <div class="c-search-itemRight">
+              <nz-date-picker [nzDisabled]="!canRefer" nzShowTime nzFormat="yyyy-MM-dd HH:mm:ss" formControlName="pushTime"></nz-date-picker>
+              <span style="color:#999"> ~ </span>
+              <nz-date-picker [nzDisabled]="!canRefer" nzShowTime nzFormat="yyyy-MM-dd HH:mm:ss" formControlName="pushTimeEnd"></nz-date-picker>
+            </div>
+            <!-- <nz-form-explain *ngIf="validForm.get('pushTime').dirty || validForm.get('pushTime').errors || validForm.get('pushTimeEnd').dirty || validForm.get('pushTimeEnd').errors">
+              <span>
+                {{ "msgCenter.bulletin.prompt.showTime" | translate}}
+              </span>
+              <span>
+                {{ "common.validator.notEmpty" | translate }}
+              </span>
+            </nz-form-explain> -->
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="6" nzRequired nzFor="pushObj">
+            {{ "msgCenter.bulletin.pushObj" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <nz-select
+              nzAllowClear
+              formControlName="pushObj"
+              id="pushObj"
+              [nzPlaceHolder] = '"msgCenter.bulletin.prompt.pushObj" | translate'
+              [nzDisabled]="!canRefer"
+            >
+              <div *ngFor='let item of pushObj'>
+                <nz-option
+                  [nzValue]="item['value']"
+                  [nzLabel]="item['desc']"
+                >
+                </nz-option>
+              </div>
+            </nz-select>
+            <nz-form-explain *ngIf="validForm.get('pushObj').dirty && validForm.get('pushObj').errors">
+              <span>
+                {{ "msgCenter.bulletin.prompt.pushObj" | translate}}
+              </span>
+              <span>
+                {{ "common.validator.notEmpty" | translate }}
+              </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+  </nz-modal>
+</div>
+

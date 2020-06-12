@@ -1,0 +1,26 @@
+<!-- 用户银行相关信息 -->
+<div class="auth-table-wrap">
+  <p class="th-title">{{'orderModule.bank.bank' | translate}}</p>
+  <table>
+    <thead>
+      <!-- <th>{{'orderModule.bank.table.id' | translate}}</th> --><!-- "id":"账户ID" -->
+      <th>{{'orderModule.bank.table.bindTime' | translate}}</th><!-- "bindTime":"绑卡时间" -->
+      <th>{{'orderModule.bank.table.bankName' | translate}}</th><!-- "bankName":"银行名称" -->
+      <th>{{'orderModule.bank.table.bankNumber' | translate}}</th><!-- "bankNumber":"银行代码" -->
+      <th>{{'orderModule.bank.table.bankCardNumber' | translate}}</th><!-- "bankCardNumber":"银行卡号" -->
+      <th>{{'orderModule.bank.table.checkCardNumber' | translate}}</th><!-- "checkCardNumber":"是否校验卡号" -->
+      <th>{{'orderModule.bank.table.state' | translate}}</th><!-- "state":"状态" -->
+    </thead>
+    <tbody *ngIf="orderTableData">
+      <tr *ngFor="let item of orderTableData">
+        <!-- <td>{{item.accountId || 'no'}}</td> -->
+        <td>{{item.createTime || 'no'}}</td>
+        <td>{{item.bankName ||'no'}}</td>
+        <td>{{item.bankCode ||'no'}}</td>
+        <td>{{item.bankCardNum ||'no'}}</td>
+        <td>{{('orderModule.bank.checkCardNumber' | translate)[item.isCheck]}}</td>
+        <td>{{('orderModule.bank.status' | translate)[item.status]}}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

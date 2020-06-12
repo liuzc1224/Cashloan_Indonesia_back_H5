@@ -1,0 +1,317 @@
+<div class="c-content-wrap">
+  <div class="half-block">
+    <div class="c-title">
+      {{ "collectionWorkbench.dataInfo" | translate}}
+      <div class="msg-button">
+        <button nz-button nzType="default" [nzSize]="'large'" nzShape="circle" (click)="msgModal()">
+          <nz-badge [nzDot]='msgDot'><i class="anticon anticon-mail"></i></nz-badge>
+        </button>
+      </div>
+    </div>
+    <div style="display: flex;justify-content:space-between">
+      <!-- 催回案件数 -->
+      <div class="dataSection">
+        <span> {{pushBackOrderTotalNum}} </span>
+        <span> {{ "collectionWorkbench.finishCaseCount" | translate}} </span>
+      </div>
+      <!-- 今日催回案件数/已分配催收案件总数 -->
+      <div class="dataSection">
+        <span> {{todayPushBackOrderNum}} / {{allotOrderTotalNum}} </span>
+        <span> {{ "collectionWorkbench.todayFinishCaseCount" | translate}} </span>
+      </div>
+      <!-- 同阶段同组排名 -->
+      <div class="dataSection">
+        <span> {{groupRanking}} </span>
+        <span> {{ "collectionWorkbench.groupRanking" | translate}} </span>
+      </div>
+    </div>
+    <div class="c-search-group c-search-border" style="display: flex;justify-content:space-between">
+      <!-- 催回案件金额 -->
+      <div class="dataSection">
+        <span> {{pushBackOrderTotalMoney}} </span>
+        <span> {{ "collectionWorkbench.finishCaseAmount" | translate}} </span>
+      </div>
+      <!-- 今日催回案件金额/今日催回案件应还总额 -->
+      <div class="dataSection">
+        <span> {{todayPushBackMoney}} / {{todayPushBackTotalMoney}} </span>
+        <span> {{ "collectionWorkbench.todayFinishCaseAmount" | translate}} </span>
+      </div>
+      <!-- 同阶段排名 -->
+      <div class="dataSection">
+        <span> {{stageRanking}}</span>
+        <span> {{ "collectionWorkbench.stageRanking" | translate}} </span>
+      </div>
+    </div>
+
+
+    <div class="c-search-group c-search-border">
+      <div class="c-search-itemRight">
+        <ul class="sectionList c-flex-row-start" style="flex-wrap:wrap;height: auto;margin-bottom: 10px;">
+          <li (click) = 'changeStatus(1)' [ngClass]='{"active-tag" : (1 == chType)}'>
+            {{ "collectionWorkbench.list" | translate}}
+          </li>
+          <li (click) = 'changeStatus(2)' [ngClass]='{"active-tag" : (2 == chType)}'>
+            {{ "collectionWorkbench.retainedCase" | translate}}
+          </li>
+          <li (click) = 'changeStatus(3)' [ngClass]='{"active-tag" : (3 == chType)}'>
+            {{ "collectionWorkbench.successfulCase" | translate}}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "collectionManagement.caseManagement.searchModel.shouldDate" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-date-picker
+            style="width: 150px"
+            [nzShowToday]="'false'"
+            [nzDisabledDate]=""
+            [(ngModel)]="searchModel.planRepaymentDateStart"
+            [nzFormat]="'dd-MM-yyyy'"
+          ></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker
+            style="width: 150px"
+            [nzShowToday]="'false'"
+            [nzDisabledDate]=""
+            [(ngModel)]="searchModel.planRepaymentDateEnd"
+            [nzFormat]="'dd-MM-yyyy'"
+          ></nz-date-picker>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "collectionManagement.caseManagement.searchModel.days" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="number" [(ngModel)]="searchModel.dueDays" [placeholder] = '"collectionManagement.caseManagement.prompt.days" | translate'>
+        </div>
+      </div>
+      <div class="c-search-item" [hidden]="exHidden" >
+        <div class="c-search-itemLeft">
+          {{ "collectionManagement.caseManagement.searchModel.stage" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="padding-left: 10px;width: 150px"[(ngModel)]="searchModel.stageId" [nzPlaceHolder]=' "collectionManagement.caseManagement.prompt.stage" | translate ' [nzAllowClear]="true">
+            <nz-option *ngFor="let option of allStage" [nzLabel]="option['phaseName']" [nzValue]="option['id']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <!--<div class="c-search-item">-->
+      <!--<div class="c-search-itemLeft">-->
+      <!--{{ "collectionManagement.caseManagement.searchModel.personnel" | translate}}:-->
+      <!--</div>-->
+      <!--<div class="c-search-itemRight">-->
+      <!--<nz-tree-select-->
+      <!--style="width: 200px"-->
+      <!--[nzDefaultExpandAll]="true"-->
+      <!--[nzNodes]="NzTreeNode"-->
+      <!--[nzPlaceHolder]='"collectionManagement.caseManagement.prompt.personnel" | translate '-->
+      <!--[(ngModel)]="searchModel.staffId">-->
+      <!--</nz-tree-select>-->
+      <!--&lt;!&ndash;<nz-select style="padding-left: 10px;width: 150px" [(ngModel)]="searchModel.staffId" [nzPlaceHolder]=' "collectionManagement.caseManagement.prompt.personnel" | translate ' [nzAllowClear]="true">&ndash;&gt;-->
+      <!--&lt;!&ndash;<nz-option *ngFor="let option of staff" [nzLabel]="option['staffName']" [nzValue]="option['id']"></nz-option>&ndash;&gt;-->
+      <!--&lt;!&ndash;</nz-select>&ndash;&gt;-->
+      <!--</div>-->
+      <!--</div>-->
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "collectionManagement.caseManagement.searchModel.reminderTime" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-date-picker
+            style="width: 150px"
+            [nzShowToday]="'false'"
+            [nzDisabledDate]=""
+            [(ngModel)]="searchModel.remindDateStart"
+            [nzFormat]="'dd-MM-yyyy'"
+          ></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker
+            style="width: 150px"
+            [nzShowToday]="'false'"
+            [nzDisabledDate]=""
+            [(ngModel)]="searchModel.remindDateEnd"
+            [nzFormat]="'dd-MM-yyyy'"
+          ></nz-date-picker>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "collectionManagement.caseManagement.searchModel.orderType" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 200px" [(ngModel)]="searchModel.orderType" [nzPlaceHolder]=' "collectionManagement.caseManagement.prompt.orderType" | translate '>
+            <nz-option *ngFor="let option of 'collectionManagement.caseManagement.orderType' | translate " [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <!--      <div class="c-search-item">-->
+      <!--        <div class="c-search-itemLeft">-->
+      <!--          {{ "collectionManagement.caseManagement.searchModel.userLevel" | translate}}:-->
+      <!--        </div>-->
+      <!--        <div class="c-search-itemRight">-->
+      <!--          <nz-select style="width: 150px" [(ngModel)]="searchModel.userGrade" [nzPlaceHolder]=' "collectionManagement.caseManagement.prompt.userLevel" | translate ' [nzAllowClear]="true">-->
+      <!--            <nz-option *ngFor="let option of userLevel" [nzLabel]="option['userRank']" [nzValue]="option['userRank']"></nz-option>-->
+      <!--          </nz-select>-->
+      <!--        </div>-->
+      <!--      </div>-->
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "collectionManagement.caseManagement.searchModel.orderNo" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input [placeholder] = '"collectionManagement.caseManagement.prompt.orderNo" | translate' type="text" [(ngModel)] ='searchModel.orderNo'>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "collectionManagement.caseManagement.searchModel.phoneNumber" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="tel" [placeholder] = '"collectionManagement.caseManagement.prompt.phoneNumber" | translate' [(ngModel)] ='searchModel.phonenum' (keyup)="num('phonenum')">
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "collectionManagement.caseManagement.searchModel.name" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input [placeholder] = '"collectionManagement.caseManagement.prompt.name" | translate' [(ngModel)] ='searchModel.username'>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <button nz-button nzType="primary"  (click) = 'search() '>
+          {{ "common.search" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button (click) = 'reset() '>
+          {{ "common.reset" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button [disabled]="totalSize===0" (click) = 'export() '>
+          {{ "common.ex" | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+  <nz-table #nzTable [nzData]="tableData" [nzScroll]="{x:'4300px'}" style="width: 100%;text-align: center" [nzLoading]="loading" [nzShowPagination]="false">
+    <thead>
+    <tr class="tr_text">
+      <th nzWidth="170px" nzLeft="0px">{{'collectionManagement.caseManagement.tabData.letterReview' | translate}}</th>
+      <th nzWidth="150px" nzLeft="150px">{{'collectionManagement.caseManagement.tabData.orderNo' | translate}}</th>
+      <th>{{'collectionManagement.caseManagement.tabData.recruiter' | translate}}</th>
+      <th>{{'collectionManagement.caseManagement.tabData.collectionLog' | translate}}</th>
+      <th>{{'collectionManagement.caseManagement.tabData.updateTime' | translate}}</th>
+      <th>{{'collectionManagement.caseManagement.tabData.reminderTime' | translate}}</th>
+      <th>{{'collectionManagement.caseManagement.tabData.retain' | translate}}</th>
+      <th>{{'collectionManagement.caseManagement.tabData.createTime' | translate}}</th>
+      <th>{{'collectionManagement.caseManagement.tabData.userNo' | translate}}</th>
+      <th>{{'collectionManagement.caseManagement.tabData.userName' | translate}}</th>
+      <th>{{'collectionManagement.caseManagement.tabData.productType' | translate}}</th>
+      <th>{{'collectionManagement.caseManagement.tabData.applyCash' | translate}}</th>
+      <th>{{'collectionManagement.caseManagement.tabData.limit' | translate}}</th>
+      <th>{{'collectionManagement.caseManagement.tabData.period' | translate}}</th>
+      <th>{{'collectionManagement.caseManagement.tabData.repayMoneyShould' | translate}}</th>
+      <th>{{'collectionManagement.caseManagement.tabData.principal' | translate}}</th>
+      <th>{{'collectionManagement.caseManagement.tabData.interest' | translate}}</th>
+      <th>{{'collectionManagement.caseManagement.tabData.serviceFee' | translate}}</th>
+      <th>{{'collectionManagement.caseManagement.tabData.overdueFee' | translate}}</th>
+      <th>{{'collectionManagement.caseManagement.tabData.RepayTimeShould' | translate}}</th>
+      <th nzShowSort (nzSortChange)="sort($event)">{{'collectionManagement.caseManagement.tabData.dueDay' | translate}}</th>
+      <th>{{'collectionManagement.caseManagement.tabData.realRepayMoney' | translate}}</th>
+      <th>{{'collectionManagement.caseManagement.tabData.repaymentDate' | translate}}</th>
+      <th>{{'collectionManagement.caseManagement.tabData.amountDue' | translate}}</th>
+      <th>{{'collectionManagement.caseManagement.tabData.orderStatus' | translate}}</th>
+      <th nzWidth="140px" nzRight="0px" style="text-align: center">{{'common.operate.name' | translate}}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let data of tableData">
+      <td nzWidth="170px" nzLeft="0px" style="color:rgb(128, 172, 207);cursor:pointer">
+        <span *ngIf="data['creditOrderNo']" (click)="authDetail(data)">{{data['creditOrderNo']}}</span>
+      </td>
+      <td nzWidth="150px" nzLeft="150px" style="color:rgb(128, 172, 207);cursor:pointer">
+        <span *ngIf="data['orderNo']" (click)="toDetail(data)">{{data['orderNo']}}</span>
+      </td>
+      <td>{{data['staffName']}}</td>
+      <td>{{data['collectionLogRemark']}}</td>
+      <td>{{ dateToString(data['collectionLogTime'])}}</td>
+      <td>{{dateToString(data['remindTime'])}}</td>
+      <td>{{ keep[data['keep']] }}</td>
+      <td>{{dateToString(data['orderCreateTime'])}}</td>
+      <td>{{data['userPhone']}}</td>
+      <td>{{data['userName']}}</td>
+      <td>{{setType(data['orderType'])}}</td>
+
+      <td>{{data['applyMoney']}}</td>
+      <td>
+        <p *ngIf="data['loanDays'] && data['loanMonths']">{{data['loanDays']*data['loanMonths'] +" "}}{{ 'collectionManagement.caseManagement.day' | translate }}</p>
+      </td>
+      <td>{{data['currentPeriod']}} / {{data['totalPeriod']}}</td>
+      <td>{{data['realRepay']}}</td>
+
+      <td>{{data['applyMoney']}}</td>
+      <!--      <td>{{data['payMoney']}}</td>-->
+      <td>{{data['interestMoney']}}</td>
+      <td>{{data['serviceCharge']}}</td>
+      <td>{{data['overDueFine']}}</td>
+      <td>{{dateToString(data['planRepaymentDate'])}}</td>
+      <td>{{data['dueDays']}}{{ 'collectionManagement.caseManagement.day' | translate }}</td>
+      <td>{{data['realRepayMoney']}}</td>
+      <td>{{dateToString(data['realRepaymentDate'])}}</td>
+      <td>{{data['currentRepay']}}</td>
+      <td>{{stats[data['orderStatus']] }}</td>
+      <td nzWidth="140px" nzRight="0px" style="color: #0000ff;text-align: center">
+        <p *ngIf="(data['orderStatus']==11 || data['orderStatus']==5 || data['orderStatus']==3 || data['orderStatus']==1)">
+          <a *ngIf="data['keep']==2" (click)="retain(data['id'],1)">{{'collectionManagement.caseManagement.retain' | translate}}</a>
+          <a *ngIf="data['keep']==1" (click)="retain(data['id'],2)">{{'collectionManagement.caseManagement.cancelRetain' | translate}}<span style="padding-left: 10px">{{data["remainDays"]}}{{'collectionManagement.caseManagement.day' | translate}}</span></a>
+        </p>
+      </td>
+    </tr>
+    </tbody>
+  </nz-table>
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")'  [nzPageSizeOptions]="[10,20,30,40,50,60,70,80,90,100]" (nzPageSizeChange)='pageChange($event , "size")'
+                   [nzPageIndex]="searchModel.currentPage" [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+      <span>
+        {{ "common.total" | translate }}
+      </span>
+      <span>
+        {{ totalSize }}
+      </span>
+      <span>
+        {{ "common.pageUnit" | translate }}
+      </span>
+    </ng-template>
+  </div>
+</div>
+
+<nz-modal [(nzVisible)]="msgModel" [nzTitle]="'collectionWorkbench.message' | translate" (nzOnCancel)="handleCancel()" [nzFooter]="modalFooter" [nzWidth]="500">
+  <div class="listChannel">
+    <div class="list-item" *ngFor="let item of msgList;let i = index" (click)="!item.read?changeList([item['id']],1):''">
+      <nz-badge *ngIf="item['status']" [nzDot]='!item.read' style="position:absolute;right:38px"></nz-badge>
+      <h3 *ngIf="item['status']" class="title">{{item['title']}}</h3><span *ngIf="item['status']" class="data">{{item['createTimeStr']}}</span>
+      <p *ngIf="item['orderNos']" style="color: #1e1e1e">{{'collectionWorkbench.orderNo' | translate}}
+        <span style="color: #4b97c8">{{"    "+item['orderNos']+" : "}}</span>
+        <span *ngIf="item['remindId']==1">{{item['recallRemark']}}</span>
+        <span *ngIf="item['remindId']==2">{{'collectionWorkbench.arrived' | translate}}</span>
+        <span *ngIf="item['remindId']==3">{{'collectionWorkbench.maturity' | translate}}</span>
+        <span *ngIf="item['remindId']==4">{{'collectionWorkbench.reallocate' | translate}}</span>
+      </p>
+    </div>
+  </div>
+  <ng-template #modalFooter>
+    <button nz-button nzType="default" (click)="removeRead()">{{"collectionWorkbench.deleteRead" | translate}}</button>
+    <button nz-button nzType="primary" (click)="allRead()">{{"collectionWorkbench.allRead" | translate}}</button>
+    <button nz-button nzType="primary" (click)="handleCancel()">{{"collectionWorkbench.shutDown" | translate}}</button>
+  </ng-template>
+</nz-modal>

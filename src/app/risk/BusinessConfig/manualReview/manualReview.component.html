@@ -1,0 +1,250 @@
+<div class="c-content-wrap" style="margin-bottom: 50px">
+  <div class="c-search-wrap">
+    <div class="c-search-group c-search-border">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "BusinessConfig.machineReview.state" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select
+            [nzPlaceHolder]="'BusinessConfig.machineReview.prompt.state' | translate"
+            [(ngModel)]="searchModel.status"
+            style="width: 150px"
+          >
+            <div *ngFor="let item of status1">
+              <nz-option [nzValue]="item['value']" [nzLabel]="item['desc']">
+              </nz-option>
+            </div>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "BusinessConfig.machineReview.stageName" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input
+                 type="text"
+                 [(ngModel)] = 'searchModel.flowName'
+                 [placeholder] = '"BusinessConfig.machineReview.prompt.stageName" | translate'
+          >
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <button nz-button nzType="primary"  (click) = 'search() '>
+          {{ "common.search" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button (click) = 'reset()'>
+          {{ "common.reset" | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="c-search-group">
+    <button nz-button (click) = 'add()'>
+      {{ "BusinessConfig.machineReview.add" | translate}}
+    </button>
+    <button nz-button (click) = 'update()' style="margin-left: 20px">
+      {{ "BusinessConfig.machineReview.update" | translate}}
+    </button>
+  </div>
+  <c-table [tableData] = 'tableData'>
+  </c-table>
+</div>
+
+
+
+<nz-modal [(nzVisible)]="riskSetMark" [nzTitle]="modalTitle" [nzFooter]="modalFooter" [nzContent]="modalContent" (nzOnCancel)="handleCancel()" [nzWidth]="600" [nzOkLoading]="isOkLoading">
+
+  <ng-template #modalTitle>
+    <span *ngIf="!validateForm.get('id').value">
+        {{"BusinessConfig.machineReview.add" | translate }}
+    </span>
+    <span *ngIf="validateForm.get('id').value">
+      {{"BusinessConfig.machineReview.edit" | translate }}
+    </span>
+  </ng-template>
+
+  <ng-template #modalContent>
+    <form nz-form [nzLayout]="'block'" [formGroup]="validateForm">
+      <nz-form-item  class='formSec'>
+        <nz-form-label [nzSm]="7" nzRequired nzFor="flowName">
+          {{ "BusinessConfig.machineReview.stageName" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="16" [nzOffset]='1'>
+          <input
+            type="text"
+            nz-input
+            formControlName="flowName"
+            [placeholder]="'BusinessConfig.machineReview.prompt.stageName' | translate"
+          >
+          <nz-form-explain *ngIf="validateForm.get('flowName').dirty && validateForm.get('flowName').errors">
+              <span>
+                {{ "BusinessConfig.machineReview.prompt.stageName" | translate}}
+              </span>
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+
+<!--      <nz-form-item  class='formSec'>-->
+<!--        <nz-form-label [nzSm]="7" nzRequired nzFor="checkParameters">-->
+<!--          {{ "BusinessConfig.machineReview.parameter" | translate }}-->
+<!--        </nz-form-label>-->
+<!--        <nz-form-control [nzSm]="16" [nzOffset]='1'>-->
+<!--          <nz-select-->
+<!--            nzMode="tags"-->
+<!--            nzAllowClear-->
+<!--            [nzPlaceHolder]='"BusinessConfig.machineReview.prompt.parameter" | translate'-->
+<!--            formControlName="checkParameters"-->
+<!--            id="checkParameters"-->
+<!--          >-->
+<!--            <div *ngFor="let item of checkParametersData">-->
+<!--              <nz-option [nzValue]="item['id']+''" [nzLabel]="item['paramName']">-->
+<!--              </nz-option>-->
+<!--            </div>-->
+<!--          </nz-select>-->
+<!--          <nz-form-explain *ngIf="validateForm.get('checkParameters').dirty && validateForm.get('checkParameters').errors">-->
+<!--              <span>-->
+<!--                {{ "BusinessConfig.machineReview.prompt.parameter" | translate}}-->
+<!--              </span>-->
+<!--          </nz-form-explain>-->
+<!--        </nz-form-control>-->
+<!--      </nz-form-item>-->
+
+      <nz-form-item  class='formSec'>
+        <nz-form-label [nzSm]="7" nzRequired nzFor="previousStep">
+          {{ "BusinessConfig.machineReview.previous" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="16" [nzOffset]='1'>
+          <nz-select
+            nzAllowClear
+            [nzPlaceHolder]='"BusinessConfig.machineReview.prompt.previous" | translate'
+            formControlName="previousStep"
+            id="previousStep"
+          >
+            <div *ngFor="let item of selectAllData">
+              <nz-option [nzValue]="item['id']" [nzLabel]="item['flowName']">
+              </nz-option>
+            </div>
+          </nz-select>
+          <nz-form-explain *ngIf="validateForm.get('previousStep').dirty && validateForm.get('previousStep').errors">
+              <span>
+                {{ "BusinessConfig.machineReview.prompt.previous" | translate}}
+              </span>
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item  class='formSec'>
+        <nz-form-label [nzSm]="7" nzRequired nzFor="nextStepPass">
+          {{ "BusinessConfig.machineReview.through" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="16" [nzOffset]='1'>
+          <nz-select
+            nzAllowClear
+            [nzPlaceHolder]='"BusinessConfig.machineReview.prompt.through" | translate'
+            formControlName="nextStepPass"
+            id="nextStepPass"
+          >
+            <div *ngFor="let item of selectDataByData">
+              <nz-option [nzValue]="item['id']" [nzLabel]="item['flowName']">
+              </nz-option>
+            </div>
+          </nz-select>
+          <nz-form-explain *ngIf="validateForm.get('nextStepPass').dirty && validateForm.get('nextStepPass').errors">
+              <span>
+                {{ "BusinessConfig.machineReview.prompt.through" | translate}}
+              </span>
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item  class='formSec'>
+        <nz-form-label [nzSm]="7" nzRequired nzFor="nextStepRefuse">
+          {{ "BusinessConfig.machineReview.rejection" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="16" [nzOffset]='1'>
+          <nz-select
+            nzAllowClear
+            [nzPlaceHolder]='"BusinessConfig.machineReview.prompt.rejection" | translate'
+            formControlName="nextStepRefuse"
+            id="nextStepRefuse"
+          >
+            <div *ngFor="let item of selectDataRefuseData">
+              <nz-option [nzValue]="item['id']" [nzLabel]="item['flowName']">
+              </nz-option>
+            </div>
+          </nz-select>
+          <nz-form-explain *ngIf="validateForm.get('nextStepRefuse').dirty && validateForm.get('nextStepRefuse').errors">
+              <span>
+                {{ "BusinessConfig.machineReview.prompt.rejection" | translate}}
+              </span>
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item  class='formSec'>
+        <nz-form-label [nzSm]="7" nzRequired nzFor="status">
+          {{ "BusinessConfig.machineReview.state" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="16" [nzOffset]='1'>
+          <nz-select
+            style="width: 100%"
+            formControlName="status"
+            [nzPlaceHolder]='"BusinessConfig.machineReview.prompt.state" | translate '
+            id="status"
+          >
+            <nz-option *ngFor="let option of status" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+          <nz-form-explain *ngIf="validateForm.get('status').dirty && validateForm.get('status').errors">
+              <span>
+                {{ "BusinessConfig.machineReview.prompt.state" | translate}}
+              </span>
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+
+
+    </form>
+  </ng-template>
+  <ng-template #modalFooter>
+    <button nz-button nzType="primary" (click)='makeNew()'>
+      {{ "common.operate.sure" | translate }}
+    </button>
+    <button nz-button nzType="default" (click)='handleCancel()'>
+      {{ "common.operate.close" | translate }}
+    </button>
+  </ng-template>
+</nz-modal>
+<nz-modal [(nzVisible)]="checkSetMark" [nzTitle]="checkTitle" [nzFooter]="checkFooter" [nzContent]="checkContent" (nzOnCancel)="checkCancel()" [nzWidth]="600" [nzOkLoading]="isCheckOkLoading">
+
+  <ng-template #checkTitle>
+    <span>
+      {{"BusinessConfig.machineReview.checkManualReview" | translate }}
+    </span>
+  </ng-template>
+
+  <ng-template #checkContent>
+    <p>
+      {{"BusinessConfig.machineReview.checkResult" | translate }} :
+    </p>
+    <div style="margin-left: 20px">
+      <p *ngIf="resultText==0" style="color: #19be6b">{{("BusinessConfig.machineReview.result" | translate)[resultText]}}</p>
+      <p *ngIf="resultText==1" style="color: #ed4014">{{("BusinessConfig.machineReview.result" | translate)[resultText]}}</p>
+      <p *ngIf="resultText==1" style="color: #ed4014">
+        {{resultMsg}}
+      </p>
+    </div>
+  </ng-template>
+  <ng-template #checkFooter>
+    <button nz-button nzType="default" (click)='checkCancel()'>
+      {{ "common.operate.cancel" | translate }}
+    </button>
+    <button nz-button nzType="primary" *ngIf="resultText==0" (click)='checkMakeNew()'>
+      {{ "BusinessConfig.machineReview.submit" | translate }}
+    </button>
+
+  </ng-template>
+</nz-modal>
+

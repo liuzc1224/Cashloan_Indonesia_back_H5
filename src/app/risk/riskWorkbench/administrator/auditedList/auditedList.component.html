@@ -1,0 +1,164 @@
+<div class="c-content-wrap">
+  <div class="c-search-wrap">
+    <div class="c-search-group c-search-border">
+      <ul class="sectionList c-flex-row-start c-flex-auto-wrap">
+        <li
+          (click) = 'changeStatus(null)'
+          [ngClass]='{"active-tag" : null==searchModel.auditRes}'
+        >
+          {{ "administrator.auditedList.orderList" | translate}}
+        </li>
+        <li
+          *ngFor = 'let item of statusEnum'
+          (click) = 'changeStatus(item["value"])'
+          [ngClass]='{"active-tag" : item.value == searchModel.auditRes}'>
+          {{ item['desc'] }}
+        </li>
+      </ul>
+      <!--</div>-->
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "administrator.auditedList.createTime" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-date-picker [(ngModel)]="searchModel.createTimeStart"></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker [(ngModel)]="searchModel.createTimeEnd"></nz-date-picker>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "administrator.auditedList.productType" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 200px" [(ngModel)]="searchModel.loanProductType" [nzPlaceHolder]=' "administrator.auditedList.prompt.productType" | translate '>
+            <nz-option *ngFor="let option of 'administrator.auditedList.productTypes' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "administrator.auditedList.reviewTime" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-date-picker [(ngModel)]="searchModel.historyAuditTimeStart"></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker [(ngModel)]="searchModel.historyAuditTimeEnd"></nz-date-picker>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "administrator.auditedList.auditResult" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 200px" [(ngModel)]="searchModel.operationResult" [nzPlaceHolder]=' "administrator.auditedList.prompt.productType" | translate '>
+            <nz-option *ngFor="let option of 'administrator.auditedList.resultsAll' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "administrator.auditedList.stage" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 200px" [(ngModel)]="searchModel.stageId" [nzPlaceHolder]=' "administrator.auditedList.prompt.stage" | translate '>
+            <nz-option *ngFor="let option of statusData" [nzLabel]="option['flowName']" [nzValue]="option['id']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "administrator.auditedList.orderNo" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input [placeholder] = '"administrator.auditedList.prompt.orderNo" | translate' type="text" [(ngModel)] ='searchModel.creditOrderNo'>
+        </div>
+      </div>
+
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "administrator.auditedList.phoneNumber" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" [placeholder] = '"administrator.auditedList.prompt.phoneNumber" | translate' [(ngModel)] = 'searchModel.userPhone'>
+        </div>
+      </div>
+
+    </div>
+    <div class="c-search-group">
+      <!--          渠道来源-->
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "riskReport.phaseData.channelSource" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select [(ngModel)]="searchModel.channel" (ngModelChange)="setSource()" style="width: 174px">
+            <nz-option *ngFor="let option of ('riskReport.phaseData.source' | translate)" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <!--            推广方式-->
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "riskReport.phaseData.promotionMethod" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-tree-select
+            style="padding-left: 10px;width: 200px;;max-height: 100px;overflow: auto"
+            [nzNodes]="promotionData"
+            [nzShowSearch]="true"
+            [nzDefaultExpandAll]="true"
+            [nzCheckable]="true"
+            [nzDropdownStyle]="{'maxHeight':'500px'}"
+            [(ngModel)]="searchModel.promotionTypeStr"
+            [nzPlaceHolder]=' "usrModule.list.prompt.promotionMethod" | translate '
+          >
+          </nz-tree-select>
+          <!--            <nz-select [(ngModel)]="searchModel.promotionType" [nzPlaceHolder]=' "usrModule.list.prompt.promotionMethod" | translate ' [nzAllowClear]="true" style="width: 174px">-->
+          <!--              <nz-option *ngFor="let option of promotionData" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>-->
+          <!--            </nz-select>-->
+        </div>
+      </div>
+      <!-- 推荐人 -->
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "riskReport.phaseData.referrer" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" [(ngModel)] = 'searchModel.referrerName' [placeholder]='"common.please" | translate'>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-btnGroup">
+      <button nz-button nzType="primary"  (click) = 'search() '>
+        {{ "common.search" | translate}}
+      </button>
+      <button style="margin-left: 20px;" nz-button (click) = 'reset() '>
+        {{ "common.reset" | translate}}
+      </button>
+    </div>
+  </div>
+
+  <c-table [tableData] = 'tableData'>
+  </c-table>
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+            <span>
+                {{ "common.total" | translate }}
+            </span>
+      <span>
+                {{ totalSize }}
+            </span>
+      <span>
+                {{ "common.pageUnit" | translate }}
+            </span>
+    </ng-template>
+  </div>
+</div>

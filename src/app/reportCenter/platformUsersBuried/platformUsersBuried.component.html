@@ -1,0 +1,56 @@
+<div class="c-content-wrap" style="margin-bottom: 30px">
+  <div class="c-search-wrap">
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "reportModule.platformUsersBuried.data" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-date-picker [(ngModel)]="searchModel.startTime" [nzAllowClear]="false"></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker [(ngModel)]="searchModel.endTime" [nzAllowClear]="false"></nz-date-picker>
+        </div>
+      </div>
+      <div class="c-btn-group" style="margin-bottom: 20px">
+        <button nz-button  nzType="primary" (click) = 'search() '>
+          {{ "common.search" | translate}}
+        </button>
+        <button nz-button class="left" (click) = 'reset() '>
+          {{ "common.reset" | translate}}
+        </button>
+      </div>
+    </div>
+    <div class="c-btn-group" style="margin-bottom: 20px">
+      <button nz-button  [nzType]="dayType==1 ? 'primary' : ''" (click) = 'setDay() '>
+        {{ "reportModule.platformUsersBuried.sevenDay" | translate}}
+      </button>
+      <button nz-button class="left" [nzType]="dayType==2 ? 'primary' : ''" (click) = 'setMonth() '>
+        {{ "reportModule.platformUsersBuried.month" | translate}}
+      </button>
+    </div>
+  </div>
+  <nz-row [nzGutter]="16" style="padding-bottom: 20px;margin-top: 10px">
+    <nz-col [nzSpan]="12">
+      <table>
+        <tr>
+          <td></td>
+          <td style="text-align:center;">
+            {{'reportModule.platformUsersBuried.clickCount' | translate}}
+          </td>
+          <td style="text-align:center;">
+            {{'reportModule.platformUsersBuried.userNumber' | translate}}
+          </td>
+        </tr>
+        <tr *ngFor="let item of 'reportModule.platformUsersBuried.table' | translate" (click)="changeShow(item['desc'],clickNN,userNN,item['selectName'])" [class]="(item['desc']==whitchClick)?'bluebackground':'defaultbackground'">
+          <td>{{item['desc']}}</td>
+          <td style="text-align:center;">{{TopList[item['clickCount']] ? TopList[item['clickCount']] : 0}}</td>
+          <td style="text-align:center;">{{TopList[item['userNumber']] ? TopList[item['userNumber']] : 0}}</td>
+        </tr>
+      </table>
+    </nz-col>
+    <nz-col [nzSpan]="12">
+      <div echarts [options]="obj1"></div>
+      <div echarts [options]="obj2"></div>
+    </nz-col>
+  </nz-row>
+</div>

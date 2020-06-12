@@ -1,0 +1,60 @@
+.sectionList{
+  width: 100% ;
+  height: 30px;
+  list-style: none ;
+  padding: 0px;
+  margin : 0px;
+}
+.sectionList > li{
+  height: 100% ;
+  padding: 0 10px;
+  border: 1px solid rgba(153, 153, 153, 0.42);
+  line-height: 30px;
+  margin-right: 10px;
+  border-radius: 5px ;
+  cursor: pointer;
+  transition: all .3s ease-in ;
+  color:#999;
+}
+.sectionList > li:hover,
+.active-tag{
+  color: #fff !important;
+  background: #1890ff;
+  border: 1px solid #1890ff;
+}
+.reportWrap{
+  width: 100%;
+  flex-wrap: wrap;
+  &.mart{
+    margin-top: 50px;
+  }
+}
+.reportWrapFlex{
+  width: 40%;
+  margin-bottom: 30px;
+}
+table,tr{
+  width: 100%;
+  border-collapse: collapse;
+  td{
+    border: 1px #cccccc solid;
+    height: 40px;
+  }
+  td:first-child{
+    text-align: right;
+    padding-right: 10px;
+  }
+  td:last-child{
+    text-align: left;
+    padding-left: 10px;
+  }
+}
+.left{
+  margin-left: 20px;
+}
+.bluebackground{
+  background:#78C2EA !important;
+}
+.defaultbackground{
+  background:transparent !important;
+}

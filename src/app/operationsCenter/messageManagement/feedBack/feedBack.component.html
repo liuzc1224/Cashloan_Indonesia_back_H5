@@ -1,0 +1,183 @@
+<div class="c-content-wrap">
+  <div class="half-block">
+    <div class="title">
+      {{ "msgCenter.feedBack.title" | translate }}
+    </div>
+    <div class="c-search-group" style="margin-top: 20px">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "msgCenter.feedBack.feedbackDate" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-range-picker [(ngModel)]="searchModel.rangeDate"></nz-range-picker>
+          <!-- <nz-date-picker [(ngModel)]="searchModel.startDate"></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker [(ngModel)]="searchModel.endDate"></nz-date-picker> -->
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "msgCenter.feedBack.informationStatus" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="padding-left: 10px;width: 150px"  [(ngModel)]="searchModel.solve" [nzPlaceHolder]=' "msgCenter.feedBack.promptStatus" | translate ' [nzAllowClear]="true">
+            <nz-option *ngFor="let option of 'msgCenter.feedBack.solve' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "msgCenter.feedBack.userAccount" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" [(ngModel)]="searchModel.phoneNumber" [placeholder]="'msgCenter.feedBack.promptAccount' | translate" />
+        </div>
+      </div>
+    </div>
+    <div class="c-btn-group" style="margin-bottom: 20px">
+      <button nz-button  nzType="primary" (click) = 'search() '>
+        {{ "common.search" | translate}}
+      </button>
+      <button nz-button class="left" (click) = 'reset() '>
+        {{ "channel.btn.reset" | translate}}
+      </button>
+    </div>
+  </div>
+  <c-table [tableData] = 'tableData' style="margin-top: 20px">
+  </c-table>
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+  <span>
+  {{ "common.total" | translate }}
+  </span>
+      <span>
+  {{ totalSize }}
+  </span>
+      <span>
+  {{ "common.pageUnit" | translate }}
+  </span>
+    </ng-template>
+  </div>
+
+  <nz-modal
+    [(nzVisible)]="isVisible"
+    [nzTitle]='"msgCenter.feedBack.feedbackInfo" | translate'
+    [nzCancelText]='"common.operate.cancel" | translate'
+    (nzOnOk)="handleOk()"
+    (nzOnCancel)="handleCancel()"
+    [nzOkLoading]="isOkLoading"
+    [nzWidth]="800"
+  >
+  <div class="formChannel">
+      <form nz-form [nzLayout]="'block'" [formGroup]="validForm">
+
+        <nz-form-item  class='formSec'>
+            <nz-form-label [nzSm]="4" nzFor="createTime">
+              {{ "msgCenter.feedBack.feedbackReferDate" | translate }}
+            </nz-form-label>
+            <nz-form-control [nzSm]="19" [nzOffset]='1'>
+                <input
+                  type="text"
+                  nz-input
+                  formControlName="createTime"
+                  id="createTime"
+                  readonly
+                >
+              </nz-form-control>
+          </nz-form-item>
+
+        <nz-form-item  class='formSec'>
+            <nz-form-label [nzSm]="4" nzFor="appVersion">
+              {{ "msgCenter.feedBack.feedbackReferVersion" | translate }}
+            </nz-form-label>
+            <nz-form-control [nzSm]="19" [nzOffset]='1'>
+                <input
+                  type="text"
+                  nz-input
+                  formControlName="appVersion"
+                  id="appVersion"
+                  readonly
+                >
+              </nz-form-control>
+          </nz-form-item>
+
+        <nz-form-item  class='formSec'>
+            <nz-form-label [nzSm]="4" nzFor="title">
+              {{ "msgCenter.feedBack.feedbackTopic" | translate }}
+            </nz-form-label>
+            <nz-form-control [nzSm]="19" [nzOffset]='1'>
+                <input
+                  type="text"
+                  nz-input
+                  formControlName="title"
+                  id="title"
+                  readonly
+                >
+              </nz-form-control>
+          </nz-form-item>
+
+        <nz-form-item  class='formSec'>
+            <nz-form-label [nzSm]="4" nzFor="content">
+              {{ "msgCenter.feedBack.feedbackContent" | translate }}
+            </nz-form-label>
+            <nz-form-control [nzSm]="19" [nzOffset]='1'>
+                <textarea
+                  nz-input
+                  formControlName="content"
+                  id="content"
+                  style="resize: none;height: 200px;"
+                  maxlength="500"
+                  readonly
+                >
+                </textarea>
+              </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item  class='formSec'>
+              <nz-form-label [nzSm]="4" nzFor="images">
+                {{ "msgCenter.feedBack.img" | translate }}
+              </nz-form-label>
+              <nz-form-control [nzSm]="19" [nzOffset]='1'>
+                  <div *ngFor="let img of validForm.value['images']"  style="width: 110px;height:110px;padding: 5px;float: left">
+                    <img [src]="img"  width="100%" height="100%" data-magnify="gallery" [attr.data-src]="img" >
+                  </div>
+                </nz-form-control>
+            </nz-form-item>
+            
+            <nz-form-item  class='formSec'>
+                <nz-form-label [nzSm]="4" nzRequired nzFor="title">
+                  {{ "msgCenter.feedBack.result" | translate }}
+                </nz-form-label>
+                <nz-form-control [nzSm]="19" [nzOffset]='1'>
+                    <nz-select style="width: 595px" formControlName="solve" nzAllowClear="false">
+                      <nz-option *ngFor="let item of ('msgCenter.feedBack.solve' | translate).slice(0,2)" [nzLabel]="item.desc" [nzValue]="item.value"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+
+              <nz-form-item  class='formSec'>
+                  <nz-form-label [nzSm]="4" nzFor="remarks">
+                    {{ "msgCenter.feedBack.remarks" | translate }}
+                  </nz-form-label>
+                  <nz-form-control [nzSm]="19" [nzOffset]='1'>
+                      <textarea
+                        nz-input
+                        formControlName="remarks"
+                        id="remarks"
+                        style="resize: none;height: 200px;"
+                        maxlength="200"
+                      >
+                      </textarea>
+                      <div style="pointer-events: none" class="input-length">{{validForm['value']['remarks'] && validForm['value']['remarks']['length'] ? validForm['value']['remarks']['length'] : 0}}/200</div>
+                    </nz-form-control>
+                </nz-form-item>
+
+      </form>
+    </div>
+    
+  </nz-modal>
+
+</div>

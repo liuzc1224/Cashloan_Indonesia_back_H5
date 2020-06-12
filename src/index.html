@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+    <title>Backend</title>
+    <base href="./">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <style type="text/css">body{overflow:hidden;}.preloader{position:fixed;top:0;left:0;width:100%;height:100%;overflow:hidden;background:#49a9ee;z-index:9999;transition:opacity .65s}.preloader-hidden-add{opacity:1;display:block}.preloader-hidden-add-active{opacity:0}.preloader-hidden{display:none}.cs-loader{position:absolute;top:0;left:0;height:100%;width:100%}.cs-loader-inner{transform:translateY(-50%);top:50%;position:absolute;width:100%;color:#fff;text-align:center}.cs-loader-inner label{font-size:20px;opacity:0;display:inline-block}@keyframes lol{0%{opacity:0;transform:translateX(-300px)}33%{opacity:1;transform:translateX(0)}66%{opacity:1;transform:translateX(0)}100%{opacity:0;transform:translateX(300px)}}.cs-loader-inner label:nth-child(6){animation:lol 3s infinite ease-in-out}.cs-loader-inner label:nth-child(5){animation:lol 3s .1s infinite ease-in-out}.cs-loader-inner label:nth-child(4){animation:lol 3s .2s infinite ease-in-out}.cs-loader-inner label:nth-child(3){animation:lol 3s .3s infinite ease-in-out}.cs-loader-inner label:nth-child(2){animation:lol 3s .4s infinite ease-in-out}.cs-loader-inner label:nth-child(1){animation:lol 3s .5s infinite ease-in-out}</style>
+    <style>
+        html , body {
+            width: 100% ;
+            height: 100% ;
+            overflow: hidden;
+        }
+    </style>
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/fonts/fontawesome-webfont.svg" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/echarts/4.1.0/echarts.min.js'></script>
+    <script src="//cdn.ckeditor.com/4.6.2/full/ckeditor.js"></script>
+
+</head>
+<body>
+  <app-root></app-root>
+  <div class="preloader" id="pageSpin">
+      <div class="cs-loader">
+          <div class="cs-loader-inner">
+              <label>	●</label>
+              <label>	●</label>
+              <label>	●</label>
+              <label>	●</label>
+              <label>	●</label>
+              <label>	●</label>
+          </div>
+      </div>
+  </div>
+  <script type="text/javascript">
+      const initialize = function () {
+          let pageSpin = document.getElementById("pageSpin");
+          pageSpin.style.display = 'block';
+          document.onreadystatechange = function () {
+              if (document.readyState == "complete") {
+                  pageSpin.style.opacity = '0';
+
+                  setTimeout(function(){
+                    pageSpin.style.display = 'none';
+                    document.body.removeChild(pageSpin);
+                  } , 650)
+              }
+          }
+      };
+      initialize();
+  </script>
+</body>
+</html>

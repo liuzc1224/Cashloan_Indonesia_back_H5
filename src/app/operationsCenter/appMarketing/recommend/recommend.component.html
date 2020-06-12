@@ -1,0 +1,228 @@
+<div class="c-content-wrap">
+  <div class="half-block">
+    <div class="title">
+      {{ "appMarketing.recommend.title" | translate }}
+      <div class="c-btnGroup">
+        <button nz-button  (click) = 'add()'>
+          {{ "appMarketing.recommend.add" | translate}}
+        </button>
+      </div>
+    </div>
+    <div class="c-search-group" style="margin-top: 20px">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "appMarketing.recommend.recommendType" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="padding-left: 10px;width: 200px" [(ngModel)]="searchModel.type" [nzPlaceHolder]=' "appMarketing.recommend.prompt.type" | translate ' [nzAllowClear]="true">
+            <nz-option *ngFor="let option of recommendType" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "appMarketing.recommend.table.id" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" [(ngModel)]="searchModel.id" [placeholder]="'appMarketing.recommend.prompt.id' | translate" (keyup)="keyupId()"/>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "appMarketing.recommend.table.name" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" [(ngModel)]="searchModel.name" [placeholder]="'appMarketing.recommend.prompt.name' | translate" />
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <button nz-button nzType="primary"  (click) = 'search() '>
+          {{ "common.search" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button (click) = 'reset() '>
+          {{ "common.reset" | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+  <c-table [tableData] = 'tableData' style="margin-top: 20px">
+  </c-table>
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+  <span>
+  {{ "common.total" | translate }}
+  </span>
+      <span>
+  {{ totalSize }}
+  </span>
+      <span>
+  {{ "common.pageUnit" | translate }}
+  </span>
+    </ng-template>
+  </div>
+  <nz-modal [(nzVisible)]="isDelete" [nzTitle]="'common.deleteToast.title' | translate" (nzOnCancel)="deleteCancel()" (nzOnOk)="deleteOk()" [nzOkLoading]="isDeleteLoading">
+    <p>{{"common.deleteToast.tip"  | translate }}！</p>
+  </nz-modal>
+  <nz-modal
+    [(nzVisible)]="isVisible"
+    [nzTitle]='"appMarketing.recommend.add" | translate'
+    [nzOkText]='"common.operate.save" | translate'
+    [nzCancelText]='"common.operate.cancel" | translate'
+    (nzOnOk)="handleOk()"
+    (nzOnCancel)="handleCancel()"
+    [nzOkLoading]="isOkLoading"
+    [nzWidth]="800"
+  >
+    <div class="formChannel">
+      <form nz-form [nzLayout]="'block'" [formGroup]="validForm">
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="6" nzRequired nzFor="name">
+            {{ "appMarketing.recommend.table.name" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <input
+              type="text"
+              maxlength="50"
+              nz-input
+              formControlName="name"
+              id="name"
+              [placeholder] = '"appMarketing.recommend.prompt.name" | translate'
+            >
+            <nz-form-explain *ngIf="validForm.get('name').dirty && validForm.get('name').errors">
+              <span>
+                {{ "appMarketing.recommend.prompt.name" | translate}}
+              </span>
+              <span>
+                {{ "common.validator.notEmpty" | translate }}
+              </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="6" nzRequired nzFor="sort">
+            {{ "appMarketing.recommend.table.recommendSort" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <input
+              type="text"
+              nz-input
+              formControlName="sort"
+              id="sort"
+              (keyup)="num()"
+              [placeholder] = '"appMarketing.recommend.prompt.recommendSort" | translate'
+            >
+            <nz-form-explain *ngIf="validForm.get('sort').dirty && validForm.get('sort').errors">
+              <span>
+                {{ "appMarketing.recommend.prompt.recommendSort" | translate}}
+              </span>
+              <span>
+                {{ "common.validator.notEmpty" | translate }}
+              </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="6" nzRequired nzFor="type">
+            {{ "appMarketing.recommend.table.type" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <nz-select
+              nzAllowClear
+              formControlName="type"
+              id="type"
+              [nzPlaceHolder] = '"appMarketing.recommend.prompt.type" | translate'
+            >
+              <div *ngFor='let item of recommendType'>
+                <nz-option
+                  [nzValue]="item['value']"
+                  [nzLabel]="item['desc']"
+                >
+                </nz-option>
+              </div>
+            </nz-select>
+            <nz-form-explain *ngIf="validForm.get('type').dirty && validForm.get('type').errors">
+              <span>
+                {{ "appMarketing.recommend.prompt.type" | translate}}
+              </span>
+              <span>
+                {{ "common.validator.notEmpty" | translate }}
+              </span>
+            </nz-form-explain>
+          </nz-form-control>
+          <nz-form-control [nzSm]="17" [nzOffset]='7' *ngIf="validForm.get('type').value==='THIRD_PARTY_LINK'">
+             <input
+                nz-input
+                formControlName="recommendUrl"
+                id="recommendUrl"
+                type="url"
+                [placeholder] = '"appMarketing.recommend.prompt.recommendUrl" | translate'
+              >
+            <nz-form-explain *ngIf="validForm.get('recommendUrl').dirty && validForm.get('recommendUrl').errors">
+              <span>
+                {{ "appMarketing.recommend.prompt.recommendUrl" | translate}}
+              </span>
+              <span>
+                {{ "common.validator.notEmpty" | translate }}
+              </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="6" nzRequired nzFor="type">
+            {{ "appMarketing.recommend.table.img" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <nz-upload
+              nzName="avatar"
+
+              nzListType="picture-card"
+              [nzBeforeUpload]="beforeUpload"
+              [nzAccept]="'image/*'"
+            >
+
+              <ng-container *ngIf="!avatarUrl">
+                <i class="anticon anticon-plus" nz-icon type="plus"></i>
+                <!--<i nz-icon class="upload-icon" type="plus" theme="outline"></i>-->
+                <div class="ant-upload-text">Upload</div>
+              </ng-container>
+              <img *ngIf="avatarUrl" [src]="avatarUrl" class="avatar">
+            </nz-upload>
+            {{ "appMarketing.recommend.recommendedSize" | translate }} 660 * 230
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="6" nzRequired nzFor="state">
+            {{ "appMarketing.recommend.table.state" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <nz-select
+              nzAllowClear
+              formControlName="state"
+              id="state"
+              [nzPlaceHolder] = '"appMarketing.recommend.prompt.state" | translate'
+            >
+              <div *ngFor='let item of recommendState'>
+                <nz-option
+                  [nzValue]="item['value']"
+                  [nzLabel]="item['desc']"
+                >
+                </nz-option>
+              </div>
+            </nz-select>
+            <nz-form-explain *ngIf="validForm.get('state').dirty && validForm.get('state').errors">
+              <span>
+                {{ "appMarketing.recommend.prompt.state" | translate}}
+              </span>
+              <span>
+                {{ "common.validator.notEmpty" | translate }}
+              </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+  </nz-modal>
+</div>

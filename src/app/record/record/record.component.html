@@ -1,0 +1,176 @@
+<div class="record">
+  <div class="c-search-group c-search-border">
+    <div class="c-search-itemLeft">
+      {{ "financeModule.list.classify" | translate }}:
+    </div>
+    <div class="c-search-itemRight">
+      <ul class="sectionList c-flex-row-start c-flex-auto-wrap">
+        <li
+          (click)="changeStatus('null')"
+          [ngClass]="{ 'active-tag': '3,4,6,13' == searchModel.status }"
+        >
+          {{ "financeModule.list.all" | translate }}
+        </li>
+        <li
+          *ngFor="let item of statusEnum"
+          (click)="changeStatus(item['value']+'')"
+          [ngClass]="{ 'active-tag': item.value == searchModel.status }"
+        >
+          {{ item.name }}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 搜索条件 -->
+  <div class="c-search-group">
+    <div class="c-search-item">
+      <div class="c-search-item" style="margin-left: 20px">
+        <div class="c-search-itemLeft">
+          {{ "financeModule.totle.table.createTime" | translate }}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-date-picker
+            [(ngModel)]="searchModel.applyCashDateStart"
+          ></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker
+            [(ngModel)]="searchModel.applyCashDateEnd"
+          ></nz-date-picker>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="c-search-group">
+    <div class="c-search-item">
+      <div class="c-search-item" style="margin-left: 20px">
+        <div class="c-search-itemLeft">
+          {{ "financeModule.totle.table.letterOrderNo" | translate }}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" [(ngModel)]="searchModel.creditOrderNo" [placeholder]='"financeModule.totle.prompt.letterOrderNo" | translate ' />
+        </div>
+      </div>
+
+      <div class="c-search-item" style="margin-left: 20px">
+        <div class="c-search-itemLeft">
+          {{ "financeModule.totle.table.loanOrderNo" | translate }}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" [(ngModel)]="searchModel.orderNo"  [placeholder]='"financeModule.totle.prompt.loanOrderNo" | translate '/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="c-search-group">
+    <div class="c-search-item">
+      <button
+        style="margin-left: 30px"
+        nz-button
+        nzType="primary"
+        (click)="search()"
+      >
+        {{ "common.search" | translate }}
+      </button>
+      <button
+        style="margin-left: 30px"
+        nz-button
+        nzType="default"
+        (click)="reset()"
+      >
+        {{ "common.reset" | translate }}
+      </button>
+    </div>
+  </div>
+  <!--<nz-table-->
+    <!--#middleTable-->
+    <!--nzSize="middle"-->
+    <!--[nzData]="orderList"-->
+    <!--*ngIf="type == 'loan'"-->
+    <!--[nzPageSize]="10"-->
+    <!--(nzPageIndexChangeClick)="changePage()"-->
+    <!--[(nzPageIndex)]="pageIndex"-->
+  <!--&gt;-->
+    <!--<thead>-->
+      <!--<tr>-->
+        <!--<th *ngFor="let item of ('orderModule.record.headerInfo' | translate)">-->
+          <!--{{ item }}-->
+        <!--</th>-->
+      <!--</tr>-->
+    <!--</thead>-->
+    <!--<tbody>-->
+      <!--<tr *ngFor="let data of middleTable.data">-->
+        <!--<td>{{ data.creditOrderNo }}</td>-->
+        <!--<td>{{ data.orderNo }}</td>-->
+        <!--<td>{{ data.orderTypeTxt }}</td>-->
+        <!--<td>{{ data.stringCreateTime }}</td>-->
+        <!--<td>{{ data.userId }}</td>-->
+        <!--<td>{{ data.userName }}</td>-->
+        <!--<td>{{ data.auditMoney }}</td>-->
+        <!--<td>-->
+          <!--{{ data.loanDays || data.loanMonths }}-->
+          <!--<span *ngIf="data.loanDays">-->
+            <!--（{{ "orderModule.record.dayType.day' | translate" }}）-->
+          <!--</span>-->
+          <!--<span *ngIf="data.loanMonths">-->
+            <!--（{{ "orderModule.record.dayType.month' | translate" }}）-->
+          <!--</span>-->
+        <!--</td>-->
+        <!--<td>{{ data.payDateStr }}</td>-->
+        <!--<td>{{ data.payDateStr }}</td>-->
+
+        <!--<td>{{ data.currentRealRepay }}</td>-->
+        <!--&lt;!&ndash; <td>{{data.realRepayMoney}}</td> &ndash;&gt;-->
+        <!--<td>{{ data.statusTxt }}</td>-->
+        <!--<td style="cursor: pointer;color: #1890ff;" (click)="goDetail(data)">-->
+          <!--{{ "common.btnGroup.a" | translate }}-->
+        <!--</td>-->
+      <!--</tr>-->
+    <!--</tbody>-->
+  <!--</nz-table>-->
+
+  <!--<nz-table-->
+    <!--#middleTable-->
+    <!--nzSize="middle"-->
+    <!--[nzData]="orderList"-->
+    <!--*ngIf="type == 'ask'"-->
+    <!--[nzPageSize]="5"-->
+  <!--&gt;-->
+    <!--<thead>-->
+      <!--<tr>-->
+        <!--<th-->
+          <!--*ngFor="let item of ('orderModule.record.askHeaderInfo' | translate)"-->
+        <!--&gt;-->
+          <!--{{ item }}-->
+        <!--</th>-->
+      <!--</tr>-->
+    <!--</thead>-->
+    <!--<tbody>-->
+      <!--<tr *ngFor="let data of middleTable.data">-->
+        <!--<td>{{ data.orderNo }}</td>-->
+        <!--<td>{{ data.createTime }}</td>-->
+        <!--<td>{{ data.applyMoney }}</td>-->
+        <!--<td>{{ data.loanDays }}</td>-->
+        <!--<td>{{ data.status | OrderStatusPipe }}</td>-->
+      <!--</tr>-->
+    <!--</tbody>-->
+  <!--</nz-table>-->
+  <c-table [tableData] = 'tableData'>
+  </c-table>
+<!--  <div class="c-pag">-->
+<!--    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>-->
+<!--    <ng-template #totalTemplate let-total>-->
+<!--            <span>-->
+<!--                {{ "common.total" | translate }}-->
+<!--            </span>-->
+<!--      <span>-->
+<!--                {{ totalSize }}-->
+<!--            </span>-->
+<!--      <span>-->
+<!--                {{ "common.pageUnit" | translate }}-->
+<!--            </span>-->
+<!--    </ng-template>-->
+<!--  </div>-->
+</div>

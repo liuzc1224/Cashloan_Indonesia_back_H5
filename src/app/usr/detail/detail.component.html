@@ -1,0 +1,58 @@
+<div class="c-content-wrap">
+    <div class="c-flex-row-end">
+        <span>
+            {{ "orderModule.order.basicInfo.loginInfo" | translate }}
+            <span *ngIf ='loginInfo'>
+                <!-- {{ loginInfo['createTime'] | dateFormat}} -->
+                {{ loginInfo['createTime']}}
+            </span>
+            <span style="margin-left: 20px" *ngIf ='loginInfo'>
+                {{ loginInfo['area']}}
+            </span>
+        </span>
+    </div>
+    <div class="c-flex-row-allStart">
+        <div class="half-block">
+            <div class="c-title">
+                {{ "orderModule.order.basicInfo.title" | translate }}
+            </div>
+            <div class="infoContent">
+                <basic-info #basicInfo>
+
+                </basic-info>
+            </div>
+        </div>
+        <!-- <div class="half-block">
+            <div class="c-title">
+                {{ "orderModule.order.approveInfo.title" | translate }}
+            </div>
+            <div class="infoContent">
+                <approve #approve>
+                </approve>
+            </div>
+        </div> -->
+    </div>
+
+    <div class="tabWrap">
+        <nz-tabset>
+            <nz-tab [nzTitle]="loanTitle" (nzSelect)="selectTab('1')">
+                <!-- <record #record [type]="'loan'"></record> -->
+                <list #list></list>
+            </nz-tab>
+            <!-- <nz-tab [nzTitle]="creditTitle" (nzSelect)="selectTab('4')">
+                <letter #letter [type]="'credit'"></letter>
+            </nz-tab> -->
+
+            <!-- <nz-tab [nzTitle] = "applyTitle" (nzSelect)="selectTab('2')">
+                <record #recordAsk [type]="'ask'"></record>
+            </nz-tab> -->
+
+            <!-- <nz-tab nzTitle = "认证信息" (nzSelect)="selectTab('3')">
+            <auth #auth>
+
+                </auth>
+            </nz-tab> -->
+
+        </nz-tabset>
+    </div>
+</div>

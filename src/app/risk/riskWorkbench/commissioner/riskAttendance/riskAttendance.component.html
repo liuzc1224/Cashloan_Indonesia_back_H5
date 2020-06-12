@@ -1,0 +1,47 @@
+<div class="c-content-wrap">
+  <div class="c-search-wrap">
+    <div class="c-search-group">
+      <!-- <nz-month-picker nzShowTime></<nz-month-picker> -->
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">{{ "atendanceModule.page.signinDate" | translate }}:</div>
+        <div class="c-search-itemRight">
+          <nz-date-picker [(ngModel)]="searchModel.signInBeginDate"></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker [(ngModel)]="searchModel.signInEndDate"></nz-date-picker>
+        </div>
+
+        <div class="c-search-item" style="margin-left: 20px" *ngIf="!isCommon">
+          <div class="c-search-itemLeft">{{ "atendanceModule.page.auditWorker" | translate }}:</div>
+          <div class="c-search-itemRight">
+            <input nz-input type="text" [(ngModel)]="searchModel.riskEmployeeName" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <button nz-button nzType="primary" (click)="search()">
+        {{ "common.search" | translate }}
+      </button>
+      <button style="margin-left: 30px" nz-button nzType="primary" (click)="reset()">
+        {{ "common.reset" | translate }}
+      </button>
+    </div>
+  </div>
+
+  <c-table [tableData]="tableData"> </c-table>
+  <div class="c-pag">
+    <nz-pagination
+      [nzShowTotal]="totalTemplate"
+      (nzPageIndexChange)="pageChange($event, 'page')"
+      (nzPageSizeChange)="pageChange($event, 'size')"
+      [nzPageIndex]="searchModel.currentPage"
+      [nzTotal]="totalSize"
+      nzShowSizeChanger
+      nzShowQuickJumper
+    ></nz-pagination>
+    <ng-template #totalTemplate let-total>
+      <span> {{ "common.total" | translate }} </span> <span> {{ totalSize }} </span>
+      <span> {{ "common.pageUnit" | translate }} </span>
+    </ng-template>
+  </div>
+</div>

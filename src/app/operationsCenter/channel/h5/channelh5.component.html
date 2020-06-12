@@ -1,0 +1,232 @@
+<div class="c-content-wrap">
+  <div class="half-block">
+    <div class="title">
+      {{ "channel.h5Title" | translate }}
+      <div class="c-btnGroup">
+        <button nz-button  (click) = 'add() '>
+          {{ "channel.btn.add" | translate}}
+        </button>
+      </div>
+    </div>
+    <div class="c-search-group" style="margin-top: 20px">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "channel.tabData.createTime" | translate}}
+        </div>
+        <div class="c-search-itemRight">
+          <nz-date-picker [(ngModel)]="searchModel.createTimeStart"></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker [(ngModel)]="searchModel.createTimeEnd"></nz-date-picker>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "channel.tabData.packageName" | translate}}
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" maxlength="50" [(ngModel)] = 'searchModel.packageName' [placeholder] = '"channel.prompt.packageName" | translate' maxlength="50" >
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "channel.tabData.channelId" | translate}}
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" maxlength="50" [(ngModel)] = 'searchModel.id' [placeholder] = '"channel.prompt.channelId" | translate' maxlength="2" >
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "channel.tabData.name" | translate}}
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" maxlength="50" [(ngModel)] = 'searchModel.name' [placeholder] = '"channel.prompt.name" | translate' >
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "channel.tabData.companyName" | translate}}
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" [(ngModel)] = 'searchModel.companyName' [placeholder] = '"channel.prompt.companyName" | translate' >
+        </div>
+      </div>
+    </div>
+    <div class="c-btn-Group" style="margin-bottom: 20px">
+      <button nz-button  nzType="primary" (click) = 'search() '>
+        {{ "common.search" | translate}}
+      </button>
+      <button nz-button class="left" (click) = 'reset() '>
+        {{ "channel.btn.reset" | translate}}
+      </button>
+    </div>
+  </div>
+  <c-table [tableData] = 'tableData'>
+  </c-table>
+  <qr-code [value]="curQCode" id="qrCode" size="300" background="#f2f1f1" padding="30" canvas="true" style="display: none"></qr-code>
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+  <span>
+  {{ "common.total" | translate }}
+  </span>
+      <span>
+  {{ totalSize }}
+  </span>
+      <span>
+  {{ "common.pageUnit" | translate }}
+  </span>
+    </ng-template>
+  </div>
+  <nz-modal
+    [(nzVisible)]="isVisible"
+    [nzTitle]='title'
+    [nzOkText]='"common.setting" | translate'
+    [nzCancelText]='"common.operate.cancel" | translate'
+    (nzOnOk)="handleOk()"
+    (nzOnCancel)="handleCancel()"
+    [nzOkLoading]="isOkLoading"
+    [nzWidth]="800"
+  >
+    <div class="formChannel">
+      <form nz-form [nzLayout]="'block'" [formGroup]="validForm">
+        <nz-form-item class="formSec">
+          <nz-form-label [nzSm]="7" [nzRequired]="true" nzFor="name">
+            {{ "channel.tabData.name" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="16" [nzOffset]="1">
+            <input
+              [readonly]="validForm.get('id').value!=null ? 'readonly' : ''"
+              maxlength="30"
+              type="text"
+              nz-input
+              formControlName="name"
+              id="name"
+              [placeholder] = '"channel.prompt.name" | translate'
+            >
+            <nz-form-explain *ngIf="validForm.get('name').dirty &&validForm.get('name').errors">
+              <span> {{ "channel.prompt.name" | translate }} </span>
+              <span> {{ "common.validator.notEmpty" | translate }} </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class="formSec">
+          <nz-form-label [nzSm]="7" [nzRequired]="true" nzFor="companyName">
+            {{ "channel.tabData.companyName" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="16" [nzOffset]="1">
+            <input
+              type="text"
+              nz-input
+              formControlName="companyName"
+              id="companyName"
+              maxlength="30"
+              [readonly]="validForm.get('id').value!=null ? 'readonly' : ''"
+              [placeholder] = '"channel.prompt.companyName" | translate'
+            >
+            <nz-form-explain *ngIf="validForm.get('companyName').dirty &&validForm.get('companyName').errors">
+              <span> {{ "channel.prompt.companyName" | translate }} </span>
+              <span> {{ "common.validator.notEmpty" | translate }} </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class="formSec">
+          <nz-form-label [nzSm]="7" [nzRequired]="true" nzFor="packageName">
+            {{ "channel.tabData.packageName" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="16" [nzOffset]="1">
+            <nz-select
+              formControlName="packageName"
+              id="packageName"
+              [nzDisabled]="validForm.get('id').value!=null ? true : false"
+              [nzPlaceHolder]="'channel.prompt.packageName' | translate"
+            >
+              <nz-option *ngFor="let option of allPackageData" [nzLabel]="option['packageName']" [nzValue]="option['packageName']"></nz-option>
+            </nz-select>
+            <nz-form-explain *ngIf="validForm.get('packageName').dirty &&validForm.get('packageName').errors">
+              <span> {{ "channel.prompt.packageName" | translate }} </span>
+              <span> {{ "common.validator.notEmpty" | translate }} </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class="formSec">
+          <nz-form-label [nzSm]="7" [nzRequired]="true" nzFor="clearingWay">
+            {{ "channel.tabData.method" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="16" [nzOffset]="1">
+            <nz-select [nzDisabled]="validForm.get('id').value!=null ? true : false" formControlName="clearingWay" id="clearingWay" [nzPlaceHolder]="'channel.prompt.method' | translate">
+              <nz-option *ngFor="let option of method" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+            </nz-select>
+            <nz-form-explain *ngIf="validForm.get('clearingWay').dirty &&validForm.get('clearingWay').errors">
+              <span> {{ "channel.prompt.method" | translate }} </span>
+              <span> {{ "common.validator.notEmpty" | translate }} </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item class="formSec" *ngIf="validForm.get('clearingWay').value!='NONE'">
+          <nz-form-label [nzSm]="7" [nzRequired]="true" nzFor="everyAmount">
+            {{ "channel.tabData.costSetting" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="8" [nzOffset]="1">
+            <input
+              maxlength="10"
+              [readonly]="validForm.get('id').value!=null ? 'readonly' : ''"
+              type="text"
+              nz-input
+              formControlName="everyAmount"
+              id="everyAmount"
+              [placeholder] = '"channel.prompt.everyAmount" | translate'
+              (keyup)="num()"
+            >
+            <nz-form-explain *ngIf="validForm.get('everyAmount').dirty &&validForm.get('everyAmount').errors">
+              <span> {{ "channel.prompt.everyAmount" | translate }} </span>
+              <span> {{ "common.validator.notEmpty" | translate }} </span>
+            </nz-form-explain>
+          </nz-form-control>
+          <nz-form-control [nzSm]="4" [nzOffset]="1">
+            <nz-select formControlName="everyAmountUnit" [nzDisabled]="validForm.get('id').value!=null ? true : false">
+              <nz-option *ngFor="let option of unit" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+            </nz-select>
+          </nz-form-control>
+          <nz-form-control [nzSm]="2" [nzOffset]="1">
+            {{"channel.everyPen" | translate }}
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class="formSec">
+          <nz-form-label [nzSm]="7" [nzRequired]="true" nzFor="state">
+            {{ "channel.tabData.channelStatus" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="16" [nzOffset]="1">
+            <nz-select formControlName="state" id="state">
+              <nz-option *ngFor="let option of channelStatus" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+            </nz-select>
+            <nz-form-explain *ngIf="validForm.get('state').dirty &&validForm.get('state').errors">
+              <span> {{ "channel.prompt.channelStatus" | translate }} </span>
+              <span> {{ "common.validator.notEmpty" | translate }} </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item class="formSec">
+          <nz-form-label [nzSm]="7" [nzRequired]="true" nzFor="state">
+            {{ "channel.tabData.templateUrl" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="16" [nzOffset]="1">
+            <nz-radio-group formControlName="Url" nzButtonStyle="'outline'">
+              <label nz-radio-button *ngFor="let option of template" nzValue="{{option['image']}}" style="width: 125px;height: 265px;margin-left: 10px">
+                <img src="{{option['image']}}" height="250" width="110" style="margin-left: -10px;margin-top: 5px;object-fit: cover;text-align: center;padding-left: 5px" />
+              </label>
+            </nz-radio-group>
+            <nz-form-explain *ngIf="validForm.get('Url').dirty &&validForm.get('Url').errors">
+              <span> {{ "channel.prompt.templateUrl" | translate }} </span>
+              <span> {{ "common.validator.notEmpty" | translate }} </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+  </nz-modal>
+</div>

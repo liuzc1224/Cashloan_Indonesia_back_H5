@@ -1,0 +1,28 @@
+.sectionList{
+    width: 100% ; 
+    list-style: none ;
+    padding: 0px; 
+    margin : 0px;
+}
+.sectionList > li{
+    height: 100% ; 
+    padding: 0 10px;
+    border: 1px solid rgba(153, 153, 153, 0.42);
+    line-height: 30px;   
+    margin-right: 10px;
+    border-radius: 5px ;
+    cursor: pointer;
+    transition: all .3s ease-in ;
+    color:#999; 
+    margin-bottom: 10px; 
+}
+.sectionList > li:hover,
+.active-tag{
+    color: #fff !important;
+    background: #1890ff;
+    border: 1px solid #1890ff;
+}
+
+::ng-deep .ant-calendar-picker-input{
+    width: 220px !important ;
+}

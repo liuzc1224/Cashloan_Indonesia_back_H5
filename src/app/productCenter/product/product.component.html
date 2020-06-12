@@ -1,0 +1,533 @@
+<div class="c-content-wrap">
+  <div class="half-block">
+    <div class="title">
+      {{ "productCenter.product.title" | translate }}
+      <div class="c-btnGroup">
+        <button nz-button [nzLoading]="realtimeLoading"  (click) = 'realtime()'>
+          {{ "productCenter.product.liveUpdate" | translate}}
+        </button>
+        <button nz-button  (click) = 'getRules()'>
+          {{ "productCenter.product.editSettlementRules" | translate}}
+        </button>
+        <button nz-button  (click) = 'add() '>
+          {{ "productCenter.product.add" | translate}}
+        </button>
+      </div>
+    </div>
+    <div class="c-search-Group">
+      <nz-select class="left" [(ngModel)]="inputValue">
+        <nz-option *ngFor="let option of inputData;" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+      </nz-select>
+      <input nz-input *ngIf="inputValue=='id'" type="tel" name="tel" [(ngModel)]="searchModel.id" class="left"  [placeholder] = '"productCenter.product.prompt" | translate' (keyup)="keyupId()" >
+      <input nz-input *ngIf="inputValue=='name'" type="text" class="left" [(ngModel)]="searchModel.loanProductName" [placeholder] = '"productCenter.product.prompt" | translate' >
+      <button nz-button class="left"  nzType="primary" (click) = 'search() '>
+        {{ "common.search" | translate}}
+      </button>
+      <button nz-button class="left"  nzType="default"  (click) = 'reset()'>
+        {{ "common.reset" | translate}}
+      </button>
+    </div>
+  </div>
+  <c-table [tableData] = 'tableData' style="margin-top: 20px">
+  </c-table>
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+  <span>
+  {{ "common.total" | translate }}
+  </span>
+      <span>
+  {{ totalSize }}
+  </span>
+      <span>
+  {{ "common.pageUnit" | translate }}
+  </span>
+    </ng-template>
+  </div>
+  <nz-modal [(nzVisible)]="isPreview" [nzTitle]="'productCenter.product.previewProduct' | translate" (nzOnCancel)="previewCancel()" (nzOnOk)="previewOk()">
+    <table>
+      <tr>
+        <td>{{'productCenter.product.previewData.id' | translate}}</td>
+        <td>{{loanProductPreviewData['id']}}</td>
+      </tr>
+      <tr>
+        <td>{{'productCenter.product.previewData.name' | translate}}</td>
+        <td>{{loanProductPreviewData['loanProductName']}}</td>
+      </tr>
+      <tr>
+        <td>{{'productCenter.product.previewData.type' | translate}}</td>
+        <td>{{setTypeView(loanProductPreviewData['loanProductType'])}}</td>
+      </tr>
+      <tr>
+        <td>{{'productCenter.product.previewData.money' | translate}}</td>
+        <td>{{loanProductPreviewData['loanQuotaMix']}}-{{loanProductPreviewData['loanQuotaMax']}}</td>
+      </tr>
+      <tr>
+        <td>{{'productCenter.product.previewData.period' | translate}}</td>
+        <td>{{loanProductPreviewData['loanTermMix']}}-{{loanProductPreviewData['loanTermMax']}}</td>
+      </tr>
+      <tr>
+        <td>{{'productCenter.product.previewData.lendRate' | translate}}</td>
+        <td>{{loanProductPreviewData['loanDayRate']}}</td>
+      </tr>
+      <tr>
+        <td>{{'productCenter.product.previewData.technology' | translate}}</td>
+        <td>{{loanProductPreviewData['technologyRate']}}</td>
+      </tr>
+      <tr>
+        <td>{{'productCenter.product.previewData.review' | translate}}</td>
+        <td>{{loanProductPreviewData['auditRate']}}</td>
+      </tr>
+      <tr>
+        <td>{{'productCenter.product.previewData.paymentMoney' | translate}}</td>
+        <td>{{loanProductPreviewData['paymentMoneyMin']}}-{{loanProductPreviewData['paymentMoneyMax']}}</td>
+      </tr>
+      <tr>
+        <td>{{'productCenter.product.previewData.amount' | translate}}</td>
+        <td>{{loanProductPreviewData['repayMoneyMin']}}-{{loanProductPreviewData['repayMoneyMax']}}</td>
+      </tr>
+      <tr *ngIf="loanProductPreviewData['period']>1">
+        <td>{{'productCenter.product.previewData.periodsNumber' | translate}}</td>
+        <td>{{loanProductPreviewData['period']}}</td>
+      </tr>
+      <tr *ngFor="let item of loanProductPreviewData['periodAmountList']">
+        <td>{{'productCenter.product.list.periodsRate1' | translate}}{{item['currentPeriod']}}{{'productCenter.product.list.periodsRate2' | translate}}</td>
+        <td>{{item['repayMin']}}-{{item['repayMax']}}</td>
+      </tr>
+    </table>
+  </nz-modal>
+  <nz-modal
+    [(nzVisible)]="isVisible"
+    [nzTitle]='"productCenter.product.title" | translate'
+    [nzOkText]='"common.setting" | translate'
+    [nzCancelText]='"common.operate.cancel" | translate'
+    (nzOnOk)="handleOk()"
+    (nzOnCancel)="handleCancel()"
+    [nzOkLoading]="isOkLoading"
+    [nzWidth]="800"
+  >
+    <div class="formChannel">
+      <form nz-form [nzLayout]="'block'" [formGroup]="validForm">
+        <nz-form-item class='formSec'>
+          <nz-form-label nzRequired [nzSm]="6"  nzFor="loanProductName">
+            {{ "productCenter.product.list.name" | translate}}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <input
+              type="text"
+              style="width: 400px"
+              nz-input
+              maxlength="50"
+              formControlName="loanProductName"
+              id="loanProductName"
+              [placeholder] = '"productCenter.product.inputPrompt" | translate'
+            >
+            <nz-form-explain *ngIf="validForm.get('loanProductName').dirty && validForm.get('loanProductName').errors">
+            <span>
+              {{ "productCenter.product.list.name" | translate }}
+            </span>
+              <span>
+              {{ "common.validator.notEmpty" | translate }}
+            </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-label nzRequired [nzSm]="6"  nzFor="loanProductType">
+            {{ "productCenter.product.list.type" | translate}}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <nz-select
+              formControlName="loanProductType"
+              id="loanProductType"
+              (ngModelChange)="setType()"
+               style="width: 400px">
+              <nz-option *ngFor="let option of typeData" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+            </nz-select>
+            <nz-form-explain *ngIf="validForm.get('loanProductType').dirty && validForm.get('loanProductType').errors">
+            <span>
+              {{ "productCenter.product.list.type" | translate }}
+            </span>
+              <span>
+              {{ "common.validator.notEmpty" | translate }}
+            </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-label nzRequired [nzSm]="6"  nzFor="loanQuotaMix">
+            {{ "productCenter.product.list.amount" | translate}}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <input
+              type="text"
+              nz-input
+              formControlName="loanQuotaMix"
+              id="loanQuotaMix"
+              style="width:80px"
+              (keyup)="Number('loanQuotaMix')"
+            >
+            <span class="span" style="padding-right: 16px;padding-left: 16px">{{ "common.unit" | translate}}</span>
+            <span class="span" style="background-color: #ffffff;border-bottom: 1px solid #f2f2f2;border-top:1px solid #f2f2f2">—</span>
+            <input
+              type="text"
+              nz-input
+              formControlName="loanQuotaMax"
+              id="loanQuotaMax"
+              style="width: 80px"
+              (keyup)="Number('loanQuotaMax')"
+            >
+            <span class="span" style="padding-right: 16px;padding-left: 16px">{{ "common.unit" | translate}}</span>
+            <span class="span" style="width: 20px;border-top: 1px solid #f2f2f2;border-bottom: 1px solid #f2f2f2;display:block;background-color: #ffffff"></span>
+            <span class="span">{{ "productCenter.product.take" | translate}}</span>
+            <input
+              type="tel"
+              nz-input
+              formControlName="loanQuotaIncrease"
+              id="loanQuotaIncrease"
+              style="width: 80px"
+              (keyup)="Number('loanQuotaIncrease')"
+            >
+            <span class="span">{{ "productCenter.product.increment" | translate}}</span>
+            <nz-form-explain *ngIf="(validForm.get('loanQuotaMix').dirty && validForm.get('loanQuotaMix').errors) || (validForm.get('loanQuotaMax').dirty && validForm.get('loanQuotaMax').errors) || (validForm.get('loanQuotaIncrease').dirty && validForm.get('loanQuotaIncrease').errors)">
+            <span style="color: red">
+              {{ "productCenter.product.list.amount" | translate }}
+            </span>
+              <span style="color: red">
+              {{ "common.validator.notEmpty" | translate }}
+            </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-label nzRequired [nzSm]="6"  nzFor="loanTermMix">
+            <span *ngIf="validForm.get('loanProductType').value==3 || validForm.get('loanProductType').value==4">{{ "productCenter.product.list.singlePeriod" | translate}}</span>
+            <span *ngIf="validForm.get('loanProductType').value==1 || validForm.get('loanProductType').value==2">{{ "productCenter.product.list.period" | translate}}</span>
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <input
+              type="text"
+              nz-input
+              formControlName="loanTermMix"
+              id="loanTermMix"
+              style="width: 80px"
+              (keyup)="Number('loanTermMix')"
+            >
+            <span class="span" style="padding-right: 24px;padding-left: 24px">{{ "productCenter.product.day" | translate}}</span>
+            <!--<span class="span" *ngIf="validForm.get('loanProductType').value==2" style="padding-right: 24px;padding-left: 24px">{{ "productCenter.product.month" | translate}}</span>-->
+            <span class="span" style="background-color: #ffffff;border-bottom: 1px solid #f2f2f2;border-top:1px solid #f2f2f2">—</span>
+            <input
+              type="text"
+              nz-input
+              formControlName="loanTermMax"
+              id="loanTermMax"
+              style="width: 80px"
+              (keyup)="Number('loanTermMax')"
+            >
+            <span class="span" style="padding-right: 24px;padding-left: 24px">{{ "productCenter.product.day" | translate}}</span>
+            <!--<span class="span" *ngIf="validForm.get('loanProductType').value==2" style="padding-right: 24px;padding-left: 24px">{{ "productCenter.product.month" | translate}}</span>-->
+            <span class="span" style="width: 20px;border-top: 1px solid #f2f2f2;border-bottom: 1px solid #f2f2f2;display:block;background-color: #ffffff"></span>
+            <span class="span">{{ "productCenter.product.take" | translate}}</span>
+            <input
+              type="text"
+              nz-input
+              formControlName="loanTermIncrease"
+              id="loanTermIncrease "
+              style="width: 80px"
+              (keyup)="Number('loanTermIncrease')"
+            >
+            <span class="span">{{ "productCenter.product.increment" | translate}}</span>
+            <nz-form-explain *ngIf="(validForm.get('loanTermMix').dirty && validForm.get('loanTermMix').errors) || (validForm.get('loanTermMax').dirty && validForm.get('loanQuotaMax').errors) || (validForm.get('loanTermIncrease').dirty && validForm.get('loanTermIncrease').errors)">
+              <span style="color: red">
+                {{ "productCenter.product.list.amount" | translate }}
+              </span>
+                <span style="color: red">
+                {{ "common.validator.notEmpty" | translate }}
+              </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item class='formSec'>
+          <nz-form-label nzRequired [nzSm]="6"  nzFor="loanDayRate">
+            {{ "productCenter.product.list.lendRate" | translate}}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <input
+              type="text"
+              nz-input
+              formControlName="loanDayRate"
+              id="loanDayRate"
+              style="width: 120px"
+              (keyup)="keyup('loanDayRate')"
+            >
+            <span class="span" style="padding-right: 24px;padding-left: 24px">%</span>
+            <nz-form-explain *ngIf="validForm.get('loanDayRate').dirty && validForm.get('loanDayRate').errors">
+            <span>
+              {{ "productCenter.product.list.lendRate" | translate }}
+            </span>
+              <span>
+              {{ "common.validator.notEmpty" | translate }}
+            </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-label nzRequired [nzSm]="6"  nzFor="annualInterestRate">
+            {{ "productCenter.product.list.annualRate" | translate}}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <input
+              type="text"
+              nz-input
+              formControlName="annualInterestRate"
+              id="annualInterestRate"
+              style="width: 120px"
+              (keyup)="keyup('annualInterestRate')"
+            >
+            <span class="span" style="padding-right: 24px;padding-left: 24px">%</span>
+            <nz-form-explain *ngIf="validForm.get('annualInterestRate').dirty && validForm.get('annualInterestRate').errors">
+            <span>
+              {{ "productCenter.product.list.annualRate" | translate }}
+            </span>
+              <span>
+              {{ "common.validator.notEmpty" | translate }}
+            </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-label nzRequired [nzSm]="6"  nzFor="technologyRate">
+            {{ "productCenter.product.list.technology" | translate}}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <input
+              type="text"
+              nz-input
+              formControlName="technologyRate"
+              id="technologyRate"
+              style="width: 120px"
+              (keyup)="keyup('technologyRate')"
+            >
+            <span class="span" style="padding-right: 24px;padding-left: 24px">%</span>
+            <nz-form-explain *ngIf="validForm.get('technologyRate').dirty && validForm.get('technologyRate').errors">
+            <span>
+              {{ "productCenter.product.list.technology" | translate }}
+            </span>
+              <span>
+              {{ "common.validator.notEmpty" | translate }}
+            </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-label nzRequired [nzSm]="6"  nzFor="auditRate">
+            {{ "productCenter.product.list.review" | translate}}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <input
+              type="text"
+              nz-input
+              formControlName="auditRate"
+              id="auditRate"
+              style="width: 120px"
+              (keyup)="keyup('auditRate')"
+            >
+            <span class="span" style="padding-right: 24px;padding-left: 24px">%</span>
+            <nz-form-explain *ngIf="validForm.get('auditRate').dirty && validForm.get('auditRate').errors">
+            <span>
+              {{ "productCenter.product.list.review" | translate }}
+            </span>
+              <span>
+              {{ "common.validator.notEmpty" | translate }}
+            </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-label nzRequired [nzSm]="6"  nzFor="gracePeriod">
+            {{ "productCenter.product.list.gracePeriod" | translate}}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <input
+              type="text"
+              nz-input
+              formControlName="gracePeriod"
+              id="gracePeriod"
+              style="width: 120px"
+              (keyup)="Number('gracePeriod')"
+            >
+            <span class="span" style="padding-right: 24px;padding-left: 24px">{{ "productCenter.product.day" | translate}}</span>
+            <nz-form-explain *ngIf="validForm.get('gracePeriod').dirty && validForm.get('gracePeriod').errors">
+            <span>
+              {{ "productCenter.product.list.gracePeriod" | translate }}
+            </span>
+              <span>
+              {{ "common.validator.notEmpty" | translate }}
+            </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-label nzRequired [nzSm]="6"  nzFor="gracePeriodDayRate">
+            {{ "productCenter.product.list.gracePeriodDayRate" | translate}}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <input
+              type="text"
+              nz-input
+              formControlName="gracePeriodDayRate"
+              id="gracePeriodDayRate"
+              style="width: 120px"
+              (keyup)="keyup('gracePeriodDayRate')"
+            >
+            <span class="span" style="padding-right: 24px;padding-left: 24px">%</span>
+            <nz-form-explain *ngIf="validForm.get('gracePeriodDayRate').dirty && validForm.get('gracePeriodDayRate').errors">
+            <span>
+              {{ "productCenter.product.list.gracePeriodDayRate" | translate }}
+            </span>
+              <span>
+              {{ "common.validator.notEmpty" | translate }}
+            </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-label nzRequired [nzSm]="6"  nzFor="overdueDayRate">
+            {{ "productCenter.product.list.overdueDayRate" | translate}}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <input
+              type="text"
+              nz-input
+              formControlName="overdueDayRate"
+              id="overdueDayRate"
+              style="width: 120px"
+              (keyup)="keyup('overdueDayRate')"
+            >
+            <span class="span" style="padding-right: 24px;padding-left: 24px">%</span>
+            <nz-form-explain *ngIf="validForm.get('overdueDayRate').dirty && validForm.get('overdueDayRate').errors">
+            <span>
+              {{ "productCenter.product.list.overdueDayRate" | translate }}
+            </span>
+              <span>
+              {{ "common.validator.notEmpty" | translate }}
+            </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec' *ngIf="validForm.get('loanProductType').value==3 || validForm.get('loanProductType').value==4">
+          <nz-form-label nzRequired [nzSm]="6"  nzFor="period">
+            {{ "productCenter.product.list.periodsNumber" | translate}}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <nz-select formControlName="period" id="period" [nzPlaceHolder]="'productCenter.product.inputPeriodsNumber' | translate" (ngModelChange)="setNumber($event)" style="width: 400px">
+              <nz-option *ngFor="let option of periodsNumberData" [nzLabel]="option" [nzValue]="option"></nz-option>
+            </nz-select>
+            <nz-form-explain *ngIf="validForm.get('period').dirty && validForm.get('period').errors">
+            <span>
+              {{ "productCenter.product.list.periodsNumber" | translate }}
+            </span>
+              <span>
+              {{ "common.validator.notEmpty" | translate }}
+            </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <div  *ngIf="validForm.get('loanProductType').value==3 || validForm.get('loanProductType').value==4">
+          <nz-form-item *ngFor="let item of periodsData;let i = index" class='formSec'>
+            <nz-form-label [nzXs]="24" [nzSm]="6" [nzFor]="item">
+              {{"productCenter.product.list.periodsRate1" | translate}}{{i+1}}{{"productCenter.product.list.periodsRate2" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzXs]="24" [nzSm]="17" [nzOffset]="1">
+              <nz-input-number
+                style="width: 400px"
+                [nzPlaceHolder]="'productCenter.product.prompt' | translate"
+                [nzMin]="0.00"
+                [nzMax]="100.00"
+                [nzStep]="0.01"
+                [attr.id]="item"
+                [formControlName]="item"
+                [nzFormatter]="formatterPercent"
+                [nzParser]="parserPercent"
+              ></nz-input-number>
+              <span style="margin-left: 10px">%</span>
+              <nz-form-explain *ngIf="validForm.get(item).dirty && validForm.get(item).hasError('required')">
+              <span>
+              {{"productCenter.product.list.periodsRate1" | translate}}{{i+1}}{{"productCenter.product.list.periodsRate2" | translate}}
+            </span>
+                <span>
+              {{ "common.validator.notEmpty" | translate }}
+            </span>
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+
+        <nz-form-item class='formSec'>
+          <nz-form-label nzRequired [nzSm]="6"  nzFor="overdueDayRate">
+            {{ "productCenter.product.list.state" | translate}}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <nz-select formControlName="status" id="status" style="width: 400px">
+              <nz-option *ngFor="let option of stateData" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+            </nz-select>
+            <nz-form-explain *ngIf="validForm.get('status').dirty && validForm.get('status').errors">
+            <span>
+              {{ "productCenter.product.list.state" | translate }}
+            </span>
+              <span>
+              {{ "common.validator.notEmpty" | translate }}
+            </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+  </nz-modal>
+  <nz-modal
+    [(nzVisible)]="isVisibleRules"
+    [nzTitle]='"productCenter.product.editSettlementRules" | translate'
+    [nzOkText]='"common.setting" | translate'
+    [nzCancelText]='"common.operate.cancel" | translate'
+    (nzOnOk)="handleOkRules()"
+    (nzOnCancel)="handleCancelRules()"
+    [nzOkLoading]="isOkLoadingRules"
+    [nzWidth]="600"
+  >
+    <div class="formChannel">
+      <form nz-form [nzLayout]="'block'" [formGroup]="validFormRules">
+        <nz-form-item class='formSec' *ngFor="let item of typeData">
+          <p style="text-align: center;color: black">{{item['desc']}}</p>
+          <nz-form-label nzRequired [nzSm]="6"  nzFor="onceContainsServiceFee">
+            {{ "productCenter.product.list.automaticSettlementRatio" | translate}}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <nz-input-number
+              style="width: 300px"
+              [nzPlaceHolder]='"productCenter.product.promptRatio" | translate'
+              [nzMin]="0.00"
+              [nzMax]="100.00"
+              [nzStep]="0.01"
+              [attr.id]="item"
+              [formControlName]="item['formControlName']"
+              [id]="item['formControlName']"
+              [nzFormatter]="formatterPercent"
+              [nzParser]="parserPercent"
+            ></nz-input-number>
+            <span style="padding-left: 12px">%</span>
+            <nz-form-explain *ngIf="validFormRules.get(item['formControlName']).dirty && validFormRules.get(item['formControlName']).errors">
+            <span>
+              {{ "productCenter.product.list.automaticSettlementRatio" | translate}}
+            </span>
+              <span>
+              {{ "common.validator.notEmpty" | translate }}
+            </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+  </nz-modal>
+</div>

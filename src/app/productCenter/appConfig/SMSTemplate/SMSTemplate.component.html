@@ -1,0 +1,134 @@
+<div class="c-content-wrap">
+
+  <div class="title">
+    {{ "productCenter.appConfig.SMS.title" | translate }}
+  </div>
+
+  <div class="c-search-wrap">
+
+    <div class="c-search-group">
+
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "productCenter.appConfig.SMS.state" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 170px" [(ngModel)]="searchModel.status" [nzPlaceHolder]=' "productCenter.appConfig.SMS.prompt.state" | translate ' nzAllowClear>
+            <nz-option *ngFor="let option of 'productCenter.appConfig.SMS.status' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+            <!-- ""全部 true激活 false停用 -->
+          </nz-select>
+        </div>
+      </div>
+
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "productCenter.appConfig.SMS.theme" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" [(ngModel)]="searchModel.theme" [placeholder]="'productCenter.appConfig.SMS.prompt.theme' | translate" />
+        </div>
+      </div>
+
+    </div>
+
+    <div class="c-btn-group" style="margin-bottom: 20px">
+      <button nz-button  nzType="primary" (click) = 'search() '>
+        {{ "common.search" | translate}}
+      </button>
+      <button nz-button class="left" (click) = 'reset() '>
+        {{ "channel.btn.reset" | translate}}
+      </button>
+    </div>
+
+  </div>
+
+  <c-table [tableData] = 'tableData' style="margin-top: 20px">
+  </c-table>
+
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+      <span>
+        {{ "common.total" | translate }}
+      </span>
+      <span>
+        {{ totalSize }}
+      </span>
+      <span>
+        {{ "common.pageUnit" | translate }}
+      </span>
+    </ng-template>
+  </div>
+
+  <nz-modal
+    [(nzVisible)]="isVisible"
+    [nzTitle]='"productCenter.appConfig.SMS.edit" | translate'
+    [nzOkText]='"common.operate.save" | translate'
+    [nzCancelText]='"common.operate.cancel" | translate'
+    (nzOnOk)="handleOk()"
+    (nzOnCancel)="handleCancel()"
+    [nzOkLoading]="isOkLoading"
+    [nzWidth]="600"
+  >
+    <div class="formChannel">
+      <form nz-form [nzLayout]="'block'" [formGroup]="validForm">
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="4">
+            {{ "productCenter.appConfig.SMS.theme" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="19" [nzOffset]='1'>
+            <input
+              type="text"
+              nz-input
+              formControlName="theme"
+              readonly="readonly"
+            >
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="4" nzRequired nzFor="msgText">
+            {{ "productCenter.appConfig.SMS.content" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="19" [nzOffset]='1'>
+            <textarea
+              nz-input
+              formControlName="msgText"
+              id="msgText"
+              [placeholder] = '"productCenter.appConfig.SMS.prompt.content" | translate'
+              style="resize: none;height: 150px;"
+              maxlength="500"
+            >
+            </textarea>
+            <nz-form-explain *ngIf="validForm.get('msgText').dirty && validForm.get('msgText').errors">
+              <span>
+                {{ "productCenter.appConfig.SMS.content" | translate}}
+              </span>
+              <span>
+                {{ "common.validator.notEmpty" | translate }}
+              </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="4" nzRequired nzFor="status">
+            {{ "productCenter.appConfig.SMS.state" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="19" [nzOffset]='1'>
+            <nz-select formControlName="status" [nzPlaceHolder]=' "productCenter.appConfig.SMS.prompt.state" | translate '>
+              <nz-option *ngFor="let option of ('productCenter.appConfig.SMS.status' | translate).slice(1)" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+            </nz-select>
+            <nz-form-explain *ngIf="validForm.get('status').dirty && validForm.get('status').errors">
+              <span>
+                {{ "productCenter.appConfig.SMS.state" | translate}}
+              </span>
+              <span>
+                {{ "common.validator.notEmpty" | translate }}
+              </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+  </nz-modal>
+
+</div>

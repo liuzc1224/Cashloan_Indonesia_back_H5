@@ -1,0 +1,145 @@
+<div class="c-content-wrap">
+  <div class="half-block">
+    <div class="title">
+      {{ "productCenter.appConfig.calendar.name" | translate }}
+    </div>
+  </div>
+
+  
+
+  <div class="btn-father-margin">
+    <div class="c-btnGroup">
+      <button nz-button nzType="primary" (click) = 'calendarSettings() '>
+        {{ "productCenter.appConfig.calendar.edit" | translate }}
+      </button>
+      <div class="c-state">
+          {{ "productCenter.appConfig.calendar.state" | translate }}
+          ：
+          {{ ("productCenter.appConfig.calendar.status" | translate)[selectedValue] }}  <!-- 此数据需要后期动态绑定  [1]有效  [0]无效 -->
+      </div>
+    </div>
+  </div>
+
+  <nz-modal [(nzVisible)]="isVisible" [nzTitle]="'productCenter.appConfig.calendar.in-edit' | translate" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzOkText]="'productCenter.appConfig.calendar.sure' | translate"  [nzCancelText]="'productCenter.appConfig.calendar.cancel' | translate" nzMaskClosable="false">
+    <div>
+      *{{ "productCenter.appConfig.calendar.name" | translate }}：
+      <nz-select style="width: 250px;" [(ngModel)]="maybeSelectedValue" nzAllowClear="false">
+        <nz-option nzValue="1" [nzLabel]="('productCenter.appConfig.calendar.status' | translate)[1]"></nz-option>
+        <nz-option nzValue="0" [nzLabel]="('productCenter.appConfig.calendar.status' | translate)[0]"></nz-option>
+      </nz-select>
+    </div>
+    <div style="padding-left:80px">
+      <div>
+          {{ "productCenter.appConfig.calendar.tip2" | translate }}
+      </div>
+
+      <div class="intoCalendar"><!-- 这个div内放日历（内） --><!-- 内层日历绑定状态为：   有效状态maybeSelectedValue    年月witchMonth    某月每日状态maybeCalendar-->
+        <p style="margin-bottom:20px;">
+          <span (click)="intoPrev()">{{ "productCenter.appConfig.calendar.prevMonth" | translate }}</span> <!-- 《上一月 -->
+          <!-- <span class="showYear">{{ witchMonth.split("-")[0] }}</span> witchMonth年份 -->
+          <nz-select style="width: 120px;" [(ngModel)]="yy" (ngModelChange)="intoChange()">
+              <nz-option *ngFor="let item of yyRange" [nzValue]="item" [nzLabel]="item+('productCenter.appConfig.calendar.year' | translate)"></nz-option>
+              <!-- <nz-option nzValue="2020" [nzLabel]="2020+('productCenter.appConfig.calendar.year' | translate)"></nz-option>
+              <nz-option nzValue="2021" [nzLabel]="2021+('productCenter.appConfig.calendar.year' | translate)"></nz-option>
+              <nz-option nzValue="2022" [nzLabel]="2022+('productCenter.appConfig.calendar.year' | translate)"></nz-option>
+              <nz-option nzValue="2023" [nzLabel]="2023+('productCenter.appConfig.calendar.year' | translate)"></nz-option>
+              <nz-option nzValue="2024" [nzLabel]="2024+('productCenter.appConfig.calendar.year' | translate)"></nz-option>
+              <nz-option nzValue="2025" [nzLabel]="2025+('productCenter.appConfig.calendar.year' | translate)"></nz-option>
+              <nz-option nzValue="2026" [nzLabel]="2026+('productCenter.appConfig.calendar.year' | translate)"></nz-option>
+              <nz-option nzValue="2027" [nzLabel]="2027+('productCenter.appConfig.calendar.year' | translate)"></nz-option>
+              <nz-option nzValue="2028" [nzLabel]="2028+('productCenter.appConfig.calendar.year' | translate)"></nz-option>
+              <nz-option nzValue="2029" [nzLabel]="2029+('productCenter.appConfig.calendar.year' | translate)"></nz-option> -->
+            </nz-select>
+            <nz-select style="width: 120px;" [(ngModel)]="mm" (ngModelChange)="intoChange()">
+              <nz-option *ngFor="let item of mmRange" [nzValue]="item" [nzLabel]="item+('productCenter.appConfig.calendar.month' | translate)"></nz-option>
+              <!-- <nz-option nzValue="02" [nzLabel]="02+('productCenter.appConfig.calendar.month' | translate)"></nz-option>
+              <nz-option nzValue="03" [nzLabel]="03+('productCenter.appConfig.calendar.month' | translate)"></nz-option>
+              <nz-option nzValue="04" [nzLabel]="04+('productCenter.appConfig.calendar.month' | translate)"></nz-option>
+              <nz-option nzValue="05" [nzLabel]="05+('productCenter.appConfig.calendar.month' | translate)"></nz-option>
+              <nz-option nzValue="06" [nzLabel]="06+('productCenter.appConfig.calendar.month' | translate)"></nz-option>
+              <nz-option nzValue="07" [nzLabel]="07+('productCenter.appConfig.calendar.month' | translate)"></nz-option>
+              <nz-option nzValue="08" [nzLabel]="08+('productCenter.appConfig.calendar.month' | translate)"></nz-option>
+              <nz-option nzValue="09" [nzLabel]="09+('productCenter.appConfig.calendar.month' | translate)"></nz-option>
+              <nz-option nzValue="10" [nzLabel]="10+('productCenter.appConfig.calendar.month' | translate)"></nz-option>
+              <nz-option nzValue="11" [nzLabel]="11+('productCenter.appConfig.calendar.month' | translate)"></nz-option>
+              <nz-option nzValue="12" [nzLabel]="12+('productCenter.appConfig.calendar.month' | translate)"></nz-option> -->
+            </nz-select>
+
+          <span (click)="intoNext()">{{ "productCenter.appConfig.calendar.nextMonth" | translate }}</span> <!-- 下一月》 -->
+        </p> 
+        <!-- <div class="showMonth">{{ ("productCenter.appConfig.calendar.months" | translate)[witchMonth.split("-")[1]-1] }}</div> witchMonth月份 -->
+        <ul class="dayList"> 
+          <li>{{ ('productCenter.appConfig.calendar.days' | translate)[0] }}</li> 
+          <li>{{ ('productCenter.appConfig.calendar.days' | translate)[1] }}</li> 
+          <li>{{ ('productCenter.appConfig.calendar.days' | translate)[2] }}</li> 
+          <li>{{ ('productCenter.appConfig.calendar.days' | translate)[3] }}</li> 
+          <li>{{ ('productCenter.appConfig.calendar.days' | translate)[4] }}</li> 
+          <li>{{ ('productCenter.appConfig.calendar.days' | translate)[5] }}</li> 
+          <li>{{ ('productCenter.appConfig.calendar.days' | translate)[6] }}</li> 
+        </ul> 
+        <ul class="dateList">
+          <span [ngStyle]="{'display':'inline-block','height':'80px',width:witchMonthFirstDay*80+'px'}"></span><!-- 填补月初空位 -->
+          <li *ngFor="let item of maybeCalendar;let i=index;" [ngClass]="{restday:item['state']==1 ? true : false , istoday: item['time'] == nowDay ? true : false}" (click)="changeWorkingCondition(i,witchMonth,item['time'],item['state'])">{{item['time'].split("-")[2]}}</li><!-- 遍历具体日历每一天 -->
+        </ul> 
+      </div>
+
+    </div>
+  </nz-modal>
+
+  <div class="outCalendar"><!-- 这个div内放日历（外） --><!-- 外层日历绑定状态为：   有效状态selectedValue    年月witchMonth    某月每日状态readyCalendar-->
+    <p style="margin-bottom:20px;">
+      <span (click)="outPrev()">{{ "productCenter.appConfig.calendar.prevMonth" | translate }}</span> <!-- 《上一月 -->
+
+      <!-- <span class="showYear">{{ witchMonth.split("-")[0] }}</span> witchMonth年份 -->
+        <nz-select style="width: 120px;" [(ngModel)]="yy" (ngModelChange)="outChange()">
+          <nz-option *ngFor="let item of yyRange" [nzValue]="item" [nzLabel]="item+('productCenter.appConfig.calendar.year' | translate)"></nz-option>
+          <!-- <nz-option nzValue="2020" [nzLabel]="2020+('productCenter.appConfig.calendar.year' | translate)"></nz-option>
+          <nz-option nzValue="2021" [nzLabel]="2021+('productCenter.appConfig.calendar.year' | translate)"></nz-option>
+          <nz-option nzValue="2022" [nzLabel]="2022+('productCenter.appConfig.calendar.year' | translate)"></nz-option>
+          <nz-option nzValue="2023" [nzLabel]="2023+('productCenter.appConfig.calendar.year' | translate)"></nz-option>
+          <nz-option nzValue="2024" [nzLabel]="2024+('productCenter.appConfig.calendar.year' | translate)"></nz-option>
+          <nz-option nzValue="2025" [nzLabel]="2025+('productCenter.appConfig.calendar.year' | translate)"></nz-option>
+          <nz-option nzValue="2026" [nzLabel]="2026+('productCenter.appConfig.calendar.year' | translate)"></nz-option>
+          <nz-option nzValue="2027" [nzLabel]="2027+('productCenter.appConfig.calendar.year' | translate)"></nz-option>
+          <nz-option nzValue="2028" [nzLabel]="2028+('productCenter.appConfig.calendar.year' | translate)"></nz-option>
+          <nz-option nzValue="2029" [nzLabel]="2029+('productCenter.appConfig.calendar.year' | translate)"></nz-option> -->
+        </nz-select>
+        <nz-select style="width: 120px;" [(ngModel)]="mm" (ngModelChange)="outChange()">
+          <nz-option *ngFor="let item of mmRange" [nzValue]="item" [nzLabel]="item+('productCenter.appConfig.calendar.month' | translate)"></nz-option>
+          <!-- <nz-option nzValue="02" [nzLabel]="02+('productCenter.appConfig.calendar.month' | translate)"></nz-option>
+          <nz-option nzValue="03" [nzLabel]="03+('productCenter.appConfig.calendar.month' | translate)"></nz-option>
+          <nz-option nzValue="04" [nzLabel]="04+('productCenter.appConfig.calendar.month' | translate)"></nz-option>
+          <nz-option nzValue="05" [nzLabel]="05+('productCenter.appConfig.calendar.month' | translate)"></nz-option>
+          <nz-option nzValue="06" [nzLabel]="06+('productCenter.appConfig.calendar.month' | translate)"></nz-option>
+          <nz-option nzValue="07" [nzLabel]="07+('productCenter.appConfig.calendar.month' | translate)"></nz-option>
+          <nz-option nzValue="08" [nzLabel]="08+('productCenter.appConfig.calendar.month' | translate)"></nz-option>
+          <nz-option nzValue="09" [nzLabel]="09+('productCenter.appConfig.calendar.month' | translate)"></nz-option>
+          <nz-option nzValue="10" [nzLabel]="10+('productCenter.appConfig.calendar.month' | translate)"></nz-option>
+          <nz-option nzValue="11" [nzLabel]="11+('productCenter.appConfig.calendar.month' | translate)"></nz-option>
+          <nz-option nzValue="12" [nzLabel]="12+('productCenter.appConfig.calendar.month' | translate)"></nz-option> -->
+        </nz-select>
+
+      <span (click)="outNext()">{{ "productCenter.appConfig.calendar.nextMonth" | translate }}</span> <!-- 下一月》 -->
+    </p> 
+    <!-- <div class="showMonth">{{ ("productCenter.appConfig.calendar.months" | translate)[witchMonth.split("-")[1]-1] }} witchMonth月份 -->
+    <ul class="dayList"> 
+      <li>{{ ('productCenter.appConfig.calendar.days' | translate)[0] }}</li> 
+      <li>{{ ('productCenter.appConfig.calendar.days' | translate)[1] }}</li> 
+      <li>{{ ('productCenter.appConfig.calendar.days' | translate)[2] }}</li> 
+      <li>{{ ('productCenter.appConfig.calendar.days' | translate)[3] }}</li> 
+      <li>{{ ('productCenter.appConfig.calendar.days' | translate)[4] }}</li> 
+      <li>{{ ('productCenter.appConfig.calendar.days' | translate)[5] }}</li> 
+      <li>{{ ('productCenter.appConfig.calendar.days' | translate)[6] }}</li> 
+    </ul> 
+    <ul class="dateList">
+      <span [ngStyle]="{'display':'inline-block','height':'80px',width:witchMonthFirstDay*80+'px'}"></span><!-- 填补月初空位 -->
+      <li *ngFor="let item of readyCalendar" [ngClass]="{restday:item['state']==1?true:false , istoday:item['time']==nowDay?true:false}">{{item['time'].split("-")[2]}}</li><!-- 遍历具体日历每一天 -->
+    </ul> 
+  </div>
+  
+
+
+  <div>
+    {{ "productCenter.appConfig.calendar.tip1" | translate }}
+  </div>
+</div>

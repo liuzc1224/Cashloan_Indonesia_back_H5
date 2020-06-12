@@ -1,0 +1,161 @@
+<div class="c-content-wrap" style="margin-bottom: 30px">
+  <div class="coupon-setting">
+    <div class="c-item">
+      <div class="c-itemLeft">
+        <p>*{{ "coupon.list.table.couponName" | translate}} :</p>
+      </div>
+      <div class="c-itemRight">
+        <input nz-input type="text" required [(ngModel)] = 'settingModel.couponName' [placeholder] = '"coupon.inputContent" | translate' maxlength="10">
+        <span style="margin-left: 10px;">{{settingModel["couponName"]["length"]}}/10</span>
+      </div>
+    </div>
+    <div class="c-item">
+      <div class="c-itemLeft">
+        <p style="margin-top: -50px">*{{ "coupon.list.setting.description" | translate}} :</p>
+      </div>
+      <div class="c-itemRight">
+        <textarea nz-input [(ngModel)] = 'settingModel.couponDescription' [placeholder] = '"coupon.list.setting.description" | translate' autosize  maxlength="140" ></textarea>
+        <span style="margin-left: 10px;">{{settingModel["couponDescription"]['length']}}/140</span>
+      </div>
+    </div>
+
+    <div class="c-item">
+      <div class="c-itemLeft">
+        <p style="margin-top: -50px;">*{{ "coupon.list.table.effectiveTime" | translate}} :</p>
+      </div>
+      <div class="c-itemRight">
+        <p >
+          <nz-date-picker
+            [nzShowToday]="'false'"
+            [nzDisabledDate]="disabledStartDate"
+            [(ngModel)]="settingModel.effectiveDate"
+            [nzFormat]="'dd-MM-yyyy'"
+          ></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker
+            [nzShowToday]="'false'"
+            [nzDisabledDate]="disabledEndDate"
+            [(ngModel)]="settingModel.expDate"
+            [nzFormat]="'dd-MM-yyyy'"
+          ></nz-date-picker>
+        </p>
+        <label nz-checkbox [(ngModel)]="dayModel">
+        </label>
+        {{ "coupon.list.setting.collection" | translate }}
+        <input nz-input type="tel" style="text-align: center;width: 100px" [(ngModel)] = 'settingModel.expDays' onkeyup="settingModel.expDays=settingModel.expDays.replace(/[^0-9]/g,'');" >
+        <nz-select style="margin-left: 10px;width: 100px" [(ngModel)]="settingModel.dateType" [nzDisabled]="!dayModel">
+          <nz-option *ngFor="let option of timeType;let i=index" [nzLabel]="option" [nzValue]="i"></nz-option>
+        </nz-select>
+        {{"coupon.list.setting.effective" | translate }}
+
+      </div>
+    </div>
+    <div class="c-item">
+      <div class="c-itemLeft">
+        <p>*{{ "coupon.list.table.receiveType" | translate}} :</p>
+      </div>
+      <div class="c-itemRight">
+        <nz-select  class="width" [(ngModel)]="settingModel.obtainType" [nzPlaceHolder] = '"coupon.list.prompt.receiveType" | translate'>
+          <nz-option *ngFor="let option of receive" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+        </nz-select>
+      </div>
+    </div>
+    <div class="c-item">
+      <div class="c-itemLeft">
+        <p>*{{ "coupon.list.setting.activityCrowd" | translate}} :</p>
+      </div>
+      <div class="c-itemRight">
+        <nz-select [(ngModel)]="settingModel.couponPeoples"  [nzPlaceHolder] = '"coupon.list.prompt.selectCrowd" | translate' >
+          <nz-option *ngFor="let option of crowd;let i = index" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+        </nz-select>
+      </div>
+
+    </div>
+
+    <div class="c-item">
+      <div class="c-itemLeft">
+        <p>*{{ "coupon.list.table.offerType" | translate}} :</p>
+      </div>
+      <div class="c-itemRight">
+        <nz-select  class="width" [(ngModel)]="settingModel.couponType" [nzPlaceHolder] = '"coupon.list.prompt.offerType" | translate' (nzOpenChange)="setCouponType()">
+          <nz-option *ngFor="let option of offer;let i = index" [nzLabel]="option" [nzValue]="i+1"></nz-option>
+        </nz-select>
+      </div>
+    </div>
+    <div *ngIf="settingModel.couponType" class="c-item">
+      <div class="c-itemLeft" [ngStyle]="{'margin-top':offerValue==offer[1] ? '-40px' : '-40px'}">
+        <p style="width: 100px;margin-left: -35px;">*{{ "coupon.list.setting.preferentialConditions" | translate}} :</p>
+      </div>
+      <div class="c-itemRight" style="margin-left: 20px">
+        <nz-radio-group [(ngModel)] = 'Model'>
+          <label nz-radio [nzValue]="0">
+            <span >
+              {{ "coupon.list.setting.loan" | translate }}
+              <input nz-input type="tel" style="text-align: center;width: 100px" [(ngModel)] = 'settingModel.couponCondition' (keyup)="test('couponCondition')">
+              <span style="margin-left: 10px" *ngIf="settingModel.couponType==1">{{ "common.unit" | translate }}，{{"coupon.list.setting.interestReduction" | translate }}</span>
+              <span style="margin-left: 10px" *ngIf="settingModel.couponType==2">{{ "common.unit" | translate }}，{{"coupon.list.offertips.interestReduction" | translate }}</span>
+              <span style="margin-left: 10px" *ngIf="settingModel.couponType==3">{{ "common.unit" | translate }}，</span>
+              <input *ngIf="settingModel.couponType==1 || settingModel.couponType==3" nz-input type="tel" style="text-align: center;margin-left: 10px;width: 100px" [(ngModel)] = 'Value' (keyup)="test1('Value')" >
+              <input *ngIf="settingModel.couponType==2" nz-input type="text" style="text-align: center;margin-left: 10px;width: 100px" [(ngModel)] = 'Value' (keyup)="test2('Value')" >
+              <span *ngIf="settingModel.couponType==1" style="margin-left: 10px">{{ "common.unit" | translate }}</span>
+              <span *ngIf="settingModel.couponType==2" style="margin-left: 10px">%</span>
+              <span *ngIf="settingModel.couponType==3" style="margin-left: 10px">{{ "coupon.list.offertips.dayFree" | translate }}</span>
+            </span>
+          </label>
+          <label nz-radio [nzValue]="1" style="margin-top: 20px" >
+            <span >
+             {{ "coupon.list.setting.nothreshold" | translate }}，
+              <span *ngIf="settingModel.couponType==1">{{"coupon.list.setting.interestReduction" | translate }}</span>
+              <span style="margin-left: 10px" *ngIf="settingModel.couponType==2">{{"coupon.list.offertips.interestReduction" | translate }}</span>
+              <input *ngIf="settingModel.couponType==1 || settingModel.couponType==3" nz-input type="tel" style="text-align: center;margin-left: 10px;width: 100px" [(ngModel)] = 'Val' (keyup)="test1('Val')" >
+              <input *ngIf="settingModel.couponType==2" nz-input type="text" style="text-align: center;margin-left: 10px;width: 100px" [(ngModel)] = 'Val' (keyup)="test2('Val')" >
+              <span  *ngIf="settingModel.couponType==1" style="margin-left: 10px">{{ "common.unit" | translate }}</span>
+              <span *ngIf="settingModel.couponType==2" style="margin-left: 10px">%</span>
+              <span *ngIf="settingModel.couponType==3" style="margin-left: 10px">{{ "coupon.list.offertips.dayFree" | translate }}</span>
+            </span>
+          </label>
+        </nz-radio-group>
+      </div>
+    </div>
+
+
+
+
+
+
+
+    <div class="c-item">
+      <div class="c-itemLeft">
+        <p>*{{ "coupon.list.table.circulation" | translate}} :</p>
+      </div>
+      <div class="c-itemRight">
+        <input nz-input class="textCenter couponCirculation" style="width: 80px" type="tel" required [(ngModel)] = 'settingModel.couponCirculation ' maxlength="8" (keyup)="test('couponCirculation')">
+        <span style="margin-left: 10px">{{ "coupon.list.setting.zhang" | translate}}</span>
+      </div>
+    </div>
+    <div class="c-item">
+      <div class="c-itemLeft">
+        <p>*{{ "coupon.list.setting.limitedPerPerson" | translate}} :</p>
+      </div>
+      <div class="c-itemRight">
+        <nz-select  class="width" [(ngModel)]="settingModel.couponLimit" style="width: 80px">
+          <nz-option *ngFor="let option of quantity" [nzLabel]="option" [nzValue]="option"></nz-option>
+        </nz-select>
+        <span style="margin-left: 10px">{{ "coupon.list.setting.zhang" | translate}}</span>
+      </div>
+    </div>
+
+
+    <div class="btn">
+      <div style="position: relative;float: right">
+        <button nz-button (click) = 'cancel() ' class="left" style="margin-right: 30px">
+          <p>{{ "common.operate.cancel" | translate}}</p>
+        </button>
+        <button nz-button (click) = 'setting() ' nzType="primary" class="left">
+          <p>{{ "common.setting" | translate}}</p>
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

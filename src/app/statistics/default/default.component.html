@@ -1,0 +1,144 @@
+<div class="dataCountWrap">
+  <div class="c-title">
+    {{ "default.history" | translate }}
+    <span *ngIf="hisData"> - {{ hisData.dataOfDay | dateFormat }} </span>
+  </div>
+  <div class="infoContent c-flex-row-start c-flex-auto-wrap" *ngIf="hisData">
+    <!-- 注册用户数 -->
+    <div class="dataSection">
+      <span> {{ "default.cols.his.registerUserCount" | translate }} </span>
+      <span> {{ hisData.registerUserCount }} </span>
+    </div>
+
+    <!-- 借款申请笔数 -->
+    <div class="dataSection">
+      <span> {{ "default.cols.his.borrowUserCount" | translate }} </span>
+      <span> {{ hisData.borrowUserCount }} </span>
+    </div>
+
+    <!-- 系统直放笔数 -->
+    <div class="dataSection">
+      <span> {{ "default.cols.his.systemAuditPassCount" | translate }} </span>
+      <span> {{ hisData.systemAuditPassCount }} </span>
+    </div>
+
+    <!-- 人工审核通过笔数 -->
+    <div class="dataSection">
+      <span>
+        {{ "default.cols.his.artificialAuditPassCount" | translate }}
+      </span>
+      <span> {{ hisData.artificialAuditPassCount }} </span>
+    </div>
+
+    <!-- 审核通过总笔数 -->
+    <div class="dataSection">
+      <span> {{ "default.cols.his.auditPassCount" | translate }} </span>
+      <span> {{ hisData.auditPassCount }} </span>
+    </div>
+
+    <!-- 审核通过总额 -->
+    <div class="dataSection">
+      <span> {{ "default.cols.his.auditTotalAmount" | translate }} </span>
+      <span> {{ hisData.auditTotalAmount }} </span>
+    </div>
+
+    <!-- 提现笔数 -->
+    <div class="dataSection">
+      <span> {{ "default.cols.his.withdrawDepositCount" | translate }} </span>
+      <span> {{ hisData.withdrawDepositCount }} </span>
+    </div>
+
+    <!-- 提现总额 -->
+    <div class="dataSection">
+      <span> {{ "default.cols.his.withdrawDepositAmount" | translate }} </span>
+      <span> {{ hisData.withdrawDepositAmount }} </span>
+    </div>
+
+    <!-- 放款总额 -->
+    <div class="dataSection">
+      <span> {{ "default.cols.his.payAmount" | translate }} </span>
+      <span> {{ hisData.payAmount }} </span>
+    </div>
+
+    <!-- 应还款总额 -->
+    <div class="dataSection">
+      <span> {{ "default.cols.his.planRepayAmount" | translate }} </span>
+      <span> {{ hisData.planRepayAmount }} </span>
+    </div>
+
+    <!-- 已还款总额 -->
+    <div class="dataSection">
+      <span> {{ "default.cols.his.repayAmount" | translate }} </span>
+      <span> {{ hisData.repayAmount }} </span>
+    </div>
+
+    <!-- 未偿还总额 -->
+    <div class="dataSection">
+      <span> {{ "default.cols.his.unRepayAmount" | translate }} </span>
+      <span> {{ hisData.unRepayAmount }} </span>
+    </div>
+
+    <!-- 逾期总额 -->
+    <div class="dataSection">
+      <span> {{ "default.cols.his.dueAmount" | translate }} </span>
+      <span> {{ hisData.dueAmount }} </span>
+    </div>
+  </div>
+
+  <div class="c-title">
+    {{ "default.today" | translate }}
+    <button
+      style="margin-left:20px;"
+      nz-button
+      nzType="primary"
+      (click)="refresh()"
+      [nzLoading]="isLoadingOne"
+    >
+      Refresh
+    </button>
+  </div>
+  <div class="infoContent c-flex-row-start c-flex-auto-wrap" *ngIf="toDayData">
+    <!-- 注册用户数 -->
+    <div class="dataSection">
+      <span> {{ "default.cols.today.registerUserCount" | translate }} </span>
+      <span> {{ toDayData.registerUserCount }} </span>
+    </div>
+
+    <!-- 借款申请笔数 -->
+    <div class="dataSection">
+      <span> {{ "default.cols.today.borrowUserCount" | translate }} </span>
+      <span> {{ toDayData.borrowUserCount }} </span>
+    </div>
+
+    <!-- 系统直放笔数 -->
+    <div class="dataSection">
+      <span> {{ "default.cols.today.systemAuditPassCount" | translate }} </span>
+      <span> {{ toDayData.systemAuditPassCount }} </span>
+    </div>
+
+    <!-- 人工审核通过数 -->
+    <div class="dataSection">
+      <span>
+        {{ "default.cols.today.artificialAuditPassCount" | translate }}
+      </span>
+      <span> {{ toDayData.artificialAuditPassCount }} </span>
+    </div>
+
+    <!-- 审核通过总笔数 -->
+    <div class="dataSection">
+      <span> {{ "default.cols.today.auditPassCount" | translate }} </span>
+      <span> {{ toDayData.auditPassCount }} </span>
+    </div>
+
+    <!-- 放款总额 -->
+    <div class="dataSection">
+      <span> {{ "default.cols.today.payAmount" | translate }} </span>
+      <span> {{ toDayData.payAmount }} </span>
+    </div>
+  </div>
+
+  <div class="c-title">{{ "default.seven" | translate }}</div>
+  <div class="infoContent">
+    <div id="chart_fitst" style="height: 300px"></div>
+  </div>
+</div>

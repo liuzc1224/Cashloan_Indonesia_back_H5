@@ -1,0 +1,71 @@
+<div class="c-content-wrap">
+  <div class="c-search-wrap">
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "channelData.startDate" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-range-picker [(ngModel)]="searchModel.rangeDate"></nz-range-picker>
+          <!-- <nz-date-picker [(ngModel)]="searchModel.start" [nzPlaceHolder] = '"reportModule.financialdata.prompt" | translate' ></nz-date-picker> -->
+        </div>
+      </div>
+      <div class="c-search-item">
+          <div class="c-search-itemLeft">
+            {{ "channelData.table.packageName" | translate}}:
+          </div>
+          <div class="c-search-itemRight">
+            <nz-select style="width: 300px;" [(ngModel)]="searchModel.packageName" nzAllowClear [nzPlaceHolder]="'channelData.prompt.packageName' | translate" (nzOpenChange)="getPackageName()">
+              <nz-option *ngFor="let item of pagename" [nzValue]="item" [nzLabel]="item"></nz-option>
+            </nz-select>
+            <!-- <input nz-input [(ngModel)]="searchModel.packageName" [placeholder] = '"channelData.prompt.packageName" | translate'> -->
+          </div>
+        </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "channelData.table.channelName" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input [(ngModel)] ='searchModel.name' [placeholder] = '"channelData.prompt.channelName" | translate'>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "channelData.table.channelID" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="number" [(ngModel)]="searchModel.id" [placeholder] = '"channelData.prompt.channelID" | translate'>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-btnGroup">
+      <button nz-button nzType="primary" (click)='search() '>
+        {{ "common.search" | translate}}
+      </button>
+      <button style="margin-left: 20px;" nz-button (click)='reset() '>
+        {{ "common.reset" | translate}}
+      </button>
+      <button style="margin-left: 20px;" nz-button [disabled]="totalSize===0" (click)='downloadH5PageNameList() '>
+        {{ "common.ex" | translate}}
+      </button>
+    </div>
+  </div>
+  <c-table [tableData] = 'tableData' style="margin-top: 20px">
+  </c-table>
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+      <span>
+          {{ "common.total" | translate }}
+      </span>
+      <span>
+          {{ totalSize }}
+      </span>
+      <span>
+          {{ "common.pageUnit" | translate }}
+      </span>
+    </ng-template>
+  </div>
+</div>

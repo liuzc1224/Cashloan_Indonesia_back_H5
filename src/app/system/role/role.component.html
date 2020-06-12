@@ -1,0 +1,194 @@
+<div class="c-content-wrap">
+  <button
+    nz-button
+    nzType="primary"
+    class="c-btn-width c-no-radius"
+    (click)="addNewRole()"
+  >
+    {{ "systemModule.role.add" | translate }}
+  </button>
+  <c-table [tableData]="tableData"> </c-table>
+  <div class="c-pag">
+    <nz-pagination
+      [nzShowTotal]="totalTemplate"
+      (nzPageIndexChange)="pageChange($event, 'page')"
+      (nzPageSizeChange)="pageChange($event, 'size')"
+      [nzPageIndex]="searchModel.pageNumber"
+      [nzTotal]="totalSize"
+      nzShowSizeChanger
+      nzShowQuickJumper
+    ></nz-pagination>
+    <ng-template #totalTemplate let-total>
+      <span> {{ "common.total" | translate }} </span>
+      <span> {{ totalSize }} </span>
+      <span> {{ "common.pageUnit" | translate }} </span>
+    </ng-template>
+  </div>
+</div>
+
+<nz-modal
+  [(nzVisible)]="infoBoxShow"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="infoBoxShow = false; firstStep = true"
+>
+  <ng-template #modalTitle>
+    <span *ngIf="!editMark"> {{ "systemModule.role.add" | translate }} </span>
+    <span *ngIf="editMark"> {{ "systemModule.role.edit" | translate }} </span>
+  </ng-template>
+
+  <ng-template #modalContent>
+    <form
+      *ngIf="firstStep"
+      nz-form
+      [nzLayout]="'inline'"
+      [formGroup]="validateForm"
+    >
+      <nz-form-item class="c-formSec">
+        <nz-form-label [nzSm]="11" nzRequired nzFor="name">
+          {{ "systemModule.role.table.roleName" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="12" [nzOffset]="1">
+          <input nz-input maxlength="50" formControlName="name" id="name" />
+          <nz-form-explain
+            *ngIf="
+              validateForm.get('name').dirty && validateForm.get('name').errors
+            "
+          >
+            <span> {{ "systemModule.role.table.roleName" | translate }} </span>
+            <span> {{ "common.validator.notEmpty" | translate }} </span>
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item class="c-formSec">
+        <nz-form-label [nzSm]="11" nzFor="description">
+          {{ "systemModule.role.table.remark" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="12" [nzOffset]="1">
+          <input nz-input formControlName="description" id="description" />
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+    <nz-tree
+      *ngIf="firstStep"
+      [(ngModel)]="menuTree"
+      [nzDefaultExpandAll]="true"
+      [nzMultiple]="true"
+      (nzClick)="mouseAction($event)"
+    >
+    </nz-tree>
+    <!-- 第二步 -->
+    <div *ngIf="!firstStep">
+      <ul>
+        <li *ngFor="let item of roleButtonData; let i = index">
+          {{ item.name }} :
+          <nz-checkbox-group
+            [(ngModel)]="item.buttonList"
+            (ngModelChange)="log(item)"
+          ></nz-checkbox-group>
+        </li>
+      </ul>
+    </div>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      nzType="primary"
+      *ngIf="firstStep"
+      [disabled]="!validateForm.valid"
+      (click)="next()"
+    >
+      {{ "common.operate.next" | translate }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      *ngIf="!editMark && !firstStep"
+      [disabled]="!validateForm.valid"
+      (click)="makeNew()"
+    >
+      {{ "common.operate.sure" | translate }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      *ngIf="editMark && !firstStep"
+      [disabled]="!validateForm.valid"
+      (click)="save()"
+    >
+      {{ "common.operate.save" | translate }}
+    </button>
+    <button
+      nz-button
+      nzType="default"
+      (click)="infoBoxShow = false; firstStep = true"
+    >
+      {{ "common.operate.close" | translate }}
+    </button>
+  </ng-template>
+</nz-modal>
+
+<nz-modal
+  [(nzVisible)]="refuseModel"
+  [nzTitle]="refuseTitle"
+  [nzContent]="refuseContent"
+  [nzFooter]="refuseFotter"
+  (nzOnCancel)="refuseModel = false"
+>
+  <ng-template #refuseTitle>
+    {{ "common.deleteToast.title" | translate }}
+  </ng-template>
+
+  <ng-template #refuseContent>
+    <div class="c-flexStart">
+      <i class="anticon anticon-info-circle-o c-warnInfo"></i>
+      <div>
+        <h4>{{ "common.deleteToast.title" | translate }}</h4>
+        <p>{{ "common.deleteToast.tip" | translate }}</p>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #refuseFotter>
+    <button nz-button nzType="default" (click)="refuseModel = false">
+      {{ "common.operate.cancel" | translate }}
+    </button>
+    <button nz-button nzType="primary" (click)="delete()">
+      {{ "common.operate.delete" | translate }}
+    </button>
+  </ng-template>
+</nz-modal>
+
+<nz-modal
+  [(nzVisible)]="refuseModel"
+  [nzTitle]="refuseTitle"
+  [nzContent]="refuseContent"
+  [nzFooter]="refuseFotter"
+  (nzOnCancel)="refuseModel = false"
+>
+  <ng-template #refuseTitle>
+    {{ "common.deleteToast.title" | translate }}
+  </ng-template>
+
+  <ng-template #refuseContent>
+    <div class="c-flexStart">
+      <i class="anticon anticon-info-circle-o c-warnInfo"></i>
+      <div>
+        <h4>{{ "common.deleteToast.title" | translate }}</h4>
+        <p>{{ "common.deleteToast.tip" | translate }}</p>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #refuseFotter>
+    <button nz-button nzType="default" (click)="refuseModel = false">
+      {{ "common.operate.cancel" | translate }}
+    </button>
+    <button nz-button nzType="primary" (click)="delete()">
+      {{ "common.operate.delete" | translate }}
+    </button>
+  </ng-template>
+</nz-modal>

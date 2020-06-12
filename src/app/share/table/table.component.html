@@ -1,0 +1,286 @@
+<nz-spin [nzSpinning]="tableData && tableData.loading" [nzDelay]="100">
+  <div class="tableWrap">
+    <div class="scrollWrap" *ngIf="tableData">
+      <table class="app-table">
+        <thead>
+          <tr class="t-head">
+            <!-- <th *ngIf = 'tableData.showIndex'>序号</th> -->
+            <th
+              *ngFor="let item of tableData.tableTitle; let idx = index"
+              style="position:relative;"
+            >
+              <div *ngIf="!item.sort && item.type != 'checkbox'">{{ item.name }}</div>
+              <div *ngIf="item.type == 'checkbox'">
+                <label
+                  nz-checkbox
+                  [(ngModel)]="item.check"
+                  (ngModelChange)="item.checkAll(item.check)"
+                ></label>
+              </div>
+              <div
+                *ngIf="item.sort"
+                (click)="setUp(item.sortFn, idx, item)"
+                style="cursor: pointer;user-select: none;"
+              >
+                <div class="c-flex-row-center" style="position: relative;">
+                  <span>{{ item.name }}</span>
+                  <div class="item_ico">
+                    <i
+                      [ngClass]="{ active: sortObj[idx] == 'top' }"
+                      class="anticon anticon-caret-up"
+                    ></i>
+                    <i
+                      [ngClass]="{ active: sortObj[idx] == 'bottom' }"
+                      class="anticon anticon-caret-down"
+                    ></i>
+                  </div>
+                </div>
+              </div>
+            </th>
+            <th
+              *ngIf="tableData.btnGroup && tableData.btnGroup.title"
+              style="width:150px"
+            >
+              {{ tableData.btnGroup.title }}
+            </th>
+          </tr>
+        </thead>
+        
+        <tbody style="font-size: 12px;">
+          <tr
+            *ngFor="let data of tableData.data; let idx_2 = index"
+            class="t-body-tr"
+          >
+            <!-- <td *ngIf = 'tableData.showIndex'> -->
+            <!-- {{ idx_2 + 1 }}
+						</td> -->
+            <td
+              *ngFor="let item of tableData.tableTitle; let idx = index"
+              [ngClass]="{ fixedWidth: item.type == 'switch' }"
+              [ngStyle]="{ 'width': item.type == 'text' ? item.width : null }"
+            >
+              <div *ngIf="item.type == 'text'" [ngStyle]="{ 'width': item.type == 'text' ? item.width : null }">
+                <div
+                  *ngIf="item.filter"
+                  (click)="item.fn && item.fn(data)"
+                  [ngClass]="{ wordBreak: item.width }"
+                  [ngStyle]="{
+                  color: item.textData && item.textColor ? (data[item.textData] ? item.textColor[data[item.textData]] : '#80accf') :
+                  (item.color ? item.color : '#333'),'width': item.type == 'text' ? item.width : null }"
+                >
+                  <div *ngIf="item.innerHTML" [innerHTML]="item.filter(data)"></div>
+                  <div *ngIf="!item.innerHTML">{{item.filter(data)}}</div>
+                </div>
+                <div
+                  *ngIf="!item.filter"
+                  (click)="item.fn && item.fn(data)"
+                  [ngClass]="{ wordBreak: item.width }"
+                  [ngStyle]="{
+                  color: item.textData && item.textColor ? (data[item.textData] ? item.textColor[data[item.textData]] : '#80accf') :
+
+                  (item.color ? item.color : '#333'),'width': item.type == 'text' ? item.width : null }"
+                >
+                  <div *ngIf="item.innerHTML" [innerHTML]="data[item.reflect]"></div>
+                  <div *ngIf="!item.innerHTML">{{data[item.reflect]}}</div>
+                  <!-- 渲染列表数据 -->
+                </div>
+              </div>
+
+              <span *ngIf="item.type == 'date'">
+                <span
+                  *ngIf="item.filter"
+                  (click)="item.fn && item.fn(data)"
+                  [ngStyle]="{ color: item.color ? item.color : '#333' }"
+                >
+                  {{ item.filter(data) | dateFormat }}
+                </span>
+                <span
+                  *ngIf="!item.filter"
+                  (click)="item.fn && item.fn(data)"
+                  [ngStyle]="{ color: item.color ? item.color : '#333' }"
+                >
+                  {{ data[item.reflect] | dateFormat }}
+                </span>
+              </span>
+
+              <div *ngIf="item.type == 'button'">
+                <span (click)="item.fn(data)">
+                  <span *ngIf="item.filter" [innerHtml]="item.filter(data)">
+                  </span>
+                  <span *ngIf="!item.filter" [innerHtml]="item.name"> </span>
+                </span>
+              </div>
+
+              <div *ngIf="item.type == 'mark'">
+                <span *ngIf="!item.filter">
+                  <nz-tag
+                    [nzColor]="
+                      item.markColor && item.markColor[data[item.reflect]]
+                        ? item.markColor[data[item.reflect]]
+                        : '#108ee9'
+                    "
+                  >
+                    {{ data[item.reflect] }}
+                  </nz-tag>
+                </span>
+                <span *ngIf="item.filter">
+                  <nz-tag
+                    [nzColor]="
+                      item.markColor && item.markColor[data[item.reflect]]
+                        ? item.markColor[data[item.reflect]]
+                        : '#108ee9'
+                    "
+                  >
+                    {{ item.filter(data) }}
+                  </nz-tag>
+                </span>
+              </div>
+
+              <div *ngIf="item.type == 'select'" class="c-flex-row-center">
+                <div
+                  *ngFor="let selectData of item.data; let statusIdx = index"
+                >
+                  <div *ngIf="data.status == selectData.status">
+                    <nz-select
+                      nzPlaceHolder="请选择"
+                      [ngModel]="item.data2"
+                      style="width: 80px;"
+                      (ngModelChange)="item.fn($event, data, item)"
+                    >
+                      <nz-option
+                        *ngFor="
+                          let option of selectData.oper;
+                          let selectIdx = index
+                        "
+                        [nzLabel]="option.name"
+                        [nzValue]="statusIdx + ',' + selectIdx"
+                        [nzDisabled]="option.disabled"
+                      >
+                      </nz-option>
+                    </nz-select>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="item.type == 'selectArr'" class="c-flex-row-center">
+                <nz-select
+                  nzPlaceHolder="请选择"
+                  nzAllowClear
+                  [ngModel]="item.data2"
+                  style="width: 80px;"
+                  (ngModelChange)="item.fn($event, data, item)"
+                >
+                  <nz-option
+                    *ngFor="let option of item.data"
+                    [nzLabel]="option"
+                    [nzValue]="option"
+                  >
+                  </nz-option>
+                </nz-select>
+              </div>
+              <div *ngIf="item.type == 'checkbox'" style="padding: 0 10px;">
+                <label
+                  nz-checkbox
+                  [(ngModel)]="data.isSelect"
+                  [nzDisabled]="data.disabled"
+                  (ngModelChange)="item.fn(data)"
+                ></label>
+              </div>
+
+              <div *ngIf="item.type == 'line'" class="c-flex-column-center">
+                <span class="c-flex-column-center" style="height:30px;">
+                  <span
+                    *ngIf="item.filter && item.filter.top"
+                    (click)="item.fn && item.fn(data)"
+                    [ngStyle]="{ color: item.color ? item.color : '#333' }"
+                  >
+                    {{ item.filter.top(data) }}
+                  </span>
+                  <span
+                    *ngIf="!item.filter || !item.filter.top"
+                    (click)="item.fn && item.fn(data)"
+                    [ngStyle]="{ color: item.color ? item.color : '#333' }"
+                  >
+                    {{ data[item.reflect.top] | nullPipe }}
+                  </span>
+                </span>
+                <span class="c-flex-column-center" style="height:30px;">
+                  <span
+                    *ngIf="item.filter && item.filter.bottom"
+                    (click)="item.fn && item.fn(data)"
+                    [ngStyle]="{ color: item.color ? item.color : '#333' }"
+                  >
+                    {{ item.filter.bottom(data) }}
+                  </span>
+                  <span
+                    *ngIf="!item.filter || !item.filter.bottom"
+                    (click)="item.fn && item.fn(data)"
+                    [ngStyle]="{ color: item.color ? item.color : '#333' }"
+                  >
+                    {{ data[item.reflect.bottom] | nullPipe }}
+                  </span>
+                </span>
+              </div>
+              <div *ngIf="item.type == 'switch'" class="c-flex-column-center">
+                <nz-switch
+                  [ngModel]="item.filter(data)['checked']"
+                  (click)="item.fn && item.fn(data)"
+                ></nz-switch>
+              </div>
+              <div *ngIf="item.type == 'audio'" class="c-flex-column-center" style="padding-bottom: 10px;padding-top: 10px">
+                <audio
+                  controlsList="download"
+                  controls="controls"
+                  [src]="data[item.reflect]">
+                </audio>
+              </div>
+              <div *ngIf="item.type == 'img'" class="c-flex-column-center">
+                <img
+                  [src]="data[item.reflect]"
+                  class="c-img-res c-img-cover"
+                  alt=""
+                />
+              </div>
+            </td>
+            <td
+              *ngIf="tableData.btnGroup && tableData.btnGroup.title"
+              class="c-flex-row-center operWrap"
+              style="width:230px"
+            >
+              <div
+                *ngFor="let btn of tableData.btnGroup.data"
+                class="btnOper"
+                [style.color]="btn.textColor"
+              >
+                <div
+                  (click)="btn.bindFn(data)"
+                  *ngIf="
+                    btn.showContion && (btn.showContion.only==='only') && data[btn.showContion.name]
+                  "
+                >
+                  <i [class]="btn.ico" style="margin-right: 5px;"></i>
+                  <span>{{ btn.name }}</span>
+                </div>
+                <div
+                  (click)="btn.bindFn(data)"
+                  *ngIf="
+                    btn.showContion && (btn.showContion.only!=='only') && 
+                    btn.showContion.value.indexOf(data[btn.showContion.name]) >
+                      -1 || (btn.showContion && btn.showContion.value.length===1 && (btn.showContion.only!=='only') && btn.showContion.value[0][0]==='!' ? (!(btn.showContion.value[0].substring(1)===(data[btn.showContion.name]).toString())) :false)
+                  "
+                >
+                  <i [class]="btn.ico" style="margin-right: 5px;"></i>
+                  <span>{{ btn.name }}</span>
+                </div>
+                <div (click)="btn.bindFn(data)" *ngIf="!btn.showContion">
+                  <i [class]="btn.ico" style="margin-right: 5px;"></i>
+                  <span>{{ btn.name }}</span>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</nz-spin>

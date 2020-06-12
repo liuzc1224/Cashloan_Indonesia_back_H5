@@ -1,0 +1,102 @@
+<div class="c-content-wrap">
+  <div class="c-search-wrap">
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "riskReport.record.checkInTime" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-date-picker [(ngModel)]="searchModel.signInBeginDate"></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker [(ngModel)]="searchModel.signInEndDate"></nz-date-picker>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "riskReport.record.reviewStage" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 150px" [(ngModel)]="searchModel.stageId" [nzPlaceHolder]=' "riskReport.record.prompt.reviewStage" | translate '>
+            <nz-option *ngFor="let option of allStage" [nzLabel]="option['flowName']" [nzValue]="option['id']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "riskReport.record.company" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 150px" [(ngModel)]="searchModel.firmId" [nzPlaceHolder]='"riskReport.record.prompt.company" | translate '>
+            <nz-option *ngFor="let option of allOverdueFirm" [nzLabel]="option['firmName']" [nzValue]="option['id']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "riskReport.record.group" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-tree-select
+            [nzDropdownStyle]="{'maxHeight':'500px'}"
+            style="width: 200px"
+            [nzDefaultExpandAll]="true"
+            [nzNodes]="NzTreeNode"
+            [nzPlaceHolder]='"riskReport.record.prompt.group" | translate '
+            [(ngModel)]="searchModel.groupId"
+          >
+          </nz-tree-select>
+        </div>
+      </div>
+
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "riskReport.record.account" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" [(ngModel)]="searchModel.riskEmployeeAccount" [placeholder]='"riskReport.record.prompt.account" | translate' />
+        </div>
+      </div>
+
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "riskReport.record.name" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" [(ngModel)]="searchModel.riskEmployeeName" [placeholder]='"riskReport.record.prompt.name" | translate' />
+        </div>
+      </div>
+      
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <button nz-button nzType="primary"  (click) = 'search() '>
+          {{ "common.search" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button (click) = 'reset()'>
+          {{ "common.reset" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button [disabled]="totalSize===0" (click) = 'exportRecord()'>
+          {{ "common.ex" | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+  <c-table [tableData] = 'tableData'>
+  </c-table>
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+      <span>
+      {{ "common.total" | translate }}
+      </span>
+      <span>
+      {{ totalSize }}
+      </span>
+      <span>
+      {{ "common.pageUnit" | translate }}
+      </span>
+    </ng-template>
+  </div>
+</div>

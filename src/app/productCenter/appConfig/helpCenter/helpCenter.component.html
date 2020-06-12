@@ -1,0 +1,177 @@
+<div class="c-content-wrap" style="margin-bottom: 30px">
+
+    <div class="title">
+      {{ "productCenter.appConfig.helpCenter.title" | translate }}
+      <button nz-button nzType="primary" (click) = 'add()' class="addbtn">
+        {{ "productCenter.appConfig.helpCenter.add" | translate }}
+      </button>
+    </div>
+
+    <div class="c-search-wrap">
+      <div class="c-search-group">
+        <div class="c-search-item">
+          <div class="c-search-itemLeft">
+            {{ "productCenter.appConfig.helpCenter.problem" | translate}}:
+          </div>
+          <div class="c-search-itemRight">
+            <input nz-input type="text" [(ngModel)]="searchModel.title" [placeholder]="'productCenter.appConfig.helpCenter.pleaseInput' | translate" />
+          </div>
+        </div>
+        <div class="c-search-item">
+          <div class="c-search-itemLeft">
+            {{ "productCenter.appConfig.helpCenter.status" | translate}}:
+          </div>
+          <div class="c-search-itemRight">
+            <nz-select style="width: 170px" [(ngModel)]="selectState" nzAllowClear="false">
+              <nz-option [nzLabel]="'productCenter.appConfig.helpCenter.all' | translate" nzValue=""></nz-option>
+              <nz-option [nzLabel]="'productCenter.appConfig.helpCenter.display' | translate" nzValue="1"></nz-option>
+              <nz-option [nzLabel]="'productCenter.appConfig.helpCenter.hiding' | translate" nzValue="0"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+      </div>
+      <div class="c-btn-group" style="margin-bottom: 20px">
+        <button nz-button  nzType="primary" (click) = 'search() '>
+          {{ "productCenter.appConfig.helpCenter.search" | translate}}
+        </button>
+        <button nz-button class="left" (click) = 'reset() '>
+          {{ "productCenter.appConfig.helpCenter.reset" | translate}}
+        </button>
+      </div>
+    </div>
+  
+
+  <c-table [tableData] = 'tableData'>
+  </c-table>
+
+  <div class="c-pag">
+    <nz-pagination
+      [nzShowTotal]="totalTemplate"
+      (nzPageIndexChange)='pageChange($event , "page")'
+      (nzPageSizeChange) = 'pageChange($event , "size")'
+      [nzPageIndex]="searchModel.currentPage"
+      [nzTotal]="totalSize"
+      nzShowSizeChanger
+      nzShowQuickJumper
+    ></nz-pagination>
+    <ng-template #totalTemplate let-total>
+      <span>{{ "productCenter.appConfig.helpCenter.total" | translate }}</span>
+      <span>{{ totalSize }}</span>
+      <span>{{ "productCenter.appConfig.helpCenter.pageUnit" | translate }}</span>
+    </ng-template>
+  </div>
+
+
+  <nz-modal [(nzVisible)]="isDelete" [nzTitle]="'productCenter.appConfig.helpCenter.decideDelete' | translate" (nzOnCancel)="deleteCancel()" (nzOnOk)="deleteOk()" [nzOkLoading]="isDeleteLoading">
+    <p>{{"productCenter.appConfig.helpCenter.decideDeleteTip"  | translate }}！</p>
+  </nz-modal>
+
+
+  <nz-modal
+    [(nzVisible)]="isVisible"
+    [nzTitle]='title'
+    [nzOkText]='"productCenter.appConfig.helpCenter.decide" | translate'
+    [nzCancelText]='"productCenter.appConfig.helpCenter.cancel" | translate'
+    (nzOnOk)="handleOk()"
+    (nzOnCancel)="handleCancel()"
+    [nzOkLoading]="isOkLoading"
+    [nzWidth]="800"
+  >
+    <div class="formChannel">
+      <form nz-form [nzLayout]="'block'" [formGroup]="validForm">
+
+      <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="4" nzRequired nzFor="order">
+            {{ "productCenter.appConfig.helpCenter.order" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="19" [nzOffset]='1'>
+            <nz-select style="width: 595px" formControlName="order" nzAllowClear="false">
+              <div *ngFor="let item of validForm.value.id?orderList.slice(0,-1):orderList"><!--判断“编辑进入”显示order个数列表，“新增进入”则显示order个数+1列表-->
+                <nz-option [nzLabel]="item['value']" [nzValue]="item['value']"></nz-option>
+              </div>
+            </nz-select>
+            <!-- <input
+              nz-input
+              formControlName="order"
+              id="order"
+              [placeholder] = '"productCenter.appConfig.helpCenter.pleasePositiveNumber" | translate' 
+              onkeyup="value=value.replace(/[^1-9][^0-9]{1-10}/g,'')"
+            > 
+            <nz-form-explain *ngIf="validForm.get('order').dirty && validForm.get('order').errors">
+              <span>
+                {{ "productCenter.appConfig.helpCenter.pleasePositiveNumber" | translate}}
+              </span>
+              <span>
+                {{ "productCenter.appConfig.helpCenter.errTip" | translate }}
+              </span>
+            </nz-form-explain> -->
+          </nz-form-control>
+        </nz-form-item>      
+
+        <nz-form-item *ngIf="title==languagePack['data']['helpCenter']['edit']"  class='formSec'>
+            <nz-form-label [nzSm]="4" nzRequired nzFor="title">
+              {{ "productCenter.appConfig.helpCenter.status" | translate }}
+            </nz-form-label>
+            <nz-form-control [nzSm]="19" [nzOffset]='1'>
+                <nz-select style="width: 595px" formControlName="status" nzAllowClear="false">
+                  <nz-option [nzLabel]="'productCenter.appConfig.helpCenter.display' | translate" nzValue="1"></nz-option>
+                  <nz-option [nzLabel]="'productCenter.appConfig.helpCenter.hiding' | translate" nzValue="0"></nz-option>
+                </nz-select>
+
+            </nz-form-control>
+          </nz-form-item>
+
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="4" nzRequired nzFor="title">
+            {{ "productCenter.appConfig.helpCenter.problem" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="19" [nzOffset]='1'>
+            <input
+              type="text"
+              nz-input
+              formControlName="title"
+              id="title"
+              [placeholder] = '"productCenter.appConfig.helpCenter.pleaseInput" | translate'
+              maxlength="100"
+            >
+            <nz-form-explain *ngIf="validForm.get('title').dirty && validForm.get('title').errors">
+              <span>
+                {{ "productCenter.appConfig.helpCenter.problem" | translate}}
+              </span>
+              <span>
+                {{ "productCenter.appConfig.helpCenter.errTip" | translate }}
+              </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="4" nzRequired nzFor="content">
+            {{ "productCenter.appConfig.helpCenter.content" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="19" [nzOffset]='1'>
+            <textarea
+              nz-input
+              formControlName="content"
+              id="content"
+              [placeholder] = '"productCenter.appConfig.helpCenter.pleaseInput" | translate'
+              style="resize: none;height: 300px;"
+              maxlength="500"
+            >
+            </textarea>
+            <nz-form-explain *ngIf="validForm.get('content').dirty && validForm.get('content').errors">
+              <span>
+                {{ "productCenter.appConfig.helpCenter.content" | translate}}
+              </span>
+              <span>
+                {{ "productCenter.appConfig.helpCenter.errTip" | translate }}
+              </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+
+      </form>
+    </div>
+  </nz-modal>
+
+</div>

@@ -1,0 +1,190 @@
+<div class="c-content-wrap">
+  <div class="half-block">
+    <div class="title">
+      {{ "appMarketing.splashScreen.title" | translate }}
+    </div>
+    <div class="c-search-btnGroup">
+      <button nz-button [nzType]="'primary'" (click) = 'add()' [disabled]="disabled">
+        {{ "appMarketing.splashScreen.add" | translate}}
+      </button>
+    </div>
+    <div class="c-search-group" style="margin-top: 10px" [hidden]="hidden">
+      {{"appMarketing.splashScreen.tip" | translate}}
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "appMarketing.splashScreen.pushMethod" | translate }}
+        </div>
+        <div class="c-search-itemRight" style="margin-right: 20px">
+          <button nz-button [nzType]="'primary'" (click) = 'setPushWay()'>
+            {{ pushWayTitle }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <c-table [tableData] = 'tableData' style="margin-top: 20px" [hidden]="hidden">
+  </c-table>
+  <nz-modal [(nzVisible)]="isDelete" [nzTitle]="'common.deleteToast.title' | translate" (nzOnCancel)="deleteCancel()" (nzOnOk)="deleteOk()" [nzOkLoading]="isDeleteLoading">
+    <p>{{"common.deleteToast.tip"  | translate }}！</p>
+  </nz-modal>
+  <nz-modal
+    [(nzVisible)]="isPushWay"
+    [nzTitle]="'appMarketing.splashScreen.pushMethod' | translate"
+    (nzOnCancel)="pushWayCancel()" (nzOnOk)="pushWayOk()"
+    [nzOkLoading]="isPushWayLoading">
+    <div class="formChannel">
+      <form nz-form [nzLayout]="'block'" [formGroup]="pushWayForm">
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="6" nzRequired>
+            {{ "appMarketing.splashScreen.pushMethod" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <nz-select
+              nzAllowClear
+              [nzPlaceHolder]="'appMarketing.splashScreen.prompt.pushMethod' | translate"
+              formControlName="pushWay"
+              id="pushWay"
+            >
+              <div *ngFor='let item of splashScreenPushWay'>
+                <nz-option
+                  [nzValue]="item['value']"
+                  [nzLabel]="item['desc']"
+                >
+                </nz-option>
+              </div>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+  </nz-modal>
+  <nz-modal
+    [(nzVisible)]="isVisible"
+    [nzTitle]='title'
+    [nzOkText]='"common.operate.save" | translate'
+    [nzCancelText]='"common.operate.cancel" | translate'
+    (nzOnOk)="handleOk()"
+    (nzOnCancel)="handleCancel()"
+    [nzOkLoading]="isOkLoading"
+    [nzWidth]="800"
+  >
+    <div class="formChannel">
+      <form nz-form [nzLayout]="'block'" [formGroup]="validForm">
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="6" nzRequired nzFor="name">
+            {{ "appMarketing.splashScreen.table.name" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <input
+              type="text"
+              nz-input
+              maxlength="50"
+              formControlName="name"
+              id="name"
+              [placeholder] = '"appMarketing.splashScreen.prompt.name" | translate'
+            >
+            <nz-form-explain *ngIf="validForm.get('name').dirty && validForm.get('name').errors">
+              <span>
+                {{ "appMarketing.splashScreen.prompt.name" | translate}}
+              </span>
+              <span>
+                {{ "common.validator.notEmpty" | translate }}
+              </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="6" nzRequired>
+            {{ "appMarketing.splashScreen.table.shelfPeriod" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <nz-date-picker
+              style="width: 150px"
+              [nzShowToday]="'false'"
+              [nzDisabledDate]="disabledStartDate"
+              formControlName="putawayBeginTime"
+              [nzFormat]="'yyyy-MM-dd'"
+            ></nz-date-picker>
+            <span style="color:#999"> ~ </span>
+            <nz-date-picker
+              style="width: 150px"
+              [nzShowToday]="'false'"
+              [nzDisabledDate]="disabledEndDate"
+              formControlName="putawayEndTime"
+              [nzFormat]="'yyyy-MM-dd'"
+            ></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="6" nzRequired nzFor="type">
+            {{ "appMarketing.splashScreen.table.img" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <nz-upload
+              nzName="avatar"
+              nzListType="picture-card"
+              [nzBeforeUpload]="beforeUpload"
+              [nzAccept]="'image/*'"
+            >
+              <ng-container *ngIf="!avatarUrl">
+                <i class="anticon anticon-plus" nz-icon type="plus"></i>
+                <!--<i nz-icon class="upload-icon" type="plus" theme="outline"></i>-->
+                <div class="ant-upload-text">Upload</div>
+              </ng-container>
+              <img *ngIf="avatarUrl" [src]="avatarUrl" class="avatar">
+            </nz-upload>
+            {{ "appMarketing.recommend.recommendedSize" | translate }} 600px * 800px
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="6" nzRequired nzFor="jump">
+            {{ "appMarketing.splashScreen.table.jump" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <nz-select
+              nzAllowClear
+              formControlName="jump"
+              id="jump"
+              [nzPlaceHolder] = '"appMarketing.splashScreen.prompt.jump" | translate'
+            >
+              <div *ngFor='let item of splashScreenjump'>
+                <nz-option
+                  [nzValue]="item['value']"
+                  [nzLabel]="item['desc']"
+                >
+                </nz-option>
+              </div>
+            </nz-select>
+            <nz-form-explain *ngIf="validForm.get('jump').dirty && validForm.get('jump').errors">
+              <span>
+                {{ "appMarketing.splashScreen.prompt.jump" | translate}}
+              </span>
+              <span>
+                {{ "common.validator.notEmpty" | translate }}
+              </span>
+            </nz-form-explain>
+          </nz-form-control>
+          <nz-form-control [nzSm]="17" [nzOffset]='7' *ngIf="validForm.get('jump').value==true">
+            <input
+              nz-input
+              formControlName="jumpLink"
+              id="jumpLink"
+              type="url"
+              [placeholder] = '"appMarketing.splashScreen.prompt.jumpLink" | translate'
+            >
+            <nz-form-explain *ngIf="validForm.get('jumpLink').dirty && validForm.get('jumpLink').errors">
+              <span>
+                {{ "appMarketing.splashScreen.prompt.jumpLink" | translate}}
+              </span>
+              <span>
+                {{ "common.validator.notEmpty" | translate }}
+              </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+  </nz-modal>
+</div>

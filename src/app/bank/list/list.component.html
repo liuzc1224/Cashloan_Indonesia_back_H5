@@ -1,0 +1,139 @@
+<div class="c-content-wrap" style="margin-bottom: 30px">
+    <button nz-button nzType="primary" class="c-btn-width c-no-radius" (click) = 'addNewBank() '>
+        {{ "common.operate.add" | translate}}
+    </button>
+    <c-table [tableData] = 'tableData'>
+    </c-table>
+</div>
+
+<nz-modal [(nzVisible)]="modalMark" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter" (nzOnCancel)="modalMark = false">
+
+        <ng-template #modalTitle>
+            <span>
+                {{ "common.operate.name" | translate}}
+            </span>
+        </ng-template>
+    
+        <ng-template #modalContent>
+            <form nz-form [nzLayout]="'inline'" [formGroup]="validateForm">
+                <nz-form-item class='c-formSec'>
+                    <nz-form-label nzRequired [nzSm]="7"  nzFor="bankName">
+                        {{ "bankModule.list.bankName" | translate }}
+                    </nz-form-label>
+                    <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+                        <input nz-input formControlName="bankName" id="bankName" [placeholder] = ' "bankModule.list.bankName" | translate '>
+                        <nz-form-explain *ngIf="validateForm.get('bankName').dirty && validateForm.get('bankName').errors">
+                            <span>
+                                    {{ "bankModule.list.bankName" | translate }}
+                            </span>
+                            <span>
+                                {{ "common.validator.notEmpty" | translate }}
+                            </span>
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item class='c-formSec'>
+                    <nz-form-label nzRequired [nzSm]="7"  nzFor="bankCode">
+                        {{ "bankModule.list.bankCode" | translate }}
+                    </nz-form-label>
+                    <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+                        <input nz-input formControlName="bankCode" id="bankCode" [placeholder] = ' "bankModule.list.bankCode" | translate '>
+                        <nz-form-explain *ngIf="validateForm.get('bankCode').dirty && validateForm.get('bankCode').errors">
+                            <span>
+                                    {{ "bankModule.list.bankCode" | translate }}
+                            </span>
+                            <span>
+                                {{ "common.validator.notEmpty" | translate }}
+                            </span>
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item class='c-formSec'>
+                    <nz-form-label nzRequired [nzSm]="7"  nzFor="bankName">
+                        {{ "bankModule.list.singleLimit" | translate }}
+                    </nz-form-label>
+                    <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+                        <input nz-input formControlName="singleLimit" id="singleLimit" [placeholder] = ' "bankModule.list.singleLimit" | translate '>
+                        <nz-form-explain *ngIf="validateForm.get('singleLimit').dirty && validateForm.get('singleLimit').errors">
+                            <span>
+                                    {{ "bankModule.list.singleLimit" | translate }}
+                            </span>
+                            <span>
+                                {{ "common.validator.notEmpty" | translate }}
+                            </span>
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item class='c-formSec'>
+                    <nz-form-label nzRequired [nzSm]="7"  nzFor="bankName">
+                        {{ "bankModule.list.dailyLimit" | translate }}
+                    </nz-form-label>
+                    <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+                        <input nz-input formControlName="dailyLimit" id="dailyLimit" [placeholder] = ' "bankModule.list.dailyLimit" | translate '>
+                        <nz-form-explain *ngIf="validateForm.get('dailyLimit').dirty && validateForm.get('dailyLimit').errors">
+                            <span>
+                                    {{ "bankModule.list.dailyLimit" | translate }}
+                            </span>
+                            <span>
+                                {{ "common.validator.notEmpty" | translate }}
+                            </span>
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item class='c-formSec'>
+                    <nz-form-label nzRequired [nzSm]="7" >
+                        {{ "bankModule.list.icon" | translate }}
+                    </nz-form-label>
+                    <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+                        <input type="file" nz-input id="imgIco">
+                    </nz-form-control>
+                </nz-form-item>
+
+            </form>
+        </ng-template>
+    
+        <ng-template #modalFooter>
+            <button nz-button nzType="primary" *ngIf = '!edieMark' [disabled]="!validateForm.valid" (click)='makeNew($event)'>
+                {{ "common.operate.sure" | translate }}
+            </button>
+            <button nz-button nzType="primary"  *ngIf = 'edieMark ' [disabled]="!validateForm.valid" (click)='save($event)'>
+                {{ "common.operate.sure" | translate }}
+            </button>
+            <button nz-button nzType="default" (click)='modalMark = false'>
+                {{ "common.operate.close" | translate }}
+            </button>
+        </ng-template>
+    </nz-modal>
+
+    <nz-modal [(nzVisible)]="deleteMark" [nzTitle]="refuseTitle" [nzContent]="refuseContent" [nzFooter]="refuseFotter" (nzOnCancel)="deleteMark = false">
+    <ng-template #refuseTitle>
+            {{ "common.deleteToast.title" | translate }}
+    </ng-template>
+
+    <ng-template #refuseContent>
+        <div class="c-flexStart">
+            <i class="anticon anticon-info-circle-o c-warnInfo"></i>
+            <div>
+                <h4>
+                    {{ "common.deleteToast.title" | translate }}
+                </h4>
+                <p>
+                    {{ "common.deleteToast.tip" | translate }}
+                </p>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #refuseFotter>
+        <button nz-button nzType="default" (click)="deleteMark = false">
+            {{ "common.operate.cancel" | translate }}
+        </button>
+        <button nz-button nzType="primary" (click)="delete($event)">
+            {{ "common.operate.delete" | translate }}
+        </button>
+    </ng-template>
+</nz-modal>

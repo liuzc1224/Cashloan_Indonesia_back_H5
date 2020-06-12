@@ -1,0 +1,327 @@
+<div class="c-content-wrap">
+  <nz-row>
+    <div class="title">
+      {{ "coupon.title" | translate }}
+      <span>{{"coupon.Remarks" | translate}}、{{"coupon.list.offer.interestrateReduction" | translate}}、{{"coupon.list.offer.dayFree" | translate}}</span>
+      <div class="c-btnGroup">
+        <button nz-button  (click) = 'add() '>
+          {{ "coupon.add" | translate}}
+        </button>
+        <button nz-button  (click) = 'view() '>
+          {{ "coupon.view" | translate}}
+        </button>
+      </div>
+    </div>
+    <div class="c-search-selectGroup">
+      <nz-select [(ngModel)]="searchModel.couponStatus" nzAllowClear  [nzPlaceHolder] = '"coupon.list.prompt.allActivities" | translate' nzAllowClear>
+        <nz-option *ngFor="let option of activityStatus;let i = index" [nzLabel]="option" [nzValue]="i+1"></nz-option>
+      </nz-select>
+      <nz-select class="left" nzAllowClear  [(ngModel)]="searchModel.couponType" [nzPlaceHolder] = '"coupon.list.prompt.offerType" | translate' >
+        <nz-option *ngFor="let option of offer;let i = index" [nzLabel]="option" [nzValue]="i+1"></nz-option>
+      </nz-select>
+      <nz-select class="left" nzAllowClear  [(ngModel)]="searchModel.obtainType" [nzPlaceHolder] = '"coupon.list.prompt.receiveType" | translate' nzAllowClear>
+        <nz-option *ngFor="let option of receiveData" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+      </nz-select>
+      <nz-select class="left" [(ngModel)]="couponIdnameValue">
+        <nz-option *ngFor="let option of couponIdname;let i = index" [nzLabel]="option" [nzValue]="i"></nz-option>
+      </nz-select>
+      <input nz-input type="text" class="left" [(ngModel)] = 'Idname' [placeholder] = '"coupon.inputContent" | translate' >
+    </div>
+  </nz-row>
+  <nz-row class="c-search-selectGroup" style="margin-bottom: 20px">
+    <button nz-button (click) = 'search()' nzType="primary">
+      {{ "coupon.search" | translate}}
+    </button>
+    <button nz-button (click) = 'reset()' nzType="primary" class="left">
+      {{ "coupon.reset" | translate}}
+    </button>
+  </nz-row>
+  <c-table [tableData] = 'tableData'>
+  </c-table>
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+              <span>
+                  {{ "common.total" | translate }}
+              </span>
+      <span>
+                  {{ totalSize }}
+              </span>
+      <span>
+                  {{ "common.pageUnit" | translate }}
+              </span>
+    </ng-template>
+  </div>
+
+  <nz-modal [(nzVisible)]="isDelete" [nzTitle]="'coupon.deleteToast' | translate" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()" [nzOkLoading]="isOkLoading">
+    <p>{{"coupon.delete"  | translate }}！</p>
+  </nz-modal>
+  <nz-modal [(nzVisible)]="isPush" [nzTitle]="'coupon.pushToast' | translate" (nzOnCancel)="pushCancel()" (nzOnOk)="pushOk()" [nzOkLoading]="isOkLoading">
+    <p>{{"coupon.push"  | translate }}！</p>
+  </nz-modal>
+  <nz-modal
+    [(nzVisible)]="isRule"
+    [nzTitle]="'coupon.ruleToast' | translate"
+    (nzOnCancel)="ruleCancel()"
+    (nzOnOk)="ruleOk()"
+    [nzWidth]="'900px'"
+
+  >
+    <table class="ruleTable">
+      <tr>
+        <td colspan="2">
+          <span style="font-size: 1.1rem">{{"coupon.list.ruleInfo.CouponList.desc"  | translate }}</span>
+        </td>
+      </tr>
+      <tr *ngFor="let option of ruleInfo;let i = index">
+        <td style="padding-left: 10px;padding-right: 10px">{{i+1}}</td>
+        <td style="padding-left: 5px;padding-right: 5px">{{option}}</td>
+      </tr>
+    </table>
+    <table class="ruleTable" style="margin-top: 10px">
+      <tr>
+        <td colspan="5">
+          <span style="font-size: 1.1rem">{{"coupon.list.ruleInfo.preferentialConditions.desc"  | translate }}</span>
+        </td>
+      </tr>
+      <tr>
+        <td>{{"coupon.list.table.couponId"  | translate }}</td>
+        <td>{{"coupon.list.table.offerType"  | translate }}</td>
+        <td>{{"coupon.list.table.preferentialConditions"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.preferentialConditions.info.amount"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.preferentialConditions.info.remarks"  | translate }}</td>
+      </tr>
+      <tr>
+        <td rowspan="2">1</td>
+        <td rowspan="2">{{"coupon.list.offer.interestReduction"  | translate }}</td>
+        <td>{{"coupon.list.setting.loan"  | translate }} M,{{"coupon.list.setting.interestReduction"  | translate }} N</td>
+        <td>N</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>{{"coupon.list.setting.nothreshold"  | translate }}，{{"coupon.list.offer.interestReduction"  | translate }} N</td>
+        <td>N</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td rowspan="2">2</td>
+        <td rowspan="2">{{"coupon.list.offer.interestrateReduction"  | translate }}</td>
+        <td>{{"coupon.list.setting.loan"  | translate }}，{{"coupon.list.offertips.interestReduction"  | translate }} N %</td>
+        <td>{{"coupon.list.offertips.lendRateMoney"  | translate }} * N %</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>{{"coupon.list.setting.nothreshold"  | translate }}，{{"coupon.list.offertips.interestReduction"  | translate }} N %</td>
+        <td>{{"coupon.list.offertips.lendRateMoney"  | translate }} * N %</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td rowspan="2">3</td>
+        <td rowspan="2">{{"coupon.list.offer.dayFree"  | translate }}</td>
+        <td>{{"coupon.list.setting.loan"  | translate }}，N {{"coupon.list.offertips.dayFree"  | translate }}</td>
+        <td>{{"coupon.list.offertips.payMoney"  | translate }} * {{"coupon.list.offertips.dailyInterestRate"  | translate }} * N</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>{{"coupon.list.setting.nothreshold"  | translate }}，N {{"coupon.list.offertips.dayFree"  | translate }}</td>
+        <td>{{"coupon.list.offertips.payMoney"  | translate }} * {{"coupon.list.offertips.dailyInterestRate"  | translate }} * N</td>
+        <td></td>
+      </tr>
+    </table>
+    <table class="ruleTable" style="margin-top: 10px">
+      <tr>
+        <td colspan="11">
+          <span style="font-size: 1.1rem">{{"coupon.list.ruleInfo.display.desc"  | translate }}</span>
+        </td>
+      </tr>
+      <tr>
+        <td>{{"coupon.list.ruleInfo.display.info.a"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.info.b"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.info.c"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.info.d"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.info.e"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.info.f"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.info.g"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.info.h"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.info.i"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.info.j"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.info.k"  | translate }}</td>
+      </tr>
+      <tr>
+        <td rowspan="8">1</td>
+        <td rowspan="8">{{"coupon.list.receive.initiativeReceive"  | translate }}</td>
+        <td rowspan="8">{{"coupon.list.ruleInfo.display.vouchers"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.notArrived"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.shutDown"  | translate }}</td>
+        <td>>=1</td>
+        <td>{{"coupon.list.ruleInfo.display.visible"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.clickable"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.notActive"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.pendingNormal"  | translate }}</td>
+        <td>“{{"coupon.list.ruleInfo.display.stats"  | translate }}”</td>
+      </tr>
+      <tr>
+        <td>{{"coupon.list.ruleInfo.display.notArrived"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.shutDown"  | translate }}</td>
+        <td><1</td>
+        <td>{{"coupon.list.ruleInfo.display.visible"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.notClickable"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.notActive"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.haveFinished"  | translate }}</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>{{"coupon.list.ruleInfo.display.notArrived"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.open"  | translate }}</td>
+        <td></td>
+        <td>{{"coupon.list.ruleInfo.display.invisible"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.notClickable"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.notActive"  | translate }}</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>{{"coupon.list.ruleInfo.display.inside"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.shutDown"  | translate }}</td>
+        <td>>=1</td>
+        <td>{{"coupon.list.ruleInfo.display.visible"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.clickable"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.effective"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.pendingNormal"  | translate }}</td>
+        <td>“{{"coupon.list.ruleInfo.display.stats"  | translate }}”</td>
+      </tr>
+      <tr>
+        <td>{{"coupon.list.ruleInfo.display.inside"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.shutDown"  | translate }}</td>
+        <td><1</td>
+        <td>{{"coupon.list.ruleInfo.display.visible"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.notClickable"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.effective"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.haveFinished"  | translate }}</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>{{"coupon.list.ruleInfo.display.inside"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.open"  | translate }}</td>
+        <td></td>
+        <td>{{"coupon.list.ruleInfo.display.visible"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.notClickable"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.effective"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.haveFinished"  | translate }}</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>{{"coupon.list.ruleInfo.display.passed"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.shutDown"  | translate }}</td>
+        <td></td>
+        <td>{{"coupon.list.ruleInfo.display.visible"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.notClickable"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.invalid"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.expired"  | translate }}</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>{{"coupon.list.ruleInfo.display.passed"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.open"  | translate }}</td>
+        <td></td>
+        <td>{{"coupon.list.ruleInfo.display.invisible"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.notClickable"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.invalid"  | translate }}</td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+    <table class="ruleTable" style="margin-top: 10px">
+      <tr>
+        <td colspan="11">
+          <span style="font-size: 1.1rem">{{"coupon.list.ruleInfo.directionalPush.desc"  | translate }}</span>
+        </td>
+      </tr>
+      <tr>
+        <td>{{"coupon.list.ruleInfo.display.info.a"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.info.b"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.info.c"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.info.d"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.info.e"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.info.f"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.info.g"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.info.h"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.info.i"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.info.j"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.info.k"  | translate }}</td>
+      </tr>
+      <tr>
+        <td rowspan="5">2</td>
+        <td rowspan="5">{{"coupon.list.ruleInfo.directionalPush.desc"  | translate }}</td>
+        <td rowspan="5">{{"coupon.list.ruleInfo.directionalPush.discountPopup"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.notArrived"  | translate }}</td>
+        <td></td>
+        <td></td>
+        <td>{{"coupon.list.ruleInfo.display.invisible"  | translate }}</td>
+        <td></td>
+        <td>{{"coupon.list.ruleInfo.display.notActive"  | translate }}</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>{{"coupon.list.ruleInfo.display.inside"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.shutDown"  | translate }}</td>
+        <td>>=1</td>
+        <td>{{"coupon.list.ruleInfo.display.visible"  | translate }}</td>
+        <td></td>
+        <td>{{"coupon.list.ruleInfo.display.effective"  | translate }}</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>{{"coupon.list.ruleInfo.display.inside"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.shutDown"  | translate }}</td>
+        <td><1</td>
+        <td>{{"coupon.list.ruleInfo.display.invisible"  | translate }}</td>
+        <td></td>
+        <td>{{"coupon.list.ruleInfo.display.effective"  | translate }}</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>{{"coupon.list.ruleInfo.display.inside"  | translate }}</td>
+        <td>{{"coupon.list.ruleInfo.display.open"  | translate }}</td>
+        <td></td>
+        <td>{{"coupon.list.ruleInfo.display.invisible"  | translate }}</td>
+        <td></td>
+        <td>{{"coupon.list.ruleInfo.display.effective"  | translate }}</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>{{"coupon.list.ruleInfo.display.passed"  | translate }}</td>
+        <td></td>
+        <td></td>
+        <td>{{"coupon.list.ruleInfo.display.invisible"  | translate }}</td>
+        <td></td>
+        <td>{{"coupon.list.ruleInfo.display.invalid"  | translate }}</td>
+        <td></td>
+        <td></td>
+      </tr>
+    </table>
+    <table class="ruleTable" style="margin-top: 10px">
+      <tr>
+        <td colspan="3">
+          <span style="font-size: 1.1rem">{{"coupon.list.ruleInfo.usageRules.desc"  | translate }}</span>
+        </td>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td>{{"coupon.list.ruleInfo.usageRules.info.a"  | translate }}</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>{{"coupon.list.ruleInfo.usageRules.info.b"  | translate }}</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>{{"coupon.list.ruleInfo.usageRules.info.c"  | translate }}</td>
+      </tr>
+    </table>
+  </nz-modal>
+</div>

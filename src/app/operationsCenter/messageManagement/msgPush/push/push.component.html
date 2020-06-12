@@ -1,0 +1,286 @@
+<div class="c-content-wrap">
+  <div class="c-search-wrap">
+    <div class="c-search-group" style="margin-top: 20px">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "msgCenter.msgPush.table.releaseDate" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-date-picker
+            nzShowTime
+            nzFormat="yyyy-MM-dd HH:mm:ss"
+            [(ngModel)]="searchModel.pushTimeStart">
+          </nz-date-picker>
+          <!-- <nz-date-picker [(ngModel)]="searchModel.pushTimeStart"></nz-date-picker> -->
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker
+            nzShowTime
+            nzFormat="yyyy-MM-dd HH:mm:ss"
+            [(ngModel)]="searchModel.pushTimeEnd">
+          </nz-date-picker>
+          <!-- <nz-date-picker [(ngModel)]="searchModel.pushTimeEnd"></nz-date-picker> -->
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "msgCenter.msgPush.table.postStatus" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select
+            [nzPlaceHolder]="'msgCenter.msgPush.prompt.postStatus' | translate"
+            nzAllowClear
+            [(ngModel)]="searchModel.pushStatus"
+            style="width: 150px"
+          >
+            <div *ngFor="let item of postStatus">
+              <nz-option [nzValue]="item['value']" [nzLabel]="item['desc']">
+              </nz-option>
+            </div>
+          </nz-select>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group" style="margin-top: 20px">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "msgCenter.msgPush.table.theme" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" [(ngModel)]="searchModel.subject" [placeholder]="'msgCenter.msgPush.prompt.theme' | translate" />
+        </div>
+      </div>
+    </div>
+    <div class="c-btn-group" style="margin-bottom: 20px">
+      <button nz-button  nzType="primary" (click) = 'search() '>
+        {{ "common.search" | translate}}
+      </button>
+      <button nz-button class="left" (click) = 'reset() '>
+        {{ "channel.btn.reset" | translate}}
+      </button>
+    </div>
+  </div>
+  <div class="c-btn-group" style="margin-bottom: 20px">
+    <button nz-button  nzType="primary" (click) = 'add() '>
+      {{ "msgCenter.msgPush.add" | translate }}
+    </button>
+  </div>
+  <c-table [tableData] = 'tableData'>
+  </c-table>
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+  <span>
+  {{ "common.total" | translate }}
+  </span>
+      <span>
+  {{ totalSize }}
+  </span>
+      <span>
+  {{ "common.pageUnit" | translate }}
+  </span>
+    </ng-template>
+  </div>
+  <nz-modal [(nzVisible)]="isDelete" [nzTitle]="'common.deleteToast.title' | translate" (nzOnCancel)="deleteCancel()" (nzOnOk)="deleteOk()" [nzOkLoading]="isDeleteLoading">
+    <p>{{"common.deleteToast.tip"  | translate }}！</p>
+  </nz-modal>
+  <nz-modal
+    [(nzVisible)]="isVisible"
+    [nzTitle]="title"
+    [nzOkText]='canRefer==true ? ("common.operate.save" | translate) : null'
+    [nzCancelText]='"common.operate.cancel" | translate'
+    (nzOnOk)="handleOk()"
+    (nzOnCancel)="handleCancel()"
+    [nzOkLoading]="isOkLoading"
+    [nzWidth]="800"
+  >
+    <div class="formChannel">
+      <form nz-form [nzLayout]="'block'" [formGroup]="validForm">
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="6" nzRequired nzFor="subject">
+            {{ "msgCenter.msgPush.table.theme" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <input
+              type="text"
+              nz-input
+              formControlName="subject"
+              id="subject"
+              [placeholder] = '"msgCenter.msgPush.prompt.theme" | translate'
+              maxlength="50"
+              [readonly]="!canRefer"
+            >
+            <div style="pointer-events: none" class="input-length">{{validForm['value']['subject'] && validForm['value']['subject']['length'] ? validForm['value']['subject']['length'] : 0}}/50</div>
+            <nz-form-explain *ngIf="validForm.get('subject').dirty && validForm.get('subject').errors">
+              <span>
+                {{ "msgCenter.msgPush.prompt.theme" | translate}}
+              </span>
+              <span>
+                {{ "common.validator.notEmpty" | translate }}
+              </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="6" nzRequired nzFor="pushTime">
+            {{ "msgCenter.msgPush.table.releaseDate" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <nz-date-picker
+              nzShowTime
+              nzFormat="yyyy-MM-dd HH:mm:ss"
+              formControlName="pushTime"
+              [nzPlaceHolder]="'msgCenter.msgPush.prompt.releaseDate' | translate"
+              [nzStyle]="{'width':'300px'}"
+              [nzDisabled]="!canRefer"
+            >
+            </nz-date-picker>
+            <nz-form-explain *ngIf="validForm.get('pushTime').dirty && validForm.get('pushTime').errors">
+              <span>
+                {{ "msgCenter.msgPush.prompt.releaseDate" | translate}}
+              </span>
+              <span>
+                {{ "common.validator.notEmpty" | translate }}
+              </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="6" nzRequired nzFor="pushType">
+            {{ "msgCenter.msgPush.table.pushType" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <nz-select
+              nzAllowClear
+              formControlName="pushType"
+              id="pushType"
+              [nzPlaceHolder] = '"msgCenter.msgPush.prompt.pushType" | translate'
+              [nzDisabled]="!canRefer"
+            >
+              <div *ngFor='let item of pushType'>
+                <nz-option
+                  [nzValue]="item['value']"
+                  [nzLabel]="item['desc']"
+                >
+                </nz-option>
+              </div>
+            </nz-select>
+            <nz-form-explain *ngIf="validForm.get('pushType').dirty && validForm.get('pushType').errors">
+              <span>
+                {{ "msgCenter.msgPush.prompt.pushType" | translate}}
+              </span>
+              <span>
+                {{ "common.validator.notEmpty" | translate }}
+              </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item  class='formSec' *ngIf="validForm.get('pushType').value==2">
+          <nz-form-label [nzSm]="6" nzRequired nzFor="pushContent">
+            {{ "msgCenter.msgPush.table.pushContent" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <textarea
+            nz-input
+            formControlName="pushContent"
+            id="pushContent"
+            [placeholder] = '"msgCenter.msgPush.prompt.pushContent" | translate'
+            style="resize: none;height: 150px;"
+            maxlength="500"
+            [readonly]="!canRefer"
+            ></textarea>
+            <div style="pointer-events: none" class="input-length">{{validForm['value']['pushContent'] && validForm['value']['pushContent']['length'] ? validForm['value']['pushContent']['length'] : 0}}/500</div>
+            <nz-form-explain *ngIf="validForm.get('pushContent').dirty && validForm.get('pushContent').errors">
+              <span>
+                {{ "msgCenter.msgPush.prompt.pushContent" | translate}}
+              </span>
+              <span>
+                {{ "common.validator.notEmpty" | translate }}
+              </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item  class='formSec' *ngIf="validForm.get('pushType').value==2">
+          <nz-form-label [nzSm]="6" nzRequired nzFor="pushObj">
+            {{ "msgCenter.msgPush.table.pushObj" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <nz-select
+              nzAllowClear
+              formControlName="pushObj"
+              id="pushObj"
+              [nzPlaceHolder] = '"msgCenter.msgPush.prompt.pushObj" | translate'
+              [nzDisabled]="!canRefer"
+            >
+              <div *ngFor='let item of pushObj'>
+                <nz-option
+                  [nzValue]="item['value']"
+                  [nzLabel]="item['desc']"
+                >
+                </nz-option>
+              </div>
+            </nz-select>
+            <nz-form-explain *ngIf="validForm.get('pushObj').dirty && validForm.get('pushObj').errors">
+              <span>
+                {{ "msgCenter.msgPush.prompt.pushType" | translate}}
+              </span>
+              <span>
+                {{ "common.validator.notEmpty" | translate }}
+              </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item  class='formSec' *ngIf="validForm.get('pushObj').value==1 && validForm.get('pushType').value==2">
+          <nz-form-control [nzSm]="17" [nzOffset]='7'>
+            <nz-upload
+              [(nzFileList)]="fileList1"
+              [nzBeforeUpload]="beforeUpload1"
+              [nzLimit]="1"
+              [nzDisabled]="!canRefer"
+            >
+              <button nz-button [nzType]="'primary'" [disabled]="!canRefer">
+                <i nz-icon type="upload"></i><span>{{ "msgCenter.msgPush.prompt.expLable" | translate }}</span>
+              </button>
+            </nz-upload>
+            <p>{{ "msgCenter.msgPush.prompt.exp" | translate }}</p>
+            <table class="tab">
+              <tr>
+                <td>{{ "msgCenter.msgPush.prompt.userId" | translate }}</td>
+<!--                 <td>{{ "msgCenter.msgPush.prompt.content" | translate }}</td>-->
+              </tr>
+              <tr>
+                <td></td>
+                <!-- <td></td> -->
+              </tr>
+            </table>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item  class='formSec' *ngIf="validForm.get('pushType').value==1 && validForm.get('pushType').value==1">
+          <nz-form-control [nzSm]="17" [nzOffset]='7'>
+            <nz-upload
+              [(nzFileList)]="fileList"
+              [nzBeforeUpload]="beforeUpload"
+              [nzLimit]="1"
+              [nzDisabled]="!canRefer"
+            >
+              <button nz-button [nzType]="'primary'" [disabled]="!canRefer">
+                <i nz-icon type="upload"></i><span>{{ "msgCenter.msgPush.prompt.btn" | translate }}</span>
+              </button>
+            </nz-upload>
+            <p>{{ "msgCenter.msgPush.prompt.exple" | translate }}</p>
+            <table class="tab">
+              <tr>
+                <td>{{ "msgCenter.msgPush.prompt.userId" | translate }}</td>
+                <td>{{ "msgCenter.msgPush.prompt.content" | translate }}</td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+              </tr>
+            </table>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+  </nz-modal>
+</div>
+

@@ -1,0 +1,75 @@
+<div class="warpper">
+    <nz-layout class="layout c-full c-no-background">
+        <nz-header class="c-no-background header">
+            <div class="headerWrap c-flex-row-start" (click) = 'backToIndex()'>
+              <div>Cashloan</div>
+<!--                <img src = './assets/img/logo_icon.png' class= ' c-img-res'>-->
+            </div>
+            <div class='c-flex-row-space headerRight'>
+                <div class = 'timeWrap c-flex-row-start' style="border:none;">
+<!--                  {{currentTime}}-->
+                    <div class="date c-flex-row-start">
+                        <i class="anticon anticon-calendar"></i>
+                        <span style="margin-left: 10px;">
+                            {{ currentDate }}
+                        </span>
+                    </div>
+                    <div class="timer c-flex-row-start">
+                        <i class="anticon anticon-clock-circle-o"></i>
+                        <span style="margin-left: 10px;">
+                            {{ currentTime }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="infoWrap c-flex-row-start">
+                    <img src="./assets/img/head.jpg" class="headImg">
+
+                    <nz-dropdown>
+                        <a nz-dropdown style="color:#fff ;">
+                            {{role}} <i class="anticon anticon-down"></i>
+                        </a>
+                        <ul nz-menu nzSelectable>
+                            <li nz-menu-item (click) = 'logout()'>
+                                <a>
+                                    {{ "common.btnGroup.e" | translate}}
+                                </a>
+                            </li>
+                        </ul>
+                    </nz-dropdown>
+                </div>
+            </div>
+<!--            <div *ngIf="permission && (signStatus === 'noSign')" class="singClass" (click)="sing()">-->
+<!--                    {{ "common.signStatus.sign" | translate }}-->
+<!--            </div>-->
+<!--            <div *ngIf="permission && (signStatus === 2 || signStatus === null)" class="singClass" (click)="loginOut()">-->
+<!--                    {{ "common.signStatus.signOut" | translate }}-->
+<!--            </div>-->
+<!--            <div *ngIf="permission && (signStatus === 0)" class="singClass">-->
+<!--                    {{ "common.signStatus.signOutIng" | translate }}-->
+<!--            </div>-->
+<!--            <div *ngIf="permission && (signStatus === 1)" class="singClass">-->
+<!--                    {{ "common.signStatus.signEnd" | translate }}-->
+<!--            </div>-->
+        </nz-header>
+
+        <nz-layout class="c-no-background">
+
+            <nz-sider [nzWidth]="250" class="c-no-background nav-sider">
+                <side-menu></side-menu>
+            </nz-sider>
+
+            <nz-layout>
+                <div class="container">
+                    <tag-nav>
+
+                    </tag-nav>
+                    <div class="routerWrap">
+                        <router-outlet>
+                        </router-outlet>
+                    </div>
+                </div>
+            </nz-layout>
+        </nz-layout>
+    </nz-layout>
+</div>

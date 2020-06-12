@@ -1,0 +1,1207 @@
+<div class="c-content-wrap" style="margin-bottom: 60px">
+  <div class="half-block">
+    <div class="c-title">
+      {{ "collectDetail.info" | translate }}
+      <button
+        *ngIf="para.orderStatus != 4 && para.orderStatus != 6 && para.orderStatus != 9 && para.orderStatus != 10"
+        style="margin-left:20px"
+        nz-button
+        nzType="primary"
+        (click)="addextendFn()"
+      >
+        {{"collectDetail.extension" | translate}}
+      </button>
+    </div>
+    <div style="display: flex;">
+      <div style="width:160px;height: 500px;border-bottom: 1px solid #e8e8e8;flex-shrink:0;">
+        <nz-list [nzDataSource]="navLeft" nzBordered [nzRenderItem]="item">
+          <ng-template #item let-item><nz-list-item [nzContent]="item.content" class="list-item" (click)="goAnchor(item.id)"></nz-list-item></ng-template>
+        </nz-list>
+      </div>
+      <div class="area-section" id="sectionInfo">
+        <div id="qqq" style="min-width: 1000px">
+          <!-- 借款订单详情 -->
+          <nz-collapse [nzBordered]="true" *ngIf="loanOrderInfoData">
+            <nz-collapse-panel [nzHeader]="loginInfoHeader" [nzActive]="true" >
+              <ng-template #loginInfoHeader>
+                <div class="header">
+                  {{"collectDetail.loanOrderDetails.title" | translate}}
+                </div>
+              </ng-template>
+              <div nz-row>
+                <table *ngIf="loanOrderInfoData">
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.orderNo' | translate }}</td>
+                    <td>{{ loanOrderInfoData['orderNo'] }}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.creditOrderNo' | translate }}</td>
+                    <td>{{ loanOrderInfoData['creditOrderNo'] }}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.stringCreateTime' | translate }}</td>
+                    <td>{{ loanOrderInfoData['stringCreateTime'] }}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.userGrade' | translate }}</td>
+                    <td>{{ loanOrderInfoData['userGrade'] }}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.orderType' | translate }}</td>
+                    <td>{{ ('loanOrderDetails.orderType' | translate)[loanOrderInfoData["loanProductType"]] }}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.orderPeriods' | translate }}</td>
+                    <td>{{ loanOrderInfoData['applyMonth'] || 0 }}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.loanProductName' | translate }}</td>
+                    <td>{{ loanOrderInfoData['loanProductName'] }}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.lendRate' | translate }}</td>
+                    <td>
+                      <span *ngIf="loanOrderInfoData['lendRate']">{{ loanOrderInfoData['lendRate'] | percent:'1.2-2'}}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.auditRate' | translate }}</td>
+                    <td>
+                      <span *ngIf="loanOrderInfoData['auditRate']">{{ loanOrderInfoData['auditRate'] | percent:'1.2-2'}}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.technologyRate' | translate }}</td>
+                    <td>
+                      <span *ngIf="loanOrderInfoData['technologyRate']">{{ loanOrderInfoData['technologyRate'] | percent:'1.2-2'}}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.gracePeriod' | translate }}</td>
+                    <td>{{ loanOrderInfoData['gracePeriod'] || 0  }}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.gracePeriodDayRate' | translate }}</td>
+                    <td>
+                      <span *ngIf="loanOrderInfoData['gracePeriodDayRate']">{{ loanOrderInfoData['gracePeriodDayRate'] | percent:'1.2-2'}}</span>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.overdueDayRate' | translate }}</td>
+                    <td>
+                      <span *ngIf="loanOrderInfoData['overdueDayRate']">{{ loanOrderInfoData['overdueDayRate'] | percent:'1.2-2'}}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.auditMoney' | translate }}</td>
+                    <td>{{ loanOrderInfoData['applyMoney']  || 0 }}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.loanDays' | translate }}</td>
+                    <td>{{ loanOrderInfoData['loanDays'] || 0 }}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.monthAuditCharge' | translate }}</td>
+                    <td>{{ loanOrderInfoData['monthAuditCharge'] || 0 }}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.monthTechnologyCharge' | translate }}</td>
+                    <td>{{ loanOrderInfoData['monthTechnologyCharge'] || 0 }}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.lendRateMoney' | translate }}</td>
+                    <td>{{ loanOrderInfoData['lendRateMoney'] || 0 }}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.loanRepay' | translate }}</td>
+                    <td>{{ loanOrderInfoData['payMoney'] || 0 }}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.currentRepay' | translate }}</td>
+                    <td>{{ loanOrderInfoData['currentRepay'] || 0 }}</td>
+                  </tr>
+                  <!--优惠券-->
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.couponMoney' | translate }}</td>
+                    <td>{{ loanOrderInfoData['couponMoney'] || 0 }}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.dueDays' | translate }}</td>
+                    <td>{{ loanOrderInfoData['dueDays'] || 0 }}</td>
+                  </tr>
+
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.overDueRateMoney' | translate }}</td>
+                    <td>{{ loanOrderInfoData['overDueRateMoney'] || 0 }}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.currentRealRepay' | translate }}</td>
+                    <td>{{ loanOrderInfoData['currentRealRepay'] || 0 }}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.realRepayMoney' | translate }}</td>
+                    <td>{{ loanOrderInfoData['realRepayMoney'] || 0 }}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.realRepaymentDate' | translate }}</td>
+                    <td>{{ dateToString(loanOrderInfoData['realRepaymentDateStr']) }}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'loanOrderDetails.list.status' | translate }}</td>
+                    <td>{{ ('loanOrderDetails.orderStatus' | translate)[loanOrderInfoData['status']] }}</td>
+                  </tr>
+                </table>
+              </div>
+            </nz-collapse-panel>
+          </nz-collapse>
+          <!-- 收款账户 -->
+          <nz-collapse [nzBordered]="true" *ngIf="withdrawalInfoData">
+            <nz-collapse-panel [nzHeader]="loginInfoHeader" [nzActive]="true" >
+              <ng-template #loginInfoHeader>
+                <div class="header">
+                  {{'withdrawalDetail.title' | translate}}
+                </div>
+              </ng-template>
+              <div nz-row>
+                <table>
+                  <tbody>
+                  <tr *ngFor="let item of ('withdrawalDetail.list' | translate)">
+                    <td>{{item['name']}}</td>
+                    <td>
+                      <!-- <span *ngIf="item.reflect==='accountType'">
+                        {{('withdrawalDetail.type' | translate)[withdrawalInfoData[0][item.reflect]] }}
+                      </span> -->
+                      <span>
+                        {{withdrawalInfoData[0] && item['reflect'] ?  withdrawalInfoData[0][item['reflect']] : ""}}
+<!--                        {{withdrawalInfoData[0][item['reflect']] ?  withdrawalInfoData[0][item['reflect']] : ""}}-->
+                      </span>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </nz-collapse-panel>
+          </nz-collapse>
+          <!-- 放款详情 -->
+          <nz-collapse [nzBordered]="true" *ngIf="loanData">
+            <nz-collapse-panel [nzHeader]="loginInfoHeader" [nzActive]="true" >
+              <ng-template #loginInfoHeader>
+                <div class="header">
+                  {{'loanDetails.title' | translate}}
+                </div>
+              </ng-template>
+              <div nz-row>
+                <table style="margin-bottom:20px">
+                  <thead>
+                  <tr>
+                    <td *ngFor="let item of ('loanDetails.list' | translate)">{{item.name}}</td>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let item of loanData">
+                    <td>{{item['applyMoney']  || 0 }}</td>
+                    <td>{{item['beforehandCharge'] || 0 }}</td>
+                    <td>{{ (item['payMoney']) || 0 }}</td>
+                    <td>{{('loanDetails.paymentResult' | translate)[item['paymentResult']] }}</td>
+                  </tr>
+                  </tbody>
+                </table>
+                <table>
+                  <thead>
+                  <tr>
+                    <td *ngFor="let item of ('loanDetails.turnover' | translate)">{{item.name}}</td>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let item of loanData">
+                    <!-- <td>{{('loanDetails.operator' | translate)[item['operator']] }}</td> -->
+                    <td>{{item['paymentChannelStr'] }}</td>
+                    <td>{{item['serialNumber'] }}</td>
+                    <td>{{item['createTimeStr'] }}</td>
+                    <td>{{ 'loanDetails.transferType' | translate }}</td>
+                    <td>{{item['payMoney'] || 0 }}</td>
+                    <td>{{('loanDetails.paymentResult' | translate)[item['paymentResult']]}}</td>
+                    <td>{{item['payDateStr'] }}</td>
+                    <td>{{('loanDetails.operator' | translate)[item['operator']] }}</td>
+                    <td>{{item['option']}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </nz-collapse-panel>
+          </nz-collapse>
+          <!-- 还款详情 -->
+          <nz-collapse [nzBordered]="true" *ngIf="repaymentData">
+            <nz-collapse-panel [nzHeader]="loginInfoHeader" [nzActive]="true" >
+              <ng-template #loginInfoHeader>
+                <div class="header">
+                  {{'repaymentDetails.title' | translate}}
+                </div>
+              </ng-template>
+              <div nz-row>
+                <table style="margin-bottom:20px">
+                  <!-- <table style="margin-bottom:20px" *ngFor="let item of repaymentData;let i = index" [style.marginTop]="i>0 ? '20px': 0"> -->
+                  <thead>
+                  <tr>
+                    <td *ngFor="let item of ('repaymentDetails.list' | translate)">{{item.name}}</td>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let item of repaymentData">
+                    <td>{{item['currentPeriod']+"/"+item['totalPeriod']}}</td>
+                    <td>{{item['applyMoney'] || 0 }}</td>
+                    <td>{{item['currentRepay'] || 0 }}</td>
+                    <td>{{item['principal'] || 0 }}</td>
+                    <td>{{item['interestMoney'] || 0 }}</td>
+                    <td>{{item['otherCost'] || 0 }}</td>
+                    <td>{{item['overDueFine'] || 0 }}</td>
+                    <td>{{item['realRepayMoney'] || 0 }}</td>
+                    <td>{{('repaymentDetails.status' | translate)[item['status']]}}</td>
+                    <td class="link" (click)="toRepaymentCode(item.orderId)">{{'repaymentDetails.manage' | translate}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+                <table>
+                  <thead>
+                  <tr>
+                    <td *ngFor="let item of ('repaymentDetails.turnover' | translate)">{{item.name}}</td>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let item of streamData">
+                    <td>{{('repaymentDetails.allRepayType' | translate)[item['repayType']]}}</td>
+                    <td>{{item['serialNumber']}}</td>
+                    <td>{{item['vaNumber']}}</td>
+                    <td>{{item['createTime']}}</td>
+                    <td>{{('repaymentDetails.transferType' | translate)[item['isCancel']]}}</td>
+                    <td>{{item['repayMoney'] || 0 }}</td>
+                    <td>{{('repaymentDetails.result' | translate)[item['operationResult']]}}</td>
+                    <td>{{item['repaymentDateStr']}}</td>
+                    <td>{{('repaymentDetails.operator' | translate)[item['operator']] }}</td>
+                    <td>{{item['description']}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </nz-collapse-panel>
+          </nz-collapse>
+          <br/>
+        </div>
+        <div id="sss" style="min-width: 1000px">
+          <!--信审订单详情-->
+          <nz-collapse [nzBordered]="true" *ngIf="orderInfoData">
+            <nz-collapse-panel [nzHeader]="loginInfoHeader" [nzActive]="true" >
+              <ng-template #loginInfoHeader>
+                <div class="header">
+                  {{ "collectDetail.auditOrder" | translate}}
+                </div>
+              </ng-template>
+              <div nz-row>
+                <table>
+                  <tr>
+                    <td>{{ 'authModule.orderDetail.orderNo' | translate }}</td>
+                    <td>{{orderInfoData['orderNo']}}</td>
+                    <td>{{ 'authModule.orderDetail.createTime' | translate }}</td>
+                    <td>{{orderInfoData['createTimeStr']}}</td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'authModule.orderDetail.userGrade' | translate }}</td>
+                    <td>{{orderInfoData['userGrade']}}</td>
+                    <td>{{ 'authModule.orderDetail.productType' | translate }}</td>
+                    <td>{{('authModule.orderDetail.orderType' | translate)[orderInfoData['loanProductType']]}}</td>
+                    <td>{{ 'authModule.orderDetail.lendRate' | translate }}</td>
+                    <td>{{orderInfoData['lendRate'] ? (orderInfoData['lendRate']*100).toFixed(2)+"%" : ""}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'authModule.orderDetail.auditMoney' | translate }}</td>
+                    <td>{{orderInfoData['applyMoney']}}</td>
+                    <td>{{ 'authModule.orderDetail.loanDays' | translate }}</td>
+                    <td>{{(orderInfoData['loanDays'] && orderInfoData['applyMonth']) ? (orderInfoData['loanDays']*orderInfoData['applyMonth']) : ""}}</td>
+                    <td>{{ 'authModule.orderDetail.orderPeriods' | translate }}</td>
+                    <td>{{orderInfoData['applyMonth']}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'authModule.orderDetail.technologyRate' | translate }}</td>
+                    <td>{{orderInfoData['monthTechnologyCharge']}}</td>
+                    <td>{{ 'authModule.orderDetail.auditRate' | translate }}</td>
+                    <td>{{orderInfoData['monthAuditCharge']}}</td>
+                    <td>{{ 'authModule.orderDetail.currentRepay' | translate }}</td>
+                    <td>{{orderInfoData['currentRepay']}}</td>
+                  </tr>
+                </table>
+              </div>
+            </nz-collapse-panel>
+          </nz-collapse>
+          <!--      已绑定用户信息-->
+          <nz-collapse [nzBordered]="true" *ngIf="userInfoData">
+            <nz-collapse-panel [nzHeader]="loginInfoHeader" [nzActive]="true" >
+              <ng-template #loginInfoHeader>
+                <div class="header">
+                  {{ 'authModule.userInfo.title' | translate }}
+                </div>
+              </ng-template>
+              <div nz-row>
+                <table>
+                  <tr>
+                    <td [ngStyle]="{ 'backgroundColor': userInfoData['channelStr']!=null ? '#bbff00' : null }">{{ 'authModule.userInfo.phone' | translate }}</td>
+                    <td [ngStyle]="{ 'backgroundColor': userInfoData['channelStr']!=null ? '#bbff00' : null }">{{userInfoData['phoneNumber']}}
+                      <span *ngIf="userInfoData['authPayment']" style="background-color: #ffbb00;color: #ffffff;padding: 5px">
+                    {{ 'authModule.userInfo.verified' | translate }}
+                  </span>
+                    </td>
+                    <td>{{ 'authModule.userInfo.name' | translate }}</td>
+                    <td>{{userInfoData['usernameShort']}}</td>
+                    <td>{{ 'authModule.userInfo.identity' | translate }}</td>
+                    <td>{{userInfoData['idNumber']}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'authModule.userInfo.source' | translate }}</td>
+                    <td>{{userInfoData['channelStr']}}</td>
+                    <td>{{ 'authModule.userInfo.method' | translate }}</td>
+                    <td>{{userInfoData['promotionTypeStr']}}</td>
+                    <td>{{ 'authModule.userInfo.referrer' | translate }}</td>
+                    <td>{{userInfoData['referrerName']}}</td>
+                  </tr>
+                </table>
+              </div>
+            </nz-collapse-panel>
+          </nz-collapse>
+          <!--      设备信息-->
+          <nz-collapse [nzBordered]="true" *ngIf="deviceInfoData">
+            <nz-collapse-panel [nzHeader]="loginInfoHeader" [nzActive]="true" >
+              <ng-template #loginInfoHeader>
+                <div class="header">
+                  {{ 'authModule.deviceInfo.title' | translate }}
+                </div>
+              </ng-template>
+              <div nz-row>
+                <table>
+                  <tr>
+                    <td>{{ 'authModule.deviceInfo.time' | translate }}</td>
+                    <td>{{deviceInfoData['createTime']}}</td>
+                    <td>{{ 'authModule.deviceInfo.packageName' | translate }}</td>
+                    <td>{{deviceInfoData['packageName']}}</td>
+                    <td>{{ 'authModule.deviceInfo.productName' | translate }}</td>
+                    <td>{{deviceInfoData['appName']}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'authModule.deviceInfo.versionNumber' | translate }}</td>
+                    <td>{{deviceInfoData['systemVersion']}}</td>
+                    <td>{{ 'authModule.deviceInfo.ip' | translate }}</td>
+                    <td>{{deviceInfoData['ipAddress']}}</td>
+                    <td>{{ 'authModule.deviceInfo.deviceName' | translate }}</td>
+                    <td>{{deviceInfoData['deviceType']}}</td>
+                    <!--                <td>{{ 'authModule.deviceInfo.degree' | translate }}</td>-->
+                    <!--                <td>{{deviceInfoData['longitude']+","+deviceInfoData['latitude']}}</td>-->
+                  </tr>
+                  <!--              <tr>-->
+
+                  <!--                    <td>{{ 'authModule.deviceInfo.deviceNo' | translate }}</td>-->
+                  <!--                    <td>{{deviceInfoData['deviceId']}}</td>-->
+                  <!--                <td>{{ 'authModule.deviceInfo.deviceName' | translate }}</td>-->
+                  <!--                <td>{{deviceInfoData['deviceType']}}</td>-->
+                  <!--                <td></td>-->
+                  <!--                <td></td>-->
+                  <!--              </tr>-->
+                  <tr>
+                    <td colspan="6">{{ 'authModule.deviceInfo.info' | translate }}</td>
+                  </tr>
+                  <tr>
+                    <td>IMEI</td>
+                    <td>{{deviceInfoData['imei']}}</td>
+                    <td>Android ID</td>
+                    <td>{{deviceInfoData['androidId']}}</td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>Google Ads ID</td>
+                    <td>{{deviceInfoData['advertisingId']}}</td>
+                    <td>RAM</td>
+                    <td>{{deviceInfoData['ram']}}</td>
+                    <td>ROM</td>
+                    <td>{{deviceInfoData['rom']}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'authModule.deviceInfo.resolution' | translate }}</td>
+                    <td>{{deviceInfoData['resolution']}}</td>
+                    <td>{{ 'authModule.deviceInfo.virtualMachine' | translate }}</td>
+                    <td>{{deviceInfoData['virtual']}}</td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </table>
+              </div>
+            </nz-collapse-panel>
+          </nz-collapse>
+          <!--      个人信息-用户录入-->
+          <nz-collapse [nzBordered]="true" *ngIf="userInfoData">
+            <nz-collapse-panel [nzHeader]="loginInfoHeader" [nzActive]="true" >
+              <ng-template #loginInfoHeader>
+                <div class="header">
+                  {{ 'authModule.personalInfo.title' | translate }}
+                </div>
+              </ng-template>
+              <div nz-row>
+                <table>
+                  <tr>
+                    <td>{{ 'authModule.personalInfo.motherName' | translate }}</td>
+                    <td>{{userInfoData['motherName']}}</td>
+                    <td>{{ 'authModule.personalInfo.educationLevel' | translate }}</td>
+                    <td>{{('authModule.personalInfo.educationLevelType' | translate )[userInfoData['educationBackground']]}}</td>
+                    <td colspan="2">{{ 'authModule.personalInfo.ktp' | translate }}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'authModule.personalInfo.gender' | translate }}</td>
+                    <td>{{('authModule.personalInfo.genderType1' | translate )[userInfoData['gender']]}}</td>
+                    <td>{{ 'authModule.personalInfo.age' | translate }}</td>
+                    <td>{{userInfoData['age']}}</td>
+                    <td colspan="2" rowspan="5">
+                      <div style="height: 150px" *ngIf="userInfoData['ktpPath']">
+                        <img height="100%" [src]="userInfoData['ktpPath']" data-magnify="gallery" [attr.data-src]="userInfoData['ktpPath']" >
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'authModule.personalInfo.maritalStatus' | translate }}</td>
+                    <td>{{('authModule.personalInfo.marital' | translate )[userInfoData['maritalStatus']]}}</td>
+                    <td>{{ 'authModule.personalInfo.childStatus' | translate }}</td>
+                    <td>{{userInfoData['childNumber']}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'authModule.personalInfo.livingType' | translate }}</td>
+                    <td>{{('authModule.personalInfo.livingTypeData' | translate )[userInfoData['residentialType']]}}</td>
+                    <td>{{ 'authModule.personalInfo.livingTime' | translate }}</td>
+                    <td>{{('authModule.personalInfo.residentialDurationType' | translate )[userInfoData['residentialDuration']]}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'authModule.personalInfo.address' | translate }}</td>
+                    <td colspan="3">
+                      {{userInfoData['province']}}-{{userInfoData['city']}}-{{userInfoData['regent']}}-{{userInfoData['block']}}-{{userInfoData['street']}}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'authModule.personalInfo.account' | translate }}</td>
+                    <td>{{userInfoData['whatsapp']}}</td>
+                    <td>{{ 'authModule.personalInfo.email' | translate }}</td>
+                    <td>{{userInfoData['email']}}</td>
+                  </tr>
+                </table>
+              </div>
+            </nz-collapse-panel>
+          </nz-collapse>
+          <!--      工作信息-用户录入-->
+          <nz-collapse [nzBordered]="true" *ngIf="userWorkInfoData">
+            <nz-collapse-panel [nzHeader]="loginInfoHeader" [nzActive]="true" >
+              <ng-template #loginInfoHeader>
+                <div class="header">
+                  {{ 'authModule.workInfo.title' | translate }}
+                </div>
+              </ng-template>
+              <div nz-row>
+                <table>
+                  <tr>
+                    <td>{{ 'authModule.workInfo.socialIdentity' | translate }}</td>
+                    <td>{{('authModule.jobs' | translate)[userWorkInfoData['socialIdentityCode']]}}</td>
+                    <td>{{ 'authModule.workInfo.income' | translate }}</td>
+                    <td>{{('authModule.income' | translate)[userWorkInfoData['monthlyIncome']]}}</td>
+                    <td colspan="2">{{ 'authModule.workInfo.workIncome' | translate }}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'authModule.workInfo.company' | translate }}</td>
+                    <td>{{userWorkInfoData['companyName']}}</td>
+                    <td>{{ 'authModule.workInfo.phone' | translate }}</td>
+                    <td>{{userWorkInfoData['telphone']}}</td>
+                    <td colspan="2" rowspan="2">
+                      <div style="height: 150px" *ngIf="userWorkInfoData['incomeProof']">
+                        <img height="100%" [src]="userWorkInfoData['incomeProof']" data-magnify="gallery" [attr.data-src]="userWorkInfoData['incomeProof']" >
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'authModule.workInfo.address' | translate }}</td>
+                    <td colspan="3">
+                      {{userWorkInfoData['province']}}-{{userWorkInfoData['city']}}-{{userWorkInfoData['regent']}}-{{userWorkInfoData['block']}}-{{userWorkInfoData['street']}}
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </nz-collapse-panel>
+          </nz-collapse>
+          <!--      KTP验证-->
+          <nz-collapse [nzBordered]="true" *ngIf="ktpCheckInfoData">
+            <nz-collapse-panel [nzHeader]="loginInfoHeader" [nzActive]="true" >
+              <ng-template #loginInfoHeader>
+                <div class="header">
+                  {{ 'authModule.ktpVerification.title' | translate }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ktpCheckInfoData['code']}}
+                </div>
+              </ng-template>
+              <div nz-row>
+                <table>
+                  <tr>
+                    <td>{{ 'authModule.ktpVerification.nameHand' | translate }}</td>
+                    <td>
+                      {{ktpCheckInfoData['inputName'] ? toUpper(ktpCheckInfoData['inputName']) : ""}}
+                      <br/>
+                      <span *ngIf="ktpCheckInfoData['ktpIdentityCheckRes']==1">
+                        {{ktpCheckInfoData['ktpIdentityName']}}
+                      </span>
+                      <span style="background-color: #19be6b" class="ktpBtn" *ngIf="ktpCheckInfoData['ktpIdentityCheckRes']==1">
+                        {{ktpCheckInfoData['ktpIdentityNamePercent']}}
+                      </span>
+                      <span *ngIf="ktpCheckInfoData['ktpIdentityCheckRes']==3">
+                        null
+                      </span>
+                      <span style="background-color: #ed4014" class="ktpBtn" *ngIf="ktpCheckInfoData['ktpIdentityCheckRes']==2">
+                        {{ktpCheckInfoData['ktpIdentityMessage']}}
+                      </span>
+                    </td>
+                    <td>{{ 'authModule.ktpVerification.identityHand' | translate }}</td>
+                    <td>
+                      {{ktpCheckInfoData['inputIdNumber']}}<br/>
+                      <span *ngIf="ktpCheckInfoData['ktpIdentityCheckRes']==1">
+                        {{ktpCheckInfoData['ktpIdentityIdNumber']}}
+                      </span>
+                      <span style="background-color: #19be6b" class="ktpBtn" *ngIf="ktpCheckInfoData['ktpIdentityCheckRes']==1">
+                        SUCCESS
+                      </span>
+                      <span *ngIf="ktpCheckInfoData['ktpIdentityCheckRes']==3">
+                        null
+                      </span>
+                      <span style="background-color: #ed4014" class="ktpBtn" *ngIf="ktpCheckInfoData['ktpIdentityCheckRes']==2">
+                        {{ktpCheckInfoData['ktpIdentityMessage']}}
+                      </span>
+                    </td>
+                    <td colspan="2">{{ 'authModule.ktpVerification.ktp' | translate }}</td>
+                  </tr>
+
+                  <tr>
+                    <td>{{ 'authModule.ktpVerification.nameIdentify' | translate }}</td>
+                    <td>{{ktpCheckInfoData['name']}}</td>
+                    <td>{{ 'authModule.ktpVerification.nik' | translate }}</td>
+                    <td>{{ktpCheckInfoData['idNumber']}}</td>
+                    <td colspan="2" rowspan="8">
+                      <div style="height: 300px" *ngIf="ktpCheckInfoData['ktpPath']">
+                        <img height="100%" [src]="ktpCheckInfoData['ktpPath']" data-magnify="gallery" [attr.data-src]="ktpCheckInfoData['ktpPath']" >
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'authModule.ktpVerification.gender' | translate }}</td>
+                    <td>{{('authModule.personalInfo.genderType' | translate)[ktpCheckInfoData['gender']]}}</td>
+                    <td>{{ 'authModule.ktpVerification.born' | translate }}</td>
+                    <td>{{ktpCheckInfoData['birthPlaceBirthday']}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'authModule.ktpVerification.maritalStatus' | translate }}</td>
+                    <td>{{ktpCheckInfoData['maritalStatus']}}</td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'authModule.ktpVerification.address' | translate }}</td>
+                    <td>{{ktpCheckInfoData['address']}}</td>
+                    <td>{{ 'authModule.ktpVerification.rtRw' | translate }}</td>
+                    <td>{{ktpCheckInfoData['rtrw']}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'authModule.ktpVerification.rural' | translate }}</td>
+                    <td>{{ktpCheckInfoData['village']}}</td>
+                    <td>{{ 'authModule.ktpVerification.area' | translate }}</td>
+                    <td>{{ktpCheckInfoData['district']}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'authModule.ktpVerification.city' | translate }}</td>
+                    <td>{{ktpCheckInfoData['city']}}</td>
+                    <td>{{ 'authModule.ktpVerification.province' | translate }}</td>
+                    <td>{{ktpCheckInfoData['province']}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'authModule.ktpVerification.faith' | translate }}</td>
+                    <td>{{ktpCheckInfoData['religion']}}</td>
+                    <td>{{ 'authModule.ktpVerification.jobs' | translate }}</td>
+                    <td>{{ktpCheckInfoData['occupation']}}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ 'authModule.ktpVerification.nationality' | translate }}</td>
+                    <td>{{ktpCheckInfoData['nationality']}}</td>
+                    <td>{{ 'authModule.ktpVerification.validUntil' | translate }}</td>
+                    <td>{{ktpCheckInfoData['expiryDate']}}</td>
+                  </tr>
+                </table>
+              </div>
+            </nz-collapse-panel>
+          </nz-collapse>
+          <!--      活体校验-->
+          <nz-collapse [nzBordered]="true" *ngIf="livingCheckInfoData">
+            <nz-collapse-panel [nzHeader]="livingCheckInfoHeader" [nzActive]="true" >
+              <ng-template #livingCheckInfoHeader>
+                <div class="header">
+                  {{ 'authModule.liveCalibration.title' | translate }}
+                  {{livingCheckInfoData['livenessScore']}}
+                </div>
+              </ng-template>
+              <div nz-row>
+                <table>
+                  <tr>
+                    <td>{{ 'authModule.liveCalibration.verification' | translate }}</td>
+                    <td>{{ 'authModule.liveCalibration.ktp' | translate }}</td>
+
+                  </tr>
+                  <tr>
+                    <td>
+                      <div style="height: 200px" *ngIf="livingCheckInfoData['imgUrl']">
+                        <img height="100%" [src]="livingCheckInfoData['imgUrl']" data-magnify="gallery" [attr.data-src]="livingCheckInfoData['imgUrl']" >
+                      </div>
+                    </td>
+                    <td>
+                      <div style="height: 200px" *ngIf="livingCheckInfoData['ktpPath']">
+                        <img height="100%" [src]="livingCheckInfoData['ktpPath']" data-magnify="gallery" [attr.data-src]="livingCheckInfoData['ktpPath']" >
+                      </div>
+                    </td>
+                  </tr>
+                  <tr *ngIf="livingCheckInfoData['livenessScore']!=null">
+                    <td>
+                      {{ 'authModule.liveCalibration.similarity' | translate }}
+                    </td>
+                    <td>
+                      {{livingCheckInfoData['livenessScore']}}
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </nz-collapse-panel>
+          </nz-collapse>
+          <!--      风险识别-星合星探-->
+          <nz-collapse [nzBordered]="true" *ngIf="riskIdentificationData">
+            <nz-collapse-panel [nzHeader]="riskIdentificationHeader" [nzActive]="true" >
+              <ng-template #riskIdentificationHeader>
+                <div class="header">
+                  {{ 'authModule.riskIdentification.title' | translate }}
+                </div>
+              </ng-template>
+              <div nz-row>
+                <table>
+                  <tr>
+                    <td>{{ 'authModule.riskIdentification.type' | translate }}</td>
+                    <td>{{ 'authModule.riskIdentification.reportResults' | translate }}</td>
+                  </tr>
+                  <tr *ngFor="let item of riskIdentificationData">
+                    <td>{{item['riskType']}}</td>
+                    <td>{{item['reportResult']}}</td>
+                  </tr>
+                </table>
+              </div>
+            </nz-collapse-panel>
+          </nz-collapse>
+          <!--     历史订单关联设备信息-->
+          <nz-collapse [nzBordered]="true" *ngIf="creditDeviceInfoData">
+            <nz-collapse-panel [nzHeader]="creditDeviceInfoHeader" [nzActive]="true" >
+              <ng-template #creditDeviceInfoHeader>
+                <div class="header">
+                  {{ 'authModule.creditDeviceInfo.title' | translate }}
+                </div>
+              </ng-template>
+              <div nz-row>
+                <table>
+                  <tr>
+                    <td>{{ 'authModule.creditDeviceInfo.time' | translate }}</td>
+                    <td>{{ 'authModule.creditDeviceInfo.creditOrderNo' | translate }}</td>
+                    <td>{{ 'authModule.creditDeviceInfo.name' | translate }}</td>
+                    <td>{{ 'authModule.creditDeviceInfo.imei' | translate }}</td>
+                    <td>{{ 'authModule.creditDeviceInfo.id' | translate }}</td>
+                    <td>{{ 'authModule.creditDeviceInfo.google' | translate }}</td>
+                    <td>{{ 'authModule.creditDeviceInfo.ram' | translate }}</td>
+                    <td>{{ 'authModule.creditDeviceInfo.rom' | translate }}</td>
+                    <td>{{ 'authModule.creditDeviceInfo.resolution' | translate }}</td>
+                    <td>{{ 'authModule.creditDeviceInfo.virtualMachine' | translate }}</td>
+                  </tr>
+                  <tr *ngFor="let item of creditDeviceInfoData">
+                    <td>{{item['applyDateStr']}}</td>
+                    <td>{{item['orderNo']}}</td>
+                    <td>{{item['deviceType']}}</td>
+                    <td>{{item['imei']}}</td>
+                    <td>{{item['androidId']}}</td>
+                    <td>{{item['advertisingId']}}</td>
+                    <td>{{item['ram']}}</td>
+                    <td>{{item['rom']}}</td>
+                    <td>{{item['resolution']}}</td>
+                    <td>{{item['virtual']}}</td>
+                  </tr>
+                </table>
+              </div>
+            </nz-collapse-panel>
+          </nz-collapse>
+          <br/>
+        </div>
+        <div id="aaa" style="min-width: 1400px">
+          <!--      联系人-用户录入-->
+          <nz-collapse [nzBordered]="true" *ngIf="userContactData">
+            <nz-collapse-panel [nzHeader]="loginInfoHeader" [nzActive]="true" >
+              <ng-template #loginInfoHeader>
+                <div class="header">
+                  {{ 'authModule.contactPerson.title' | translate }}
+                </div>
+              </ng-template>
+              <div nz-row>
+                <table>
+                  <tr>
+                    <td></td>
+                    <td>{{ 'authModule.contactPerson.relationship' | translate }}</td>
+                    <td>{{ 'authModule.contactPerson.name' | translate }}</td>
+                    <td style="min-width: 150px">{{ 'authModule.contactPerson.phone' | translate }}</td>
+                    <td>{{ 'authModule.contactPerson.status' | translate }}</td>
+                    <td>{{ 'authModule.contactPerson.lastUpdated' | translate }}</td>
+                    <td>{{ 'authModule.contactPerson.updater' | translate }}</td>
+                    <td colspan="5">{{ 'authModule.contactPerson.operation' | translate }}</td>
+                  </tr>
+                  <tr *ngFor='let item of userContactData ,let idx = index'>
+                    <td>{{ 'authModule.contactPerson.emergency' | translate }}{{idx+1}}</td>
+                    <td>{{('authModule.contactPerson.relation' | translate)[item['relation']]}}</td>
+                    <td>{{item['contactName']}}</td>
+                    <td>{{item['contactPhone']}}</td>
+                    <td>{{item['phoneNumStatus']!=null ? ('authModule.contactPerson.state' | translate)[item['phoneNumStatus']] : ""}}</td>
+                    <td>{{item['modifyTime']}}</td>
+                    <td>{{item['modifyOperatorName']}}</td>
+                    <td class="contact-state" (click)="setContactState(item,1)">{{ 'authModule.contactPerson.connectedNot' | translate }}</td>
+                    <td class="contact-state" (click)="setContactState(item,2)">{{ 'authModule.contactPerson.shutdown' | translate }}</td>
+                    <td class="contact-state" (click)="setContactState(item,3)">{{ 'authModule.contactPerson.emptyNumber' | translate }}</td>
+                    <td class="contact-state" (click)="setContactState(item,4)">{{ 'authModule.contactPerson.knowNot' | translate }}</td>
+                    <td class="contact-state" (click)="setContactState(item,5)">{{ 'authModule.contactPerson.available' | translate }}</td>
+                  </tr>
+                </table>
+              </div>
+            </nz-collapse-panel>
+          </nz-collapse>
+          <br/>
+        </div>
+        <div id="ggg" style="min-width: 1400px">
+          <nz-collapse [nzBordered]="true">
+            <nz-collapse-panel [nzHeader]="loginInfoHeader" [nzActive]="true" >
+              <ng-template #loginInfoHeader>
+                <div class="header">
+                  {{ "collectDetail.contactBook" | translate}}
+                </div>
+              </ng-template>
+              <div nz-row>
+                <nz-table [nzData]="phoneList" [nzShowPagination]="false" nzBordered>
+                  <thead>
+                    <tr>
+                      <th>{{ "collectDetail.name" | translate}}</th>
+                      <th style="min-width: 150px">{{ "collectDetail.telephone" | translate}}</th>
+                      <th>{{ 'authModule.contactPerson.status' | translate }}</th>
+                      <th>{{ 'authModule.contactPerson.lastUpdated' | translate }}</th>
+                      <th>{{ 'authModule.contactPerson.updater' | translate }}</th>
+                      <th colspan="5">{{ 'authModule.contactPerson.operation' | translate }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let data of phoneList">
+                      <td>{{data['contactName'] ? data['contactName'] :""}}</td>
+                      <td>{{data['contactPhone'] ? data['contactPhone'] :""}}</td>
+                      <td>{{data['phoneNumStatus']!=null ? ('authModule.contactPerson.state' | translate)[data['phoneNumStatus']] : ""}}</td>
+                      <td>{{data['modifyTime']}}</td>
+                      <td>{{data['modifyOperatorName']}}</td>
+                      <td class="contact-state" (click)="setContactState(data,1)">{{ 'authModule.contactPerson.connectedNot' | translate }}</td>
+                      <td class="contact-state" (click)="setContactState(data,2)">{{ 'authModule.contactPerson.shutdown' | translate }}</td>
+                      <td class="contact-state" (click)="setContactState(data,3)">{{ 'authModule.contactPerson.emptyNumber' | translate }}</td>
+                      <td class="contact-state" (click)="setContactState(data,4)">{{ 'authModule.contactPerson.knowNot' | translate }}</td>
+                      <td class="contact-state" (click)="setContactState(data,5)">{{ 'authModule.contactPerson.available' | translate }}</td>
+                    </tr>
+                  </tbody>
+                </nz-table>
+              </div>
+            </nz-collapse-panel>
+          </nz-collapse>
+        </div>
+        <div id="letterRecord" style="min-width: 1000px">
+          <nz-collapse [nzBordered]="true">
+            <nz-collapse-panel [nzHeader]="letterRecordHeader" [nzActive]="true" >
+              <ng-template #letterRecordHeader>
+                <div class="header">
+                  {{ "letterReviewOrder.letterRecord" | translate}}
+                </div>
+              </ng-template>
+              <div nz-row>
+                <table class="tab">
+                  <tr>
+                    <td>
+                      {{'letterReviewOrder.reviewOrderNo' | translate}}
+                    </td>
+                    <td>
+                      {{letterReviewData && letterReviewData['creditOrderNO'] ? letterReviewData['creditOrderNO'] : ""}}
+                    </td>
+                  </tr>
+                </table>
+                <c-table [tableData] = 'letterRecordData'>
+                </c-table>
+              </div>
+            </nz-collapse-panel>
+          </nz-collapse>
+        </div>
+        <br/>
+        <br/>
+      </div>
+      <div class="phone-tips" id="div-iframe">
+        <h3>{{userInfoData && userInfoData['phoneNumber'] ? userInfoData['phoneNumber'] : ""}}</h3>
+        <div class="div-button" (click)="phoneFn(1)">{{'collectDetail.dial' | translate}}</div>
+        <div class="div-button" (click)="phoneFn(2)">{{'collectDetail.sendMessage' | translate}}</div>
+        <div class="div-button" (click)="copyClipboard(1)">{{'collectDetail.copyPhone' | translate}}</div>
+        <div class="div-button" (click)="copyCode()">{{'collectDetail.copyLink' | translate}}</div>
+      </div>
+    </div>
+    <div class="c-search-group c-search-border">
+      <div class="c-search-itemRight">
+        <ul class="sectionList c-flex-row-start" style="flex-wrap:wrap;height: auto;">
+          <li (click) = 'changeStatus(1)' [ngClass]='{"active-tag" : (1 == chType)}'>
+            {{'collectDetail.collectionLog' | translate}}
+          </li>
+          <li (click) = 'changeStatus(2)' [ngClass]='{"active-tag" : (2 == chType)}'>
+            {{'collectDetail.collectionPhone' | translate}}
+          </li>
+          <li (click) = 'changeStatus(3)' [ngClass]='{"active-tag" : (3 == chType)}'>
+            {{'collectDetail.collectionSms' | translate}}
+          </li>
+          <li (click) = 'changeStatus(4)' [ngClass]='{"active-tag" : (4 == chType)}'>
+            {{'collectDetail.collectionFlow' | translate}}
+          </li>
+          <li (click) = 'changeStatus(5)' [ngClass]='{"active-tag" : (5 == chType)}'>
+            {{'collectDetail.repaymentCode' | translate}}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="c-search-group" *ngIf="5 == chType">
+
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "financeModule.repaymentCode.createType" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 150px;" [(ngModel)]="searchModel.type">
+            <nz-option *ngFor="let item of ('financeModule.repaymentCode.createTypes' | translate)" [nzValue]="item.value" [nzLabel]="item.desc"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "financeModule.repaymentCode.tradeStatus" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 150px;" [(ngModel)]="searchModel.status">
+            <nz-option *ngFor="let item of ('financeModule.repaymentCode.tradeStatuss' | translate)" [nzValue]="item.value" [nzLabel]="item.desc"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+    </div>
+
+    <div class="c-search-btnGroup" *ngIf="5 == chType">
+      <button nz-button nzType="primary"  (click) = 'search() '>
+        {{ "common.search" | translate}}
+      </button>
+      <button style="margin-left: 20px;" nz-button (click) = 'reset() '>
+        {{ "common.reset" | translate}}
+      </button>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <button nz-button nzType="primary" *ngIf="1 == chType" (click) = 'addModelFn() '>
+          {{ "common.operate.add" | translate}}
+        </button>
+        <button nz-button nzType="primary" *ngIf="5 == chType" (click) = 'addCode() ' style="margin-top: 20px">
+          {{ "financeModule.repaymentCode.add" | translate }}
+        </button>
+        <!-- <button nz-button nzType="primary"  (click) = 'getList() '>
+          {{ "common.search" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button (click) = 'reset() '>
+          {{ "common.reset" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button (click) = 'reset() '>
+          {{ "common.ex" | translate}}
+        </button> -->
+      </div>
+    </div>
+  </div>
+  <c-table [tableData]='tableData'>
+  </c-table>
+  <!-- <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange)='pageChange($event , "size")'
+      [nzPageIndex]="searchModel.currentPage" [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+      <span>
+        {{ "common.total" | translate }}
+      </span>
+      <span>
+        {{ totalSize }}
+      </span>
+      <span>
+        {{ "common.pageUnit" | translate }}
+      </span>
+    </ng-template>
+  </div> -->
+  <button id="btn-msisdn" style="display: none;">{{ "collectDetail.dialNumber" | translate}}</button>
+</div>
+
+<nz-modal [(nzVisible)]="addModel" [nzTitle]="'collectDetail.addCollectionLog' | translate" (nzOnOk)="handleOk()" (nzOnCancel)="handleCancel()" [nzOkLoading]="isOkLoading" [nzWidth]="500">
+  <div class="formChannel">
+    <form nz-form [formGroup]="logForm">
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="logType">{{ "collectDetail.collectionLogType" | translate}}</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+          <nz-select formControlName="logType">
+            <nz-option nzValue="1" [nzLabel]="'collectDetail.dialNoAnswer' | translate"></nz-option>
+            <nz-option nzValue="2" [nzLabel]="'collectDetail.delayedRepayment' | translate"></nz-option>
+            <nz-option nzValue="3" [nzLabel]="'collectDetail.refusalRepayment' | translate"></nz-option>
+            <nz-option nzValue="4" [nzLabel]="'collectDetail.emptyNumber' | translate"></nz-option>
+            <nz-option nzValue="5" [nzLabel]="'collectDetail.downtime' | translate"></nz-option>
+            <nz-option nzValue="6" [nzLabel]="'collectDetail.extension' | translate"></nz-option>
+          </nz-select>
+          <nz-form-explain *ngIf="logForm.get('logType').dirty && logForm.get('logType').errors">{{ "collectDetail.inputName" | translate}}</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzRequired>{{ "collectDetail.remarks" | translate}}</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <textarea formControlName="remark" nz-input rows="2"></textarea>
+          <nz-form-explain *ngIf="logForm.get('remark').dirty&&logForm.get('remark').hasError('required')">{{ "collectDetail.inputRemarks" | translate}}</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item nz-row style="margin-bottom:8px;">
+        <nz-form-control [nzSpan]="14" [nzOffset]="6">
+          <label nz-checkbox formControlName="remind">
+            <span>{{ "collectDetail.appointmentReminder" | translate}}</span>
+          </label>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item *ngIf="logForm.value.remind">
+        <nz-form-label [nzSpan]="6" [nzRequired]="logForm.get('remind')?.value">{{ "collectDetail.appointmentReminder" | translate}}</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <nz-date-picker [nzStyle]="{width:'262px'}" nzShowTime formControlName="remindTime"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item *ngIf="logForm.value.remind">
+        <nz-form-label [nzSpan]="6" [nzRequired]="logForm.get('remind')?.value">{{ "collectDetail.reminderContent" | translate}}</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <textarea formControlName="remindContent" nz-input rows="2"></textarea>
+          <nz-form-explain *ngIf="logForm.get('remindContent').dirty&&logForm.get('remindContent').hasError('required')">{{ "collectDetail.inputReminderContent" | translate}}</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="extendModel" [nzTitle]="'collectDetail.extension' | translate" (nzOnOk)="extendOk()" (nzOnCancel)="extendCancel()" [nzOkLoading]="isOkLoading" [nzWidth]="500">
+  <div class="formChannel">
+    <form nz-form [formGroup]="extendForm">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6">{{ "collectDetail.orderNo" | translate}}</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          {{para.orderNo}}
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="6" nzRequired>{{ "collectDetail.loanOrderDetails.amount" | translate}}</nz-form-label>
+        <nz-form-control [nzSpan]="16">
+          <input nz-input formControlName="money" id="money" [placeholder]="'collectDetail.loanOrderDetails.inputAmount' | translate">
+          <nz-form-explain *ngIf="extendForm.get('money').dirty&&extendForm.get('money').hasError('required')">{{ "collectDetail.inputAmount" | translate}}!</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <div nz-col nzSpan="6"> </div>
+        <nz-form-control [nzSpan]="16">
+            <nz-table [nzData]="[{}]" [nzShowPagination]="false" nzBordered>
+              <tbody>
+                <tr><td style="width:50%">{{ "collectDetail.loanOrderDetails.actualCurrentRepay" | translate}}</td><td>{{extendInfo['surplusRepay']}}</td></tr>
+                <tr><td style="width:50%">{{ "collectDetail.loanOrderDetails.principal" | translate}}</td><td>{{extendInfo['applyMoney']}}</td></tr>
+                <tr><td style="width:50%">{{ "collectDetail.loanOrderDetails.interest" | translate}}</td><td>{{extendInfo['interestMoney']}}</td></tr>
+                <tr><td style="width:50%">{{ "collectDetail.loanOrderDetails.otherFee" | translate}}</td><td>{{extendInfo['serviceCharge']}}</td></tr>
+                <tr><td style="width:50%">{{ "collectDetail.loanOrderDetails.overDueRateMoney" | translate}}</td><td>{{extendInfo['overDueFine']}}</td></tr>
+                <tr><td style="width:50%">{{ "collectDetail.loanOrderDetails.amountRepaid" | translate}}</td><td>{{extendInfo['realRepayMoney']}}</td></tr>
+                <tr style="background-color: #cccccc"><td style="width:50%">{{ "collectDetail.loanOrderDetails.currentRepay" | translate}}</td><td>{{extendInfo['currentRepay']}}</td></tr>
+                <tr><td style="width:50%">{{ "collectDetail.loanOrderDetails.payDate" | translate}}</td><td>{{extendInfo[' payDateStr']}}</td></tr>
+                <tr><td style="width:50%">{{ "collectDetail.loanOrderDetails.loanDays" | translate}}</td><td>{{extendInfo['loanDays']}}</td></tr>
+                <tr><td style="width:50%">{{ "collectDetail.loanOrderDetails.planRepaymentDate" | translate}}</td><td>{{extendInfo['planRepaymentDateStr']}}</td></tr>
+                <tr style="background-color: #cccccc"><td style="width:50%">{{ "collectDetail.loanOrderDetails.extensionDate" | translate}}</td><td>{{extendInfo['exhibitionPeriodDateStr']}}</td></tr>
+              </tbody>
+            </nz-table>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="phoneModel" [nzTitle]="phoneType == 1 ? ('collectDetail.dialNumber' | translate) : ('collectDetail.sendMessage' | translate) " (nzOnOk)="phoneOk()" (nzOnCancel)="phoneCancel()" [nzOkLoading]="isOkLoading" [nzWidth]="1000">
+  <div class="formChannel">
+    <ul class="sectionList c-flex-row-start c-search-border" style="flex-wrap:wrap;height: auto;margin-bottom: 15px;">
+      <li (click) = 'changePhoneStatus(1)' [ngClass]='{"active-tag" : (1 == phoneMdlType)}'>
+        {{ "collectDetail.friendInfo" | translate }}
+      </li>
+      <li (click) = 'changePhoneStatus(2)' [ngClass]='{"active-tag" : (2 == phoneMdlType)}'>
+        {{ "collectDetail.addressBook" | translate }}
+      </li>
+<!--      <li (click) = 'changePhoneStatus(3)' [ngClass]='{"active-tag" : (3 == phoneMdlType)}'>-->
+<!--        {{ "collectDetail.callRecord" | translate }}-->
+<!--      </li>-->
+    </ul>
+    <form nz-form [formGroup]="phoneForm">
+      <nz-form-item>
+        <nz-form-control [nzSpan]="24">
+          <div style="max-height: 200px;overflow-y: auto">
+            <!-- 紧急联系人 -->
+            <nz-table *ngIf="phoneMdlType == 1" [nzData]="friendInfo" [nzShowPagination]="false" nzBordered>
+              <thead>
+              <tr>
+                <th *ngIf="phoneType==1"></th>
+                <th *ngIf="phoneType==2"  nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event, 1)"></th>
+                <th>{{ "collectDetail.name" | translate }}</th>
+                <th>{{ "collectDetail.phone" | translate }}</th>
+                <th>{{ 'authModule.contactPerson.status' | translate }}</th>
+                <th>{{ 'authModule.contactPerson.lastUpdated' | translate }}</th>
+                <th>{{ 'authModule.contactPerson.updater' | translate }}</th>
+                <th colspan="5">{{ 'authModule.contactPerson.operation' | translate }}</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let data of friendInfo">
+                <td nzShowCheckbox [(nzChecked)]="data['checked']" [nzDisabled]="data['disabled']" (nzCheckedChange)="checkEmergent(data)"></td>
+                <td>{{data['contactName']}}</td>
+                <td>{{data['contactPhone']}}</td>
+                <td>{{data['phoneNumStatus']!=null ? ('authModule.contactPerson.state' | translate)[data['phoneNumStatus']] : ""}}</td>
+                <td>{{data['modifyTime']}}</td>
+                <td>{{data['modifyOperatorName']}}</td>
+                <td class="contact-state" (click)="setFriendInfo(data,1)">{{ 'authModule.contactPerson.connectedNot' | translate }}</td>
+                <td class="contact-state" (click)="setFriendInfo(data,2)">{{ 'authModule.contactPerson.shutdown' | translate }}</td>
+                <td class="contact-state" (click)="setFriendInfo(data,3)">{{ 'authModule.contactPerson.emptyNumber' | translate }}</td>
+                <td class="contact-state" (click)="setFriendInfo(data,4)">{{ 'authModule.contactPerson.knowNot' | translate }}</td>
+                <td class="contact-state" (click)="setFriendInfo(data,5)">{{ 'authModule.contactPerson.available' | translate }}</td>
+              </tr>
+              </tbody>
+            </nz-table>
+            <!-- 通讯录 -->
+            <nz-table *ngIf="phoneMdlType == 2" [nzData]="phoneListData" [nzShowPagination]="false" nzBordered>
+              <thead>
+              <tr>
+                <th *ngIf="phoneType==1"></th>
+                <th *ngIf="phoneType==2" nzShowCheckbox [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event, 2)"></th>
+                <th>{{ "collectDetail.name" | translate }}</th>
+                <th>{{ "collectDetail.phone" | translate }}</th>
+                <th>{{ 'authModule.contactPerson.status' | translate }}</th>
+                <th>{{ 'authModule.contactPerson.lastUpdated' | translate }}</th>
+                <th>{{ 'authModule.contactPerson.updater' | translate }}</th>
+                <th colspan="5">{{ 'authModule.contactPerson.operation' | translate }}</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let data of phoneListData">
+                <td nzShowCheckbox [(nzChecked)]="data['checked']" [nzDisabled]="data['disabled']" (nzCheckedChange)="checkEmergent(data)"></td>
+                <td>{{data['contactName']}}</td>
+                <td>{{data['contactPhone']}}</td>
+                <td>{{data['phoneNumStatus']!=null ? ('authModule.contactPerson.state' | translate)[data['phoneNumStatus']] : ""}}</td>
+                <td>{{data['modifyTime']}}</td>
+                <td>{{data['modifyOperatorName']}}</td>
+                <td class="contact-state" (click)="setPhoneListData(data,1)">{{ 'authModule.contactPerson.connectedNot' | translate }}</td>
+                <td class="contact-state" (click)="setPhoneListData(data,2)">{{ 'authModule.contactPerson.shutdown' | translate }}</td>
+                <td class="contact-state" (click)="setPhoneListData(data,3)">{{ 'authModule.contactPerson.emptyNumber' | translate }}</td>
+                <td class="contact-state" (click)="setPhoneListData(data,4)">{{ 'authModule.contactPerson.knowNot' | translate }}</td>
+                <td class="contact-state" (click)="setPhoneListData(data,5)">{{ 'authModule.contactPerson.available' | translate }}</td>
+              </tr>
+              </tbody>
+            </nz-table>
+          </div>
+
+        </nz-form-control>
+      </nz-form-item>
+      <div *ngIf="phoneType == 1">
+        <nz-form-item>
+          <nz-form-label [nzSpan]="6" nzRequired>{{ "collectDetail.addPhone" | translate }}</nz-form-label>
+          <nz-form-control [nzSpan]="14">
+            <input nz-input type="text" [(ngModel)]="phoneCall" [ngModelOptions]="{standalone: true}" [placeholder]="'collectDetail.inputPhone' | translate">
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div *ngIf="phoneType == 2" style="max-height: 200px;overflow-y: auto">
+        <nz-form-item *ngFor="let item of phoneArray;let i = index">
+          <nz-form-label *ngIf="i==0" [nzSpan]="6" nzRequired>{{ "collectDetail.addPhone" | translate }}</nz-form-label>
+          <nz-form-control [nzOffset]="i==0?0:6" [nzSpan]="14">
+            <input nz-input [(ngModel)]="item['phone']" [ngModelOptions]="{standalone: true}" [placeholder]="'collectDetail.inputPhone' | translate">
+          </nz-form-control>
+          <div *ngIf="phoneType == 2" class="icon-content" nz-col [nzSpan]="4">
+            <i *ngIf="i!=0" class="anticon anticon-minus-circle-o" (click)="deletephoneNum(item)"></i>
+            <i *ngIf="i==0" class="anticon anticon-plus-circle-o" (click)="addphoneNum()"></i>
+          </div>
+        </nz-form-item>
+      </div>
+      <nz-form-item *ngIf="phoneType==2">
+        <nz-form-label [nzSpan]="6" nzRequired>{{ "collectDetail.messageContent" | translate }}</nz-form-label>
+        <nz-form-control [nzSpan]="14">
+          <textarea formControlName="msg" nz-input rows="2"  [placeholder]="'collectDetail.messageContent' | translate"></textarea>
+          <nz-form-explain *ngIf="phoneForm.get('msg').dirty&&phoneForm.get('msg').hasError('required')">{{ "collectDetail.msgContent" | translate }}!</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
+</nz-modal>
+<nz-modal
+  [(nzVisible)]="isVisible"
+  [nzTitle]='"financeModule.repaymentCode.add" | translate'
+  [nzOkText]='"common.setting" | translate'
+  [nzCancelText]='"common.operate.cancel" | translate'
+  (nzOnOk)="handleOkCode()"
+  (nzOnCancel)="handleCancelCode()"
+  [nzOkLoading]="isOkLoadingCode"
+>
+  <div class="formChannel">
+    <form nz-form [nzLayout]="'block'" [formGroup]="validForm">
+      <nz-form-item>
+        <nz-form-label [nzSm]="8" nzRequired>
+          {{ "financeModule.repaymentCode.inadd.loanOrder" | translate}}
+        </nz-form-label>
+        <nz-form-control [nzSm]="15"  [nzOffset]='1'>
+          <input
+            type="text"
+            nz-input
+            formControlName="orderNo"
+            id="orderNo"
+            disabled
+          >
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="8" nzRequired>
+          {{ "financeModule.repaymentCode.inadd.residue" | translate}}
+        </nz-form-label>
+        <nz-form-control [nzSm]="15"  [nzOffset]='1'>
+          <nz-input-group  nzSuffix="RP">
+            <input
+              type="text"
+              nz-input
+              formControlName="leftAmount"
+              id="leftAmount"
+              disabled
+            >
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="8" nzRequired>
+          {{ "financeModule.repaymentCode.inadd.transactionAmount" | translate}}
+        </nz-form-label>
+        <nz-form-control [nzSm]="15"  [nzOffset]='1'>
+          <nz-input-group  nzSuffix="RP">
+            <input
+              type="number"
+              nz-input
+              formControlName="dealMoney"
+              id="dealMoney"
+              [placeholder] = '"financeModule.repaymentCode.moreThanTenThousand" | translate'
+            >
+          </nz-input-group>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
+</nz-modal>

@@ -1,0 +1,138 @@
+<div class="c-content-wrap">
+  <div class="half-block" style="margin-bottom: 20px">
+    <div class="title">
+      {{ "productCenter.contract.title" | translate }}
+      <div class="c-btnGroup">
+        <button nz-button  (click) = 'add()'>
+          {{ "productCenter.contract.add" | translate}}
+        </button>
+      </div>
+    </div>
+    <div class="serach">
+      <nz-select [(ngModel)]="inputValue">
+        <nz-option *ngFor="let option of inputData;" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+      </nz-select>
+      <input nz-input nzAllowClear *ngIf="inputValue==='id'" style="width: 200px" type="tel" name="tel" [(ngModel)]="searchModel.id" class="left"  [placeholder] = '"productCenter.contract.prompt" | translate' (keyup)="keyupId()" >
+      <input nz-input nzAllowClear *ngIf="inputValue==='name'" style="width: 200px" type="text" class="left" [(ngModel)]="searchModel['contractName']" [placeholder] = '"productCenter.contract.prompt" | translate' >
+      <button nz-button class="left"  nzType="primary" (click) = 'search() '>
+        {{ "common.search" | translate}}
+      </button>
+      <button nz-button class="left"  nzType="default"  (click) = 'reset()'>
+        {{ "common.reset" | translate}}
+      </button>
+    </div>
+  </div>
+
+  <c-table [tableData] = 'tableData'>
+  </c-table>
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+  <span>
+  {{ "common.total" | translate }}
+  </span>
+      <span>
+  {{ totalSize }}
+  </span>
+      <span>
+  {{ "common.pageUnit" | translate }}
+  </span>
+    </ng-template>
+  </div>
+  <nz-modal [(nzVisible)]="isDelete" [nzTitle]="'common.deleteToast.title' | translate" (nzOnCancel)="deleteCancel()" (nzOnOk)="deleteOk()" [nzOkLoading]="isDeleteLoading">
+    <p>{{"common.deleteToast.tip"  | translate }}！</p>
+  </nz-modal>
+
+  <nz-modal
+    [(nzVisible)]="isVisible"
+    [nzTitle]='"productCenter.product.title" | translate'
+    [nzOkText]='"common.setting" | translate'
+    [nzCancelText]='"common.operate.cancel" | translate'
+    (nzOnOk)="handleOk()"
+    (nzOnCancel)="handleCancel()"
+    [nzOkLoading]="isOkLoading"
+    [nzWidth]="800"
+  >
+    <div class="formChannel">
+      <form nz-form [nzLayout]="'block'" [formGroup]="validForm">
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired nzFor="contractName">
+              {{ "productCenter.contract.list.name" | translate}}
+            </nz-form-label>
+              <nz-form-control [nzSm]="16" [nzOffset]='1'>
+                <input
+                  type="text"
+                  nz-input
+                  formControlName="contractName"
+                  id="name"
+                  [placeholder] = '"productCenter.contract.tips.name" | translate'
+                >
+              </nz-form-control>
+            <nz-form-explain *ngIf="validForm.get('contractName').dirty && validForm.get('contractName').errors">
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+
+
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired nzFor="type">
+              {{ "productCenter.contract.list.type" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16" [nzOffset]='1'>
+              <nz-select formControlName="contractProtocolId" id="contractProtocolId" (ngModelChange)="setType($event)" [nzPlaceHolder]="'productCenter.contract.tips.type' | translate" [nzAllowClear]="true">
+                <nz-option *ngFor="let option of AllProtocol" [nzLabel]="option['protocolType']" [nzValue]="option['id']"></nz-option>
+              </nz-select>
+            </nz-form-control>
+            <nz-form-explain *ngIf="validForm.get('contractProtocolId').dirty && validForm.get('contractProtocolId').errors">
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-label [nzSm]="7" nzRequired nzFor="agreementURL">
+            {{ "productCenter.contract.list.agreementURL" | translate}}
+          </nz-form-label>
+          <nz-form-control [nzSm]="16" [nzOffset]='1'>
+            <input
+              readonly
+              type="text"
+              nz-input
+              formControlName="agreementURL"
+              id="agreementURL"
+              [placeholder]="'productCenter.contract.tips.agreementURL' | translate"
+            >
+          </nz-form-control>
+          <nz-form-explain *ngIf="validForm.get('agreementURL').dirty && validForm.get('agreementURL').errors">
+          </nz-form-explain>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-label [nzSm]="7" nzRequired nzFor="contractProtocolContent">
+            {{ "productCenter.contract.list.agreement" | translate}}
+          </nz-form-label>
+          <nz-form-control [nzSm]="24">
+            <ckeditor formControlName="contractProtocolContent" debounce="500" [config]="configData">
+            </ckeditor>
+          </nz-form-control>
+          <nz-form-explain *ngIf="validForm.get('contractProtocolContent').dirty && validForm.get('contractProtocolContent').errors">
+          </nz-form-explain>
+        </nz-form-item>
+
+        <nz-form-item class='formSec' *ngIf="validForm.get('id').value">
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzFor="type">
+              {{ "productCenter.product.list.state" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16" [nzOffset]='1'>
+              <nz-select formControlName="status" id="status">
+                <nz-option *ngFor="let option of stateData" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+              </nz-select>
+            </nz-form-control>
+            <nz-form-explain *ngIf="validForm.get('status').dirty && validForm.get('status').errors">
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+  </nz-modal>
+</div>

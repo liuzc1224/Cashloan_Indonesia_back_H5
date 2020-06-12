@@ -1,0 +1,86 @@
+<div class="c-content-wrap">
+  <div class="c-search-wrap">
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "riskReport.thirdParty.callDate" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-range-picker [(ngModel)]="searchModel.rangeDate" [nzAllowClear]="false"></nz-range-picker>
+          <!-- <nz-date-picker [(ngModel)]="searchModel.startDate"></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker [(ngModel)]="searchModel.endDate"></nz-date-picker> -->
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+    <div class="c-search-item">
+      <button nz-button nzType="primary"  (click) = 'search()'>
+        {{ "common.search" | translate}}
+      </button>
+      <button style="margin-left: 20px;" nz-button (click) = 'reset()'>
+        {{ "common.reset" | translate}}
+      </button>
+      <button style="margin-left: 20px;" nz-button [disabled]="totalSize===0" (click) = 'getExportList()'>
+        {{ "common.ex" | translate}}
+      </button>
+    </div>
+  </div>
+  </div>
+  <nz-table
+    #borderedTable
+    nzBordered
+    [nzData]="totalData"
+    [nzShowPagination]="false"
+    [nzLoading]="timeLoading"
+  >
+    <thead>
+    <tr>
+      <th></th>
+      <th class="textCenter">{{"riskReport.thirdParty.livingRecognition" | translate}}</th>
+      <th class="textCenter">{{"riskReport.thirdParty.deviceFingerprint" | translate}}</th>
+      <th class="textCenter">{{"riskReport.thirdParty.authentication" | translate}}</th>
+      <th class="textCenter">{{"riskReport.thirdParty.OCR" | translate}}</th>
+      <th class="textCenter">{{"riskReport.thirdParty.portraitComparison" | translate}}</th>
+      <th class="textCenter">{{"riskReport.thirdParty.blacklist" | translate}}</th>
+      <th class="textCenter">{{"riskReport.thirdParty.multipleDetection" | translate}}</th>
+      <th class="textCenter">{{"riskReport.thirdParty.faceBlacklist" | translate}}</th>
+      <th class="textCenter">{{"riskReport.thirdParty.creditPoints" | translate}}</th>
+      <th class="textCenter">{{"riskReport.thirdParty.telecommunications" | translate}}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>{{"riskReport.thirdParty.total" | translate}}</td>
+      <td>{{allRes.yituAliveCount}}</td>
+      <td>{{allRes.androidFigureCount}}</td>
+      <td>{{allRes.identityCheckCount}}</td>
+      <td>{{allRes.ocrCheckCount}}</td>
+      <td>{{allRes.yituFaceCheckCount}}</td>
+      <td>{{allRes.blackListCheckCount}}</td>
+      <td>{{allRes.multiCheckCount}}</td>
+      <td>{{allRes.riskyFaceCheckCount}}</td>
+      <td>{{allRes.creditScoreCheckCount}}</td>
+      <td>{{allRes.telScoreCheckCount}}</td>
+    </tr>
+    </tbody>
+  </nz-table>
+
+  <c-table [tableData] = 'tableData'>
+  </c-table>
+  
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+      <span>
+      {{ "common.total" | translate }}
+      </span>
+      <span>
+      {{ totalSize }}
+      </span>
+      <span>
+      {{ "common.pageUnit" | translate }}
+      </span>
+    </ng-template>
+  </div>
+</div>

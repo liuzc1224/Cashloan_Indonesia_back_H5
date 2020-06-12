@@ -1,0 +1,104 @@
+<div class="record">
+  <div class="c-search-group c-search-border">
+    <div class="c-search-itemLeft">
+      {{ "financeModule.list.classify" | translate }}:
+    </div>
+    <div class="c-search-itemRight">
+      <ul class="sectionList c-flex-row-start c-flex-auto-wrap">
+        <li
+          (click)="changeStatus('null')"
+          [ngClass]="{ 'active-tag': 'null' == SearchModel.status }"
+        >
+          {{ "financeModule.list.all" | translate }}
+        </li>
+        <li
+          *ngFor="let item of statusEnum"
+          (click)="changeStatus(item.value)"
+          [ngClass]="{ 'active-tag': item.value == SearchModel.status }"
+        >
+          {{ item.name }}
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 搜索条件 -->
+  <div class="c-search-group">
+    <div class="c-search-item" style="margin-left: 20px">
+      <div class="c-search-itemLeft">
+        {{ "financeModule.totle.table.cashLoanDate" | translate }}:
+      </div>
+      <div class="c-search-itemRight">
+        <nz-date-picker
+          [nzPlaceHolder]="' '"
+          [(ngModel)]="SearchModel.applyDateBegin"
+        ></nz-date-picker>
+        <span style="color:#999"> ~ </span>
+        <nz-date-picker
+          [nzPlaceHolder]="' '"
+          [(ngModel)]="SearchModel.applyDateEnd"
+        ></nz-date-picker>
+      </div>
+    </div>
+  </div>
+  <div class="c-search-group">
+    <div class="c-search-item">
+      <div class="c-search-item" style="margin-left: 20px">
+        <div class="c-search-itemLeft">
+          {{ "financeModule.totle.table.letterOrderNo" | translate }}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" [(ngModel)]="SearchModel.creditOrderNo" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="c-search-group">
+    <div class="c-search-item">
+      <button
+        style="margin-left: 30px"
+        nz-button
+        nzType="primary"
+        (click)="search()"
+      >
+        {{ "common.search" | translate }}
+      </button>
+      <button
+        style="margin-left: 30px"
+        nz-button
+        nzType="default"
+        (click)="reset()"
+      >
+        {{ "common.reset" | translate }}
+      </button>
+    </div>
+  </div>
+  <nz-table
+    #middleTable
+    nzSize="middle"
+    [nzData]="orderList"
+    [nzPageSize]="10"
+    (nzPageIndexChangeClick)="changePage()"
+    [(nzPageIndex)]="currentPage"
+  >
+    <thead>
+      <tr>
+        <th *ngFor="let item of ('common.letter.table.headerInfo' | translate)">
+          {{ item }}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of middleTable.data">
+        <td>{{ data.applyDateStr }}</td>
+        <td>{{ data.creditOrderNo }}</td>
+        <td>{{ data.userPhone }}</td>
+        <td>{{ data.userGrade }}</td>
+        <td>{{ data.approveDays }}</td>
+        <td>{{ data.approveEffectDayStr }}</td>
+        <td>{{ data.approveExpDayStr }}</td>
+        <td>{{ data.statusTxt }}</td>
+      </tr>
+    </tbody>
+  </nz-table>
+</div>

@@ -1,0 +1,100 @@
+<div class="c-content-wrap">
+  <div class="half-block">
+    <div class="title">
+      {{ "channel.title" | translate }}
+      <div class="c-btnGroup">
+        <button nz-button  (click) = 'add()'>
+          {{ "channel.btn.add" | translate}}
+        </button>
+      </div>
+    </div>
+    <div class="c-search-Group">
+      <span>{{ "channel.tabData.channelNumber" | translate}}</span>
+      <input nz-input type="text" class="left" [(ngModel)] = 'searchModel.serialNumber' [placeholder] = '"channel.prompt.Id" | translate' maxlength="2" >
+      <span class="left">{{ "channel.tabData.channelProvider" | translate}}</span>
+      <input nz-input type="text" class="left" [(ngModel)] = 'searchModel.name' [placeholder] = '"channel.prompt.channelProvider" | translate' >
+      <div class="c-btn-Group">
+        <button nz-button  nzType="primary" (click) = 'search() '>
+          {{ "common.search" | translate}}
+        </button>
+        <button nz-button class="left" (click) = 'reset() '>
+          {{ "channel.btn.reset" | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+  <c-table [tableData] = 'tableData' style="margin-top: 20px">
+  </c-table>
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+      <span>
+          {{ "common.total" | translate }}
+      </span>
+      <span>
+          {{ totalSize }}
+      </span>
+      <span>
+          {{ "common.pageUnit" | translate }}
+      </span>
+    </ng-template>
+  </div>
+  <nz-modal
+    [(nzVisible)]="isVisible"
+    [nzTitle]='title'
+    [nzOkText]='"common.setting" | translate'
+    [nzCancelText]='"common.operate.cancel" | translate'
+    (nzOnOk)="handleOk()"
+    (nzOnCancel)="handleCancel()"
+    [nzOkLoading]="isOkLoading"
+  >
+    <div class="formChannel">
+      <form nz-form [nzLayout]="'inline'" [formGroup]="validForm">
+        <nz-form-item class='formSec'>
+          <nz-form-label [nzSm]="7" nzRequired nzFor="name">
+            {{ "channel.tabData.channelProvider" | translate}}
+          </nz-form-label>
+          <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+            <input
+              type="text"
+              nz-input
+              maxlength="50"
+              formControlName="name"
+              id="name"
+              [placeholder] = '"channel.prompt.channelProvider" | translate'
+              class="left"
+            >
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-label [nzSm]="7" nzRequired nzFor="serialNumber">
+            {{ "channel.tabData.channelNumber" | translate}}
+          </nz-form-label>
+          <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+            <input
+              type="text"
+              nz-input
+              formControlName="serialNumber"
+              id="serialNumber"
+              [placeholder] = '"channel.prompt.Id" | translate'
+              class="left"
+              maxlength="2"
+              onkeyup="validForm.value['serialNumber']=validForm.value['serialNumber'].replace(/[^A-Z0-9]/g,'')"
+              [readonly]="!canChange"
+            >
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-label [nzSm]="7" nzRequired nzFor="state">
+            {{ "channel.tabData.channelStatus" | translate}}
+          </nz-form-label>
+          <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+            <nz-select formControlName="state" class="left" id="state">
+              <nz-option *ngFor="let option of channelStatus" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+  </nz-modal>
+</div>

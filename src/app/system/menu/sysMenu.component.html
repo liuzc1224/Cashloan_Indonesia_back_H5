@@ -1,0 +1,150 @@
+<div class="c-content-wrap" style="margin-bottom: 200px">
+  <button
+    nz-button
+    nzType="primary"
+    class="c-btn-width c-no-radius"
+    (click)="addParentNode()"
+  >
+    {{ "common.newParentMenu" | translate}}
+  </button>
+  <div class="treeWrap">
+    <nz-tree
+      [(ngModel)]="treeInfo"
+      [nzShowLine]="true"
+      (nzContextMenu)="hideMenu()"
+      (nzClick)="showMenu($event)"
+      (nzExpandChange)="hideMenu()"
+      [nzDefaultExpandAll]="true"
+    >
+    </nz-tree>
+  </div>
+</div>
+
+<nz-modal
+  [(nzVisible)]="infoBoxShow"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="infoBoxShow = false"
+>
+  <ng-template #modalTitle>
+    <span *ngIf="!editMark">{{ "common.operate.add"| translate}}</span> <span *ngIf="editMark">{{ "common.operate.edit"| translate}}</span>
+  </ng-template>
+
+  <ng-template #modalContent>
+    <form nz-form [nzLayout]="'inline'" [formGroup]="validateForm">
+      <nz-form-item class="c-formSec">
+        <nz-form-label [nzSm]="9" nzRequired nzFor="iconPath"
+          >{{ "common.icon"| translate}}</nz-form-label
+        >
+        <nz-form-control [nzSm]="14" [nzOffset]="1">
+          <input nz-input formControlName="iconPath" id="iconPath" />
+          <nz-form-explain
+            *ngIf="
+              validateForm.get('iconPath').dirty &&
+              validateForm.get('iconPath').errors
+            "
+            >图标不能为空</nz-form-explain
+          >
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item class="c-formSec">
+        <nz-form-label [nzSm]="9" nzRequired nzFor="url">路径</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzOffset]="1">
+          <input nz-input formControlName="url" id="url" />
+          <nz-form-explain
+            *ngIf="
+              validateForm.get('url').dirty && validateForm.get('url').errors
+            "
+            >节点路径不能为空</nz-form-explain
+          >
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item class="c-formSec">
+        <nz-form-label [nzSm]="9" nzRequired nzFor="isButton"
+          >是否按钮</nz-form-label
+        >
+        <nz-form-control [nzSm]="14" [nzOffset]="1">
+          <nz-select
+            name="select-error"
+            formControlName="isButton"
+            id="isButton"
+          >
+            <nz-option nzValue="1" nzLabel="是"></nz-option>
+            <nz-option nzValue="0" nzLabel="否"></nz-option>
+          </nz-select>
+          <nz-form-explain
+            *ngIf="
+              validateForm.get('isButton').dirty &&
+              validateForm.get('isButton').errors
+            "
+            >是否按钮必须选择</nz-form-explain
+          >
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item class="c-formSec">
+        <nz-form-label [nzSm]="9" nzFor="zh_CN">名称(中文)</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzOffset]="1">
+          <input nz-input formControlName="zh_CN" id="zh_CN" />
+          <nz-form-explain
+            *ngIf="
+              validateForm.get('zh_CN').dirty &&
+              validateForm.get('zh_CN').errors
+            "
+            >节点名称不能为空</nz-form-explain
+          >
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item class="c-formSec">
+        <nz-form-label [nzSm]="9" nzFor="id_ID">名称(印尼语)</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzOffset]="1">
+          <input nz-input formControlName="id_ID" id="id_ID" />
+          <nz-form-explain
+            *ngIf="
+              validateForm.get('id_ID').dirty &&
+              validateForm.get('id_ID').errors
+            "
+            >节点名称不能为空</nz-form-explain
+          >
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      nzType="primary"
+      *ngIf="!editMark"
+      [disabled]="!validateForm.valid"
+      (click)="makeNew()"
+    >
+      确定
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      *ngIf="editMark"
+      [disabled]="!validateForm.valid"
+      (click)="save()"
+    >
+      保存
+    </button>
+    <button nz-button nzType="default" (click)="infoBoxShow = false">
+      关闭
+    </button>
+  </ng-template>
+</nz-modal>
+
+<div class="menu">
+  <ul>
+    <li (click)="addItem()">{{ "common.operate.add" | translate }}</li>
+    <li (click)="editItem()">{{ "common.operate.edit" | translate }}</li>
+    <li (click)="removeItem()">{{ "common.operate.delete" | translate }}</li>
+    <li (click)="hideMenu()">{{ "common.operate.close" | translate }}</li>
+  </ul>
+</div>

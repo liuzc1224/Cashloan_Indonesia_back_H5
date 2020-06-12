@@ -1,0 +1,37 @@
+<div class="c-content-wrap">
+    <div class="c-flex-row-start c-info-wrap">
+        <div class="c-info-title">
+            {{ "orderModule.order.approveInfo.overDueTotal" | translate }} :
+        </div>
+        <div class="c-info-content" *ngIf = 'userInfo'>
+            {{ userInfo.overDueTotal }}
+        </div>
+    </div>
+
+    <div class="c-flex-row-start c-info-wrap">
+        <div class="c-info-title">
+            {{ "orderModule.order.approveInfo.borrowTotal" | translate }} :
+        </div>
+        <div class="c-info-content" *ngIf = 'userInfo'>
+            {{ userInfo.borrowTotal }}
+        </div>
+    </div>
+
+    <div class="c-flex-row-start c-info-wrap">
+        <div class="c-info-title">
+            {{ "orderModule.order.approveInfo.unReturnTotal" | translate }} :
+        </div>
+        <div class="c-info-content" *ngIf = 'userInfo'>
+            {{ userInfo.unReturnTotal }}
+        </div>
+    </div>
+
+    <div class="c-flex-row-start c-info-wrap">
+        <div class="c-info-title">
+            {{ "orderModule.order.approveInfo.auth" | translate }} :
+        </div>
+        <div style="color: #1890ff ; cursor: pointer;" class="c-info-content" (click) = 'goToAuth()'>
+            {{ "orderModule.order.approveInfo.checkUp" | translate }}
+        </div>
+    </div>
+</div>

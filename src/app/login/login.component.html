@@ -1,0 +1,70 @@
+<div class="c-full wrap c-flex-row-center">
+    <div class="c-flex-column-center container">
+        <div class="formWrap">
+            <form nz-form [nzLayout]="'inline'" [formGroup]="validForm">
+                <nz-form-item class='formSec'>
+                    <nz-form-control [nzSm]="24">
+                        <div style="position: relative;width: 100% ;">
+                            <i class="anticon anticon-user icoColor"></i>
+                            <input
+                                type="text"
+                                nz-input
+                                formControlName="username"
+                                id="username"
+                                [placeholder] = '"login.username" | translate'
+                                class="inputItem"
+                            >
+                        </div>
+                        <nz-form-explain *ngIf="validForm.get('username').dirty && validForm.get('username').errors">
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item class='formSec'>
+                    <nz-form-control [nzSm]="24">
+                        <div style="position: relative;">
+                            <i class="anticon anticon-lock icoColor"></i>
+                            <input
+                                nz-input
+                                formControlName="password"
+                                id="password"
+                                [placeholder] = '"login.password" | translate'
+                                class="inputItem"
+                                type="password"
+                            >
+                        </div>
+                        <nz-form-explain *ngIf="validForm.get('password').dirty && validForm.get('password').errors">
+                        </nz-form-explain>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item class='formSec'>
+                    <nz-form-control [nzSm]="24">
+                        <nz-select
+                            [nzPlaceHolder]=' "common.languageSetting" | translate '
+                            formControlName="locale"
+                            (ngModelChange) = 'choseLocale($event)'
+                        >
+                            <nz-option
+                                *ngFor = 'let item of languageEnmu'
+                                [nzValue]="item['value']"
+                                [nzLabel]="item['name']"
+                            >
+                            </nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+            </form>
+
+            <button 
+                nz-button 
+                nzType="primary" 
+                class="loginBtn"
+                (click) = 'login()'
+                [nzLoading]="isLoading"
+            >
+                {{ "login.login" | translate }}
+            </button>
+        </div>
+    </div>
+</div>

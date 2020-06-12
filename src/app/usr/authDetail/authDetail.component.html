@@ -1,0 +1,28 @@
+<!-- 订单相关信息 -->
+<!-- <div *ngIf="orderTableData">
+  <img class="c-img-res img-info" style="visibility: hidden;height:0;" [src]="orderTableData.front" alt=""  data-magnify="gallery" [attr.data-src]="orderTableData.front">
+  <img class="c-img-res img-info" style="visibility: hidden;height:0;" [src]="orderTableData.reverse" alt=""  data-magnify="gallery" [attr.data-src]="orderTableData.reverse">
+</div> -->
+<div class="auth-table-wrap" *ngIf='orderTableData'>
+  <p class="th-title">{{'orderModule.record.userAuthenticationDetails' | translate}}</p>
+  <table>
+    <tbody *ngIf="orderTableData">
+      <tr *ngFor="let item of ('orderModule.record.basicUserInfo' | translate)">
+        <td>{{item.name}}</td>
+        <td *ngIf="item.reflect=='approveEffectDay'">{{orderTableData[item.reflect] || 'no'}}<nz-tag [nzColor]="'red'">{{orderTableData['approveEffectDay']===null ? ('orderModule.record.auth' | translate)['false'] : ('orderModule.record.auth' | translate)['true']}}</nz-tag></td>
+        <td *ngIf="item.reflect=='gender'">{{('orderModule.record.genderType' | translate)[orderTableData[item.reflect]]}}</td>
+        <td *ngIf="item.reflect!='gender'&&item.reflect!='approveEffectDay'">{{orderTableData[item.reflect]}}</td>
+      </tr>
+      <!-- <tr *ngFor="let item of ('orderModule.record.basicUserCPFInfo' | translate);let i = index;">
+        <td>{{item.name}}</td>
+        <td *ngIf=" item.reflect!='front' " >{{orderTableData[item.reflect]}}</td>
+        <td *ngIf="item.reflect=='front'" style="cursor:pointer;color:blue;" (click)='showImg(0)'>{{ 'common.clickShow' | translate }}</td>
+      </tr> -->
+    </tbody>
+  </table>
+  <div style="text-align: center;">
+      <p class="th-title">{{'orderModule.record.nowIdCard' | translate}}</p>
+      <img [src]="orderTableData.front" style="cursor:pointer;width:500px" (click)='showImg(0)'>
+      <img class="c-img-res img-info" style="visibility: hidden;height:0;" [src]="orderTableData.front" alt=""  data-magnify="gallery" [attr.data-src]="orderTableData.front">
+  </div>
+</div>

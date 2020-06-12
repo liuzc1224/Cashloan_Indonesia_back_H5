@@ -1,0 +1,209 @@
+<div class="c-content-wrap">
+  <div class="half-block">
+    <div class="title">
+      {{ title }}
+      <div class="c-btnGroup">
+        <button nz-button  (click) = 'add() '>
+          {{ "channel.channelBranch.btn.add" | translate}}
+        </button>
+        <button nz-button  (click) = 'generate()'>
+          {{ "channel.channelBranch.btn.generate" | translate}}
+        </button>
+        <button nz-button [hidden]="exHidden" [disabled]="totalSize===0" (click) = 'exChannelBranch() '>
+          {{ "channel.channelBranch.btn.export" | translate}}
+        </button>
+        <button nz-button  (click) = 'imChannelBranch() '>
+          {{ "channel.channelBranch.btn.import" | translate}}
+          <input type="file" id="file" accept=".xls,.xlsx" (change)="upLoad()" />
+        </button>
+      </div>
+    </div>
+    <div class="c-search-Group">
+      <span>{{ "channel.channelBranch.tabData.invitationCode" | translate}}</span>
+      <input nz-input type="text" class="left" [(ngModel)] = 'searchModel.invitationCode' [placeholder] = '"channel.prompt.invitationCode" | translate' >
+      <span class="left">{{ "channel.channelBranch.tabData.name" | translate}}</span>
+      <input nz-input type="text" class="left" [(ngModel)] = 'searchModel.name' [placeholder] = '"channel.prompt.channelBranchName" | translate' >
+      <span class="left">{{ "channel.channelBranch.tabData.contact" | translate}}</span>
+      <input nz-input type="text" class="left" [(ngModel)] = 'searchModel.contactUser' [placeholder] = '"channel.prompt.contact" | translate' >
+      <div class="c-btn-Group">
+        <button nz-button  nzType="primary" (click) = 'search() '>
+          {{ "common.search" | translate}}
+        </button>
+        <button nz-button class="left" (click) = 'reset() '>
+          {{ "channel.btn.reset" | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+  <c-table [tableData] = 'tableData' style="margin-top: 20px">
+  </c-table>
+  <div class="c-pag">
+  <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+  <ng-template #totalTemplate let-total>
+  <span>
+  {{ "common.total" | translate }}
+  </span>
+  <span>
+  {{ totalSize }}
+  </span>
+  <span>
+  {{ "common.pageUnit" | translate }}
+  </span>
+  </ng-template>
+  </div>
+  <nz-modal
+    [(nzVisible)]="isGenerate"
+    [nzTitle]='"channel.channelBranch.btn.generate" | translate'
+    [nzOkText]='"channel.channelBranch.btn.ex" | translate'
+    [nzCancelText]='"common.operate.cancel" | translate'
+    (nzOnOk)="generateOk()"
+    (nzOnCancel)="generateCancel()"
+    [nzOkLoading]="isOkLoading"
+  >
+    <div style="width: 90%;margin: 0 auto">
+      <p>{{ "channel.prompt.unusedInvitationCode" | translate}}<span style="color: #fb0036">{{Quantity}}</span>{{ "channel.prompt.piece" | translate}}</p>
+      <p>
+        *{{ "channel.prompt.generateNumber" | translate}}
+        <input nz-input
+               style="width: 200px"
+               type="tel"
+               class="left"
+               (keyup)="setInput(generateNumber)"
+               [(ngModel)] = 'generateNumber'
+               [placeholder] = '"channel.prompt.generate" | translate'
+        >
+      </p>
+    </div>
+  </nz-modal>
+
+  <nz-modal
+    [(nzVisible)]="isAdd"
+    [nzTitle]='"channel.channelBranch.btn.add" | translate'
+    [nzOkText]='"channel.channelBranch.btn.setting" | translate'
+    [nzCancelText]='"common.operate.cancel" | translate'
+    (nzOnOk)="addOk()"
+    (nzOnCancel)="addCancel()"
+    [nzOkLoading]="isOkLoading"
+  >
+    <div style="width: 100%;margin: 0 auto">
+      <div class="formChannel">
+        <form nz-form [nzLayout]="'block'" [formGroup]="validForm">
+          <nz-form-item class='formSec'>
+            <nz-form-control>
+              <p>
+                <span class="label">*{{ "channel.channelBranch.tabData.invitationCode" | translate}} :</span>
+                <input
+                  type="text"
+                  nz-input
+                  formControlName="invitationCode"
+                  id="invitationCode"
+                  [placeholder]='"channel.prompt.invitationCode" | translate'
+                  style="width: 200px"
+                  class="left"
+                  [maxLength]="maxLength['invitationCode']"
+                  readonly="readonly"
+                >
+              </p>
+              <nz-form-explain *ngIf="validForm.get('invitationCode').dirty && validForm.get('invitationCode').errors">
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item class='formSec'>
+            <nz-form-control>
+              <p>
+                <span class="label">*{{ "channel.channelBranch.tabData.name" | translate}} :</span>
+                <input
+                  type="text"
+                  nz-input
+                  formControlName="name"
+                  id="name"
+                  [placeholder]='"channel.prompt.channelBranchName" | translate'
+                  style="width: 200px"
+                  class="left"
+                  [maxLength]="maxLength['name']"
+                  (keyup)="testOther('name')"
+                >
+              </p>
+              <span style="margin-left: 5px">{{nameLength}} / {{ maxLength['name'] }}</span>
+              <nz-form-explain *ngIf="validForm.get('name').dirty && validForm.get('name').errors">
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item class='formSec'>
+            <nz-form-control>
+              <p>
+                <span class="label">*{{ "channel.channelBranch.streetAddress" | translate}} :</span>
+                <input
+                  type="text"
+                  nz-input
+                  formControlName="street"
+                  id="street"
+                  [placeholder]='"channel.prompt.streetAddress" | translate'
+                  style="width: 200px"
+                  class="left"
+                  [maxLength]="maxLength['street']"
+                  (keyup)="testOther('street')"
+                >
+              </p>
+              <span style="margin-left: 5px">{{streetLength}} / {{ maxLength['street'] }}</span>
+              <nz-form-explain *ngIf="validForm.get('street').dirty && validForm.get('street').errors">
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item class='formSec'>
+            <nz-form-control>
+              <p>
+                <span class="label">*{{ "channel.channelBranch.tabData.contact" | translate}} :</span>
+                <input
+                  type="text"
+                  nz-input
+                  formControlName="contactUser"
+                  id="contactUser"
+                  [placeholder]='"channel.prompt.contact" | translate'
+                  style="width: 200px"
+                  class="left"
+                  [maxLength]="maxLength['contactUser']"
+                  (keyup)="testOther('contactUser')"
+                >
+              </p>
+              <span style="margin-left: 5px">{{contactUserLength}} / {{maxLength['contactUser']}}</span>
+              <nz-form-explain *ngIf="validForm.get('contactUser').dirty && validForm.get('contactUser').errors">
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item class='formSec'>
+            <nz-form-control>
+              <p>
+                <span class="label">*{{ "channel.channelBranch.tabData.contactNumber" | translate}} :</span>
+                <input
+                  type="tel"
+                  nz-input
+                  formControlName="contactPhone"
+                  id="contactPhone"
+                  [placeholder]='"channel.prompt.contactNumber" | translate'
+                  style="width: 200px"
+                  class="left"
+                  [maxLength]="maxLength['contactPhone']"
+                  (keyup)="testOther('contactPhone')"
+                >
+              </p>
+              <span style="margin-left: 5px">{{ contactPhoneLength }} / {{maxLength['contactPhone']}}</span>
+              <nz-form-explain *ngIf="validForm.get('contactPhone').dirty && validForm.get('contactPhone').errors">
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item class='formSec'>
+            <nz-form-control>
+              <p>
+                <span class="label">*{{ "channel.channelBranch.status" | translate}} :</span>
+                <nz-select formControlName="state" class="left" style="width: 200px;" id="state" nzAllowClear>
+                  <nz-option *ngFor="let option of channelStatus" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+                </nz-select>
+              </p>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+      </div>
+    </div>
+  </nz-modal>
+</div>

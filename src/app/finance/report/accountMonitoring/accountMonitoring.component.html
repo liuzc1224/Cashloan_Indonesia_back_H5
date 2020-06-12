@@ -1,0 +1,152 @@
+<div class="c-content-wrap">
+  <div class="c-search-wrap">
+
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          <nz-select
+            [(ngModel)]="selectModel"
+            style="width: 200px"
+            (nzOpenChange)="changeSelect()"
+          >
+            <div *ngFor='let item of searchEnum ,let idx = index'>
+              <nz-option
+                [nzValue]="item['value']"
+                [nzLabel]="item['name']"
+              >
+              </nz-option>
+            </div>
+          </nz-select>
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input [(ngModel)]="inputContent" [placeholder]=' "finance.report.accountMonitoring.prompt.pleaseInput" | translate ' style="width: 200px" >
+        </div>
+      </div>
+    </div>
+
+    <div class="c-search-btnGroup">
+      <button nz-button nzType="primary" (click)='search() '>
+        {{ "common.search" | translate}}
+      </button>
+      <button style="margin-left: 20px;" nz-button (click)='reset() '>
+        {{ "common.reset" | translate}}
+      </button>
+      <button style="margin-left: 20px;" nz-button [disabled]="totalSize===0" (click)='downloadAccountMonitoring() '>
+        {{ "common.ex" | translate}}
+      </button>
+    </div>
+  </div>
+
+  <c-table [tableData]='tableData'>
+  </c-table>
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")'
+                   (nzPageSizeChange)='pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"
+                   [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+            <span>
+                {{ "common.total" | translate }}
+            </span>
+      <span>
+                {{ totalSize }}
+            </span>
+      <span>
+                {{ "common.pageUnit" | translate }}
+            </span>
+    </ng-template>
+  </div>
+</div>
+
+<nz-modal [(nzVisible)]="hasClearMark" [nzTitle]="clearTitle" [nzContent]="clearContent" [nzFooter]="clearFooter"
+          (nzOnCancel)="hasClearMark = false">
+  <ng-template #clearTitle>
+        <span>
+            {{ "finance.report.accountMonitoring.edit" | translate}}
+        </span>
+  </ng-template>
+
+  <ng-template #clearContent>
+    <form nz-form [nzLayout]="'block'" [formGroup]="hasClearForm">
+      <!--支付平台-->
+      <nz-form-item class='formSec'>
+        <nz-form-label [nzSm]="7" nzRequired nzFor="isDone">
+          {{ "finance.report.accountMonitoring.paymentPlatform" | translate}}
+        </nz-form-label>
+        <nz-form-control [nzSm]="16" [nzOffset]='1'>
+          <input nz-input readonly type="text" formControlName="platformName" [placeholder]='"finance.report.accountMonitoring.prompt.paymentPlatform" | translate' />
+        </nz-form-control>
+      </nz-form-item>
+      <!--最低账户额度-->
+      <nz-form-item class='formSec'>
+        <nz-form-label [nzSm]="7" nzRequired nzFor="isDone">
+          {{ "finance.report.accountMonitoring.balanceLimit" | translate}}
+        </nz-form-label>
+        <nz-form-control [nzSm]="16" [nzOffset]='1'>
+          <input nz-input type="number" formControlName="effectiveBalanceLimit" [placeholder]='"finance.report.accountMonitoring.prompt.balanceLimit" | translate' />
+          <nz-form-explain *ngIf="hasClearForm.get('effectiveBalanceLimit').dirty && hasClearForm.get('effectiveBalanceLimit').errors">
+            <span>
+              {{ "financeModule.repayList.table.remark" | translate }}
+            </span>
+            <span>
+              {{ "common.validator.notEmpty" | translate }}
+            </span>
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <!--提醒邮箱-->
+      <nz-form-item class='formSec'>
+        <nz-form-label [nzSm]="7" nzFor="currentRepay">
+          {{ "finance.report.accountMonitoring.email" | translate}}
+        </nz-form-label>
+        <nz-form-control [nzSm]="10" [nzOffset]='1'>
+          <input nz-input type="text" formControlName="emailq" [placeholder]='"finance.report.accountMonitoring.prompt.email" | translate' />
+          <nz-form-explain *ngIf="hasClearForm.get('emailq').dirty && hasClearForm.get('emailq').errors">
+            <span>
+              {{ "finance.report.accountMonitoring.email" | translate}}
+            </span>
+            <span>
+              {{ "common.validator.notEmpty" | translate }}
+            </span>
+          </nz-form-explain>
+        </nz-form-control>
+        <nz-form-control [nzSm]="6">
+            <nz-select formControlName="emailh" >
+              <div *ngFor='let item of "finance.report.accountMonitoring.emailh" | translate'>
+                <nz-option
+                  [nzValue]="item['value']"
+                  [nzLabel]="item['desc']"
+                >
+                </nz-option>
+              </div>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <!--状态-->
+      <nz-form-item class='formSec'>
+        <nz-form-label [nzSm]="7" nzFor="currentRepay">
+          {{ "finance.report.accountMonitoring.state" | translate}}
+        </nz-form-label>
+        <nz-form-control [nzSm]="16" [nzOffset]='1'>
+          <nz-select formControlName="paymentFlag">
+            <div *ngFor='let item of "finance.report.accountMonitoring.status" | translate'>
+              <nz-option
+                [nzValue]="item['value']"
+                [nzLabel]="item['desc']"
+              >
+              </nz-option>
+            </div>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-template>
+
+  <ng-template #clearFooter>
+    <button nz-button nzType="primary"  (click)='submit($event)'>
+      {{ "common.operate.sure" | translate }}
+    </button>
+    <button nz-button nzType="default" (click)='cancel()'>
+      {{ "common.operate.close" | translate }}
+    </button>
+  </ng-template>
+</nz-modal>

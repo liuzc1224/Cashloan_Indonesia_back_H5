@@ -1,0 +1,667 @@
+<div class="c-content-wrap">
+  <div class="half-block">
+    <div class="c-search-group c-search-border">
+      <div class="c-search-itemRight">
+        <ul class="sectionList c-flex-row-start" style="flex-wrap:wrap;height: auto;">
+          <li
+            *ngFor = 'let item of managementType'
+            (click) = 'changeStatus(item["value"])'
+            [ngClass]='{"active-tag" : (item["value"] == chType)}'
+            style="white-space:nowrap;margin-bottom: 10px;">
+            {{ item['desc'] }}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="c-search-group" *ngIf="chType==1">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'collectionManagement.management.searchModel.group' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <nz-tree-select
+            style="width: 200px"
+            [nzDropdownStyle]="{'maxHeight':'500px'}"
+            [nzDefaultExpandAll]="true"
+            [nzNodes]="NzTreeNodes"
+            [nzPlaceHolder]='"collectionManagement.management.prompt.group" | translate '
+            [(ngModel)]="searchModel.groupId"
+            id="sechgroupId">
+          </nz-tree-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'collectionManagement.management.searchModel.type' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 150px" [(ngModel)]="searchModel.groupType" [nzPlaceHolder]=' "collectionManagement.management.prompt.type" | translate '>
+            <nz-option *ngFor="let option of 'collectionManagement.management.personnelType1' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'collectionManagement.management.searchModel.company' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 150px" [(ngModel)]="searchModel.firmId" [nzPlaceHolder]='"collectionManagement.management.prompt.company" | translate ' nzAllowClear>
+            <nz-option *ngFor="let option of allOverdueFirm" [nzLabel]="option['firmName']" [nzValue]="option['id']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'collectionManagement.management.searchModel.stage' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 150px" [(ngModel)]="searchModel.stageId" [nzPlaceHolder]=' "collectionManagement.management.prompt.stage" | translate ' nzAllowClear>
+            <nz-option *ngFor="let option of allStage" [nzLabel]="option['phaseName']" [nzValue]="option['id']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+
+    </div>
+    <div class="c-search-group" *ngIf="chType==1">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'collectionManagement.management.searchModel.status' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 150px" [(ngModel)]="searchModel.status" [nzPlaceHolder]=' "collectionManagement.management.prompt.status" | translate '>
+            <nz-option *ngFor="let option of 'collectionManagement.management.statusAll' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'collectionManagement.management.searchModel.personnelName' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input [placeholder] = '"collectionManagement.management.prompt.personnelName" | translate' type="text" [(ngModel)] ='searchModel.staffName'>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'collectionManagement.management.searchModel.phoneNumber' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input [placeholder] = '"collectionManagement.management.prompt.phoneNumber" | translate' type="text" [(ngModel)] ='searchModel.phonenumer'>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group" *ngIf="chType==2">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'collectionManagement.management.searchModel.company' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 150px" [(ngModel)]="searchModel.firmId" [nzPlaceHolder]=' "collectionManagement.management.prompt.company" | translate ' nzAllowClear>
+            <nz-option *ngFor="let option of allOverdueFirm" [nzLabel]="option['firmName']" [nzValue]="option['id']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'collectionManagement.management.searchModel.status' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 150px" [(ngModel)]="searchModel.status" [nzPlaceHolder]=' "collectionManagement.management.prompt.status" | translate '>
+            <nz-option *ngFor="let option of 'collectionManagement.management.statusAll' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'collectionManagement.management.searchModel.stage' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 150px" [(ngModel)]="searchModel.stageId" [nzPlaceHolder]=' "collectionManagement.management.prompt.stage" | translate ' nzAllowClear>
+            <nz-option *ngFor="let option of allStage" [nzLabel]="option['phaseName']" [nzValue]="option['id']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'collectionManagement.management.searchModel.type' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 150px" [(ngModel)]="searchModel.groupType" [nzPlaceHolder]=' "collectionManagement.management.prompt.type" | translate '>
+            <nz-option *ngFor="let option of 'collectionManagement.management.personnelType1' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group" *ngIf="chType==2">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'collectionManagement.management.searchModel.collectionTeamName' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input [placeholder] = '"collectionManagement.management.prompt.collectionTeamName" | translate' type="text" [(ngModel)] ='searchModel.groupName'>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group" *ngIf="chType==3">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'collectionManagement.management.searchModel.type' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 150px" [(ngModel)]="searchModel.firmType" [nzPlaceHolder]=' "collectionManagement.management.prompt.type" | translate ' >
+            <nz-option *ngFor="let option of 'collectionManagement.management.companyType1' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'collectionManagement.management.searchModel.status' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 150px" [(ngModel)]="searchModel.status" [nzPlaceHolder]=' "collectionManagement.management.prompt.status" | translate '>
+            <nz-option *ngFor="let option of 'collectionManagement.management.statusAll1' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'collectionManagement.management.searchModel.companyName' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input [placeholder] = '"collectionManagement.management.prompt.companyName" | translate' type="text" [(ngModel)] ='searchModel.firmName'>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <button nz-button nzType="primary"  (click) = 'search() '>
+          {{ "common.search" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button (click) = 'reset() '>
+          {{ "common.reset" | translate}}
+        </button>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item" *ngIf="chType==1">
+        <button nz-button nzType="primary"  (click) = personnel()>
+          {{ "collectionManagement.management.personnelAdd" | translate}}
+        </button>
+      </div>
+      <div class="c-search-item" *ngIf="chType==2">
+        <button nz-button nzType="primary"  (click) = 'group()'>
+          {{ "collectionManagement.management.groupAdd" | translate}}
+        </button>
+      </div>
+      <div class="c-search-item" *ngIf="chType==3">
+        <button nz-button nzType="primary"  (click) = 'company()'>
+          {{ "collectionManagement.management.companyAdd" | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+  <c-table [tableData] = 'tableData' style="margin-top: 20px;">
+  </c-table>
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+      <span>
+        {{ "common.total" | translate }}
+      </span>
+      <span>
+        {{ totalSize }}
+      </span>
+      <span>
+        {{ "common.pageUnit" | translate }}
+      </span>
+    </ng-template>
+  </div>
+
+
+  <nz-modal
+    [(nzVisible)]="isPersonnel"
+    [nzTitle]="personnelTitle"
+    [nzOkText]='"common.operate.sure" | translate'
+    [nzCancelText]='"common.operate.cancel" | translate'
+    (nzOnOk)="personnelOk()"
+    (nzOnCancel)="personnelCancel()"
+    [nzOkLoading]="personnelLoading"
+  >
+    <div class="formChannel">
+      <form nz-form [nzLayout]="'block'" [formGroup]="personnelForm">
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired>
+              {{ "collectionManagement.management.model.actualName" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <input
+                type="text"
+                nz-input
+                formControlName="staffName"
+                id="staffName"
+                maxlength="100"
+                [placeholder] = '"collectionManagement.management.prompt.actualName" | translate'
+              >
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired>
+              {{ "collectionManagement.management.searchModel.phoneNumber" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <input
+                type="text"
+                nz-input
+                formControlName="phonenumer"
+                id="phonenumer"
+                maxlength="30"
+                [placeholder] = '"collectionManagement.management.prompt.phoneNumber" | translate'
+              >
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired>
+              {{ "collectionManagement.management.searchModel.group" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="11"  [nzOffset]='1'>
+              <nz-tree-select
+                [nzNodes]="NzTreeNode"
+                [nzDefaultExpandAll]="false"
+                [nzPlaceHolder]='"collectionManagement.management.prompt.group" | translate '
+                formControlName="groupId"
+                id="groupId"
+                [nzDropdownStyle]="{'maxHeight':'500px'}"
+                (ngModelChange)="groupSelect($event)">
+              </nz-tree-select>
+              <!--<nz-select-->
+                <!--formControlName="groupId"-->
+                <!--nzAllowClear-->
+                <!--id="groupId"-->
+                <!---->
+                <!--(ngModelChange)="groupSelect()"-->
+              <!--&gt;-->
+                <!--<nz-option *ngFor="let option of allOverdueGroup" [nzLabel]="option['groupName']" [nzValue]="option['id']"></nz-option>-->
+              <!--</nz-select>-->
+            </nz-form-control>
+            <nz-form-control [nzSm]="5">
+              <p style="margin-left: 5px">{{ groupType }}</p>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec' *ngIf="this.groupType != '催收管理岗'">
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired>
+              {{ "collectionManagement.management.model.weights" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <nz-select
+                formControlName="weight"
+                nzAllowClear
+                id="weight"
+                [nzPlaceHolder]='"collectionManagement.management.prompt.weights" | translate '>
+                <nz-option *ngFor="let option of weights" [nzLabel]="option" [nzValue]="option"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired>
+              {{ "collectionManagement.management.model.accountName" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <input
+                type="text"
+                nz-input
+                formControlName="username"
+                id="username"
+                maxlength="30"
+                [placeholder] = '"collectionManagement.management.prompt.accountName" | translate'
+              >
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired *ngIf="!personnelForm.get('id').value">
+              {{ "collectionManagement.management.model.accountPassword" | translate}}
+            </nz-form-label>
+            <nz-form-label [nzSm]="7" *ngIf="personnelForm.get('id').value" >
+              {{ "collectionManagement.management.model.accountPassword" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <input
+                type="password"
+                nz-input
+                formControlName="password"
+                id="password"
+                maxlength="30"
+                [placeholder] = '"collectionManagement.management.prompt.accountPassword" | translate'
+              >
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired>
+              {{ "collectionManagement.management.model.recallPhone" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <input
+                type="text"
+                nz-input
+                formControlName="recallPhone"
+                id="recallPhone"
+                maxlength="30"
+                [placeholder] = '"collectionManagement.management.prompt.recallPhone" | translate'
+              >
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired *ngIf="!personnelForm.get('id').value">
+              {{ "collectionManagement.management.model.recallPhonePassword" | translate}}
+            </nz-form-label>
+            <nz-form-label [nzSm]="7" *ngIf="personnelForm.get('id').value" >
+              {{ "collectionManagement.management.model.recallPhonePassword" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <input
+                type="password"
+                nz-input
+                formControlName="recallPhonePassword"
+                id="recallPhonePassword"
+                maxlength="30"
+                [placeholder] = '"collectionManagement.management.prompt.recallPhonePassword" | translate'
+              >
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired>
+              {{ "collectionManagement.management.searchModel.status" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <nz-select
+                formControlName="status"
+                nzAllowClear
+                id="status"
+                [nzPlaceHolder]=' "collectionManagement.management.prompt.status" | translate '
+                (ngModelChange)="personnelStatus($event)"
+              >
+                <nz-option *ngFor="let option of 'collectionManagement.management.status1' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired>
+              {{ "collectionManagement.management.model.freed" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <nz-select
+                formControlName="releaseCase"
+                nzAllowClear
+                id="releaseCase"
+                [nzPlaceHolder]=' "collectionManagement.management.prompt.freed" | translate '
+                [nzDisabled]="personnelDisabled"
+              >
+                <nz-option *ngFor="let option of 'collectionManagement.management.freed' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+  </nz-modal>
+
+  <nz-modal
+    [(nzVisible)]="isGroup"
+    [nzTitle]="groupTitle"
+    [nzOkText]='"common.operate.sure" | translate'
+    [nzCancelText]='"common.operate.cancel" | translate'
+    (nzOnOk)="groupOk()"
+    (nzOnCancel)="groupCancel()"
+    [nzOkLoading]="groupLoading"
+  >
+    <div class="formChannel">
+      <form nz-form [nzLayout]="'block'" [formGroup]="groupForm">
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired>
+              {{ "collectionManagement.management.searchModel.type" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <nz-select
+                formControlName="groupType"
+                nzAllowClear
+                id="groupType"
+                [nzPlaceHolder]=' "collectionManagement.management.prompt.type" | translate '>
+                <nz-option *ngFor="let option of 'collectionManagement.management.personnelType' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired>
+              {{ "collectionManagement.management.searchModel.collectionTeamName" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <input
+                type="text"
+                nz-input
+                formControlName="groupName"
+                id="groupName"
+                [placeholder] = '"collectionManagement.management.prompt.collectionTeamName" | translate'
+              >
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7">
+              {{ "collectionManagement.management.model.introduction" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <input
+                type="text"
+                nz-input
+                formControlName="groupDescription"
+                id="groupDescription"
+                [placeholder] = '"collectionManagement.management.prompt.introduction" | translate'
+              >
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired>
+              {{ "collectionManagement.management.searchModel.company" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <nz-select formControlName="firmId" [nzPlaceHolder]=' "collectionManagement.management.prompt.company" | translate ' nzAllowClear>
+                <nz-option *ngFor="let option of allOverdueFirm" [nzLabel]="option['firmName']" [nzValue]="option['id']"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired>
+              {{ "collectionManagement.management.searchModel.stage" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <nz-select formControlName="stageId" [nzPlaceHolder]=' "collectionManagement.management.prompt.stage" | translate ' nzAllowClear>
+                <nz-option *ngFor="let option of allStage" [nzLabel]="option['phaseName']" [nzValue]="option['id']"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired>
+              {{ "collectionManagement.management.searchModel.productType" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <nz-select nzMode="multiple" formControlName="loanProductTypeList" [nzPlaceHolder]=' "collectionManagement.management.prompt.productType" | translate ' nzAllowClear>
+                <nz-option *ngFor="let option of ('collectionManagement.management.productType' | translate)" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec' *ngIf="groupForm.get('groupType').value==1">
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired>
+              {{ "collectionManagement.management.model.weights" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <nz-select
+                formControlName="weight"
+                [nzPlaceHolder]='"collectionManagement.management.prompt.weights" | translate '
+                nzAllowClear
+              >
+                <nz-option *ngFor="let option of weights" [nzLabel]="option" [nzValue]="option"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired>
+              {{ "collectionManagement.management.searchModel.status" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <nz-select
+                formControlName="status"
+                nzAllowClear
+                [nzPlaceHolder]=' "collectionManagement.management.prompt.status" | translate '
+                (ngModelChange)="groupStatus($event)"
+              >
+                <nz-option *ngFor="let option of 'collectionManagement.management.status1' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec' *ngIf="groupForm.get('groupType').value==1">
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired>
+              {{ "collectionManagement.management.model.freed" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <nz-select
+                formControlName="releaseCase"
+                nzAllowClear
+                [nzPlaceHolder]=' "collectionManagement.management.prompt.freed" | translate '
+                [nzDisabled]="groupDisabled"
+              >
+                <nz-option *ngFor="let option of 'collectionManagement.management.freed' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+  </nz-modal>
+  <nz-modal
+    [(nzVisible)]="isCompany"
+    [nzTitle]="companyTitle"
+    [nzOkText]='"common.operate.sure" | translate'
+    [nzCancelText]='"common.operate.cancel" | translate'
+    (nzOnOk)="companyOk()"
+    (nzOnCancel)="companyCancel()"
+    [nzOkLoading]="companyLoading"
+  >
+    <div class="formChannel">
+      <form nz-form [nzLayout]="'block'" [formGroup]="companyForm">
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired>
+              {{ "collectionManagement.management.searchModel.companyName" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <input
+                type="text"
+                nz-input
+                formControlName="firmName"
+                [placeholder] = '"collectionManagement.management.prompt.companyName" | translate'
+              >
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7">
+              {{ "collectionManagement.management.model.companyIntroduction" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <input
+                type="text"
+                nz-input
+                formControlName="firmIntroduction"
+                [placeholder] = '"collectionManagement.management.prompt.companyIntroduction" | translate'
+              >
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired>
+              {{ "collectionManagement.management.searchModel.type" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <nz-select
+                formControlName="firmType"
+                nzAllowClear
+                [nzPlaceHolder]=' "collectionManagement.management.prompt.type" | translate '>
+                <nz-option *ngFor="let option of 'collectionManagement.management.companyType' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired >
+              {{ "collectionManagement.management.searchModel.status" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <nz-select
+                formControlName="status"
+                nzAllowClear
+                [nzPlaceHolder]=' "collectionManagement.management.prompt.status" | translate '
+                (ngModelChange)="companyStatus($event)"
+              >
+                <nz-option *ngFor="let option of 'collectionManagement.management.status1' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired>
+              {{ "collectionManagement.management.model.freed" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <nz-select
+                nzAllowClear
+                formControlName="releaseCase"
+                [nzPlaceHolder]=' "collectionManagement.management.prompt.freed" | translate '
+                [nzDisabled]="companyDisabled"
+              >
+                <nz-option *ngFor="let option of 'collectionManagement.management.freed' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+  </nz-modal>
+</div>

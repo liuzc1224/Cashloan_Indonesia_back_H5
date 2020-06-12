@@ -1,0 +1,128 @@
+<div class="c-content-wrap">
+    <div class="c-search-wrap">
+        <div class="c-search-group">
+            <!-- 注册日期 -->
+            <div class="c-search-item">
+                <div class="c-search-itemLeft">
+                  {{ "usrModule.list.table.registeredTime" | translate}}:
+                </div>
+                <div class="c-search-itemRight">
+                    <nz-date-picker [(ngModel)]="searchModel.registerTimeStart"></nz-date-picker>
+                    <span style="color:#999"> ~ </span>
+                    <nz-date-picker [(ngModel)]="searchModel.registerTimeEnd"></nz-date-picker>
+                </div>
+            </div>
+<!--          渠道来源-->
+            <div class="c-search-item">
+              <div class="c-search-itemLeft">
+                {{ "usrModule.list.table.channelSource" | translate}}:
+              </div>
+              <div class="c-search-itemRight">
+                <nz-select [(ngModel)]="searchModel.channel" [nzPlaceHolder]=' "usrModule.list.prompt.channelSource" | translate ' [nzAllowClear]="true" (ngModelChange)="setSource()" style="width: 174px">
+                  <nz-option *ngFor="let option of ('usrModule.list.source' | translate)" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+                </nz-select>
+              </div>
+            </div>
+
+        </div>
+
+          <div class="c-search-group">
+            <!--            推广方式-->
+            <div class="c-search-item">
+              <div class="c-search-itemLeft">
+                {{ "usrModule.list.table.promotionMethod" | translate}}:
+              </div>
+              <div class="c-search-itemRight">
+                <nz-select [(ngModel)]="searchModel.promotionTypeStr" [nzPlaceHolder]=' "usrModule.list.prompt.promotionMethod" | translate ' [nzAllowClear]="true" style="width: 174px">
+                  <nz-option *ngFor="let option of promotionData" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+                </nz-select>
+              </div>
+            </div>
+            <!-- 推荐人 -->
+            <div class="c-search-item">
+                <div class="c-search-itemLeft">
+                    {{ "usrModule.list.table.referrer" | translate}}:
+                </div>
+                <div class="c-search-itemRight">
+                    <input nz-input type="text" [(ngModel)] = 'searchModel.referrerName' [placeholder]='"usrModule.list.prompt.referrer" | translate'>
+                </div>
+            </div>
+          <!--注册包名-->
+          <div class="c-search-item">
+            <div class="c-search-itemLeft">
+              {{ "usrModule.list.table.packageNames" | translate}}:
+            </div>
+            <div class="c-search-itemRight">
+              <nz-select [(ngModel)]="searchModel.packageName" [nzPlaceHolder]=' "usrModule.list.prompt.packageNames" | translate ' [nzAllowClear]="true" style="width: 174px">
+                <nz-option *ngFor="let option of allPackageData" [nzLabel]="option['packageName']" [nzValue]="option['packageName']"></nz-option>              </nz-select>
+            </div>
+          </div>
+
+          <!--用户等级-->
+<!--          <div class="c-search-item">-->
+<!--            <div class="c-search-itemLeft">-->
+<!--              {{ "usrModule.list.table.userLevel" | translate}}:-->
+<!--            </div>-->
+<!--            <div class="c-search-itemRight">-->
+<!--              <nz-select [(ngModel)]="searchModel.userGrade" [nzPlaceHolder]=' "letterReviewOrder.prompt.userLevel" | translate ' [nzAllowClear]="true" style="width: 174px">-->
+<!--                <nz-option *ngFor="let option of userLevel" [nzLabel]="option['userLevelName']" [nzValue]="option['userLevelName']"></nz-option>-->
+<!--              </nz-select>-->
+<!--            </div>-->
+<!--          </div>-->
+        </div>
+        <div class="c-search-group">
+          <!-- 用户id -->
+          <div class="c-search-item">
+            <div class="c-search-itemLeft">
+              {{ "usrModule.list.table.userId" | translate}}:
+            </div>
+            <div class="c-search-itemRight">
+              <input nz-input type="text" [(ngModel)] = 'searchModel.id' [placeholder]='"usrModule.list.prompt.userId" | translate'>
+            </div>
+          </div>
+          <!-- 国际号 -->
+            <div class="c-search-item">
+                <div class="c-search-itemLeft">
+                    {{ "usrModule.list.table.international" | translate}}:
+                </div>
+                <div class="c-search-itemRight">
+                    <input nz-input type="text" [(ngModel)] = 'searchModel.areaCode' [placeholder]='"usrModule.list.prompt.international" | translate'>
+                </div>
+            </div>
+            <!-- 手机号 -->
+            <div class="c-search-item">
+                <div class="c-search-itemLeft">
+                    {{ "usrModule.list.table.mobile" | translate}}:
+                </div>
+                <div class="c-search-itemRight">
+                    <input nz-input type="text" [(ngModel)] = 'searchModel.phoneNumber' [placeholder]='"usrModule.list.prompt.mobile" | translate'>
+                </div>
+            </div>
+        </div>
+        <div class="c-search-group">
+            <button nz-button nzType="primary"  (click) = 'search()' style="margin-right:20px;">
+                {{ "common.search" | translate}}
+            </button>
+            <button nz-button nzType="default"  (click) = 'reset() '>
+                {{ "common.reset" | translate}}
+            </button>
+        </div>
+    </div>
+
+    <c-table [tableData] = 'tableData'>
+    </c-table>
+    <div class="c-pag">
+        <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+        <ng-template #totalTemplate let-total>
+            <span>
+                {{ "common.total" | translate }}
+            </span>
+            <span>
+                {{ totalSize }}
+            </span>
+            <span>
+                {{ "common.pageUnit" | translate }}
+            </span>
+        </ng-template>
+    </div>
+</div>

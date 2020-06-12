@@ -1,0 +1,104 @@
+<div class="c-content-wrap">
+  <div class="c-search-wrap">
+
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "finance.report.abnormalRepayment.createTime" | translate}}
+        </div>
+        <div class="c-search-itemRight">
+          <nz-date-picker [(ngModel)]="searchModel.createTimeStart"></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker [(ngModel)]="searchModel.createTimeEnd"></nz-date-picker>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "finance.report.abnormalRepayment.successTime" | translate}}
+        </div>
+        <div class="c-search-itemRight">
+          <nz-date-picker [(ngModel)]='searchModel.dealTimeStart'></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker [(ngModel)]='searchModel.dealTimeEnd'></nz-date-picker>
+        </div>
+      </div>
+    </div>
+
+    <div class="c-search-group">
+        <div class="c-search-item">
+          <div class="c-search-itemLeft">
+            {{ "finance.report.abnormalRepayment.state" | translate}}
+          </div>
+          <div class="c-search-itemRight">
+              <nz-select style="width: 166px;" [(ngModel)]="searchModel.status">
+                  <nz-option *ngFor="let item of ('finance.report.abnormalRepayment.status' | translate)" [nzValue]="item.value" [nzLabel]="item.desc"></nz-option>
+              </nz-select>
+          </div>
+        </div>
+        <div class="c-search-item">
+          <div class="c-search-itemLeft">
+            {{ "finance.report.abnormalRepayment.payMethod" | translate}}
+          </div>
+          <div class="c-search-itemRight">
+              <nz-select style="width: 166px;" [(ngModel)]="searchModel.paymentMethod">
+                  <nz-option *ngFor="let item of ('finance.report.abnormalRepayment.payMethods' | translate)" [nzValue]="item.value" [nzLabel]="item.desc"></nz-option>
+              </nz-select>
+          </div>
+        </div>
+      </div>
+
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          <nz-select
+            [(ngModel)]="selectModel"
+            style="width: 200px"
+            (nzOpenChange)="changeSelect()"
+          >
+            <div *ngFor='let item of searchEnum ,let idx = index'>
+              <nz-option
+                [nzValue]="item['value']"
+                [nzLabel]="item['name']"
+              >
+              </nz-option>
+            </div>
+          </nz-select>
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input [(ngModel)]="inputContent" [placeholder]=' "financeModule.list.center" | translate ' style="width: 200px" >
+        </div>
+      </div>
+    </div>
+
+    <div class="c-search-btnGroup">
+      <button nz-button nzType="primary" (click)='search() '>
+        {{ "common.search" | translate}}
+      </button>
+      <button style="margin-left: 20px;" nz-button (click)='reset() '>
+        {{ "common.reset" | translate}}
+      </button>
+      <button style="margin-left: 20px;" nz-button [disabled]="totalSize===0" (click)='downabnormalRepaymentList() '>
+        {{ "common.ex" | translate}}
+      </button>
+    </div>
+  </div>
+
+  <c-table [tableData]='tableData'>
+  </c-table>
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")'
+                   (nzPageSizeChange)='pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"
+                   [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+            <span>
+                {{ "common.total" | translate }}
+            </span>
+      <span>
+                {{ totalSize }}
+            </span>
+      <span>
+                {{ "common.pageUnit" | translate }}
+            </span>
+    </ng-template>
+  </div>
+</div>

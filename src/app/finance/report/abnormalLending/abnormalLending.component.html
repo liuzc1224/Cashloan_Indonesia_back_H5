@@ -1,0 +1,84 @@
+<div class="c-content-wrap">
+  <div class="c-search-wrap">
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "finance.report.abnormalLending.detectionTime" | translate}}
+        </div>
+        <div class="c-search-itemRight">
+          <nz-date-picker [(ngModel)]="searchModel.createTimeStart"></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker [(ngModel)]="searchModel. createTimeEnd"></nz-date-picker>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "finance.report.abnormalLending.paymentChannel" | translate}}
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select [(ngModel)]="searchModel.platformId" style="width: 200px">
+            <nz-option *ngFor="let item of ('finance.report.abnormalLending.paymentChannels' | translate)" [nzValue]="item.value" [nzLabel]="item.desc"></nz-option>
+        </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "finance.report.abnormalLending.tradeStatus" | translate}}
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select [(ngModel)]="searchModel.paymentStatus" style="width: 200px">
+            <nz-option *ngFor="let item of ('finance.report.abnormalLending.statuss' | translate)" [nzValue]="item.value" [nzLabel]="item.desc"></nz-option>
+        </nz-select>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+
+          <nz-select [(ngModel)]="selectWhat" style="width: 200px" (nzOpenChange)="changeSelect()">
+              <nz-option
+                *ngFor='let item of searchEnum ,let idx = index'  
+                [nzValue]="item['value']"
+                [nzLabel]="item['name']"
+              >
+              </nz-option>
+          </nz-select>
+          
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input [(ngModel)]="inputContent" [placeholder]=' "financeModule.list.center" | translate ' style="width: 200px" >
+        </div>
+      </div>
+    </div>
+    <div class="c-search-btnGroup">
+      <button nz-button nzType="primary" (click)='search() '>
+        {{ "common.search" | translate}}
+      </button>
+      <button style="margin-left: 20px;" nz-button (click)='reset() '>
+        {{ "common.reset" | translate}}
+      </button>
+    </div>
+  </div>
+
+  <c-table [tableData]='tableData'>
+  </c-table>
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")'
+                   (nzPageSizeChange)='pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"
+                   [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+            <span>
+                {{ "common.total" | translate }}
+            </span>
+      <span>
+                {{ totalSize }}
+            </span>
+      <span>
+                {{ "common.pageUnit" | translate }}
+            </span>
+    </ng-template>
+  </div>
+</div>

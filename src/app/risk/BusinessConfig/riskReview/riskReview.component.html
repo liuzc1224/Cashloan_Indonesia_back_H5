@@ -1,0 +1,156 @@
+<div class="c-content-wrap">
+  <div class="half-block">
+    <div class="c-search-group c-search-border">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "reviewRiskList.riskSetting.table.type" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select
+            [nzPlaceHolder]="'reviewRiskList.riskSetting.prompt.type' | translate"
+            [(ngModel)]="searchModel.type"
+            style="width: 150px"
+          >
+            <div *ngFor="let item of reviewType">
+              <nz-option [nzValue]="item['value']" [nzLabel]="item['desc']">
+              </nz-option>
+            </div>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "reviewRiskList.riskSetting.table.status" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select
+            [nzPlaceHolder]="'reviewRiskList.riskSetting.prompt.status' | translate"
+            [(ngModel)]="searchModel.status"
+            style="width: 150px"
+          >
+            <div *ngFor="let item of status">
+              <nz-option [nzValue]="item['value']" [nzLabel]="item['desc']">
+              </nz-option>
+            </div>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "reviewRiskList.riskSetting.table.name" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input
+           type="text"
+           [(ngModel)] = 'searchModel.paramName'
+           [placeholder] = '"reviewRiskList.riskSetting.prompt.name" | translate'
+          >
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <button nz-button nzType="primary"  (click) = 'search()'>
+          {{ "common.search" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button (click) = 'reset()'>
+          {{ "common.reset" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button [disabled]="totalSize===0" (click) = 'exportData()'>
+          {{ "common.ex" | translate}}
+        </button>
+      </div>
+    </div>
+    <c-table [tableData] = 'tableData'>
+    </c-table>
+    <div class="c-pag">
+      <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+      <ng-template #totalTemplate let-total>
+        <span>
+        {{ "common.total" | translate }}
+        </span>
+        <span>
+        {{ totalSize }}
+        </span>
+        <span>
+        {{ "common.pageUnit" | translate }}
+        </span>
+      </ng-template>
+    </div>
+  </div>
+</div>
+
+
+
+<nz-modal [(nzVisible)]="riskSetMark" [nzTitle]="modalTitle" [nzFooter]="modalFooter" [nzContent]="modalContent" (nzOnCancel)="makeCancel()" [nzWidth]="800" [nzOkLoading]="isOkLoading">
+
+    <ng-template #modalTitle>
+        <span>
+            {{"reviewRiskList.riskSetting.title" | translate }}
+        </span>
+    </ng-template>
+
+    <ng-template #modalContent>
+        <form nz-form [nzLayout]="'inline'" [formGroup]="validateForm">
+            <!-- 是否开启 -->
+          <nz-form-item class='c-formSec'>
+                <nz-form-label [nzSm]="7" nzRequired>
+                    {{"reviewRiskList.manageModule.isopen" | translate }}
+                </nz-form-label>
+                <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+                  <nz-select
+                    [nzPlaceHolder]="'financeModule.list.model.resuseRes' | translate"
+                    formControlName="status"
+                    id="status"
+                  >
+                    <div *ngFor="let item of statusEum">
+                      <nz-option [nzValue]="item['value']" [nzLabel]="item['desc']">
+                      </nz-option>
+                    </div>
+                  </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+          <nz-form-item class='c-formSec' *ngIf="!hid && validateForm.get('params').value">
+            <nz-form-label [nzSm]="7" nzRequired>
+              {{"reviewRiskList.riskSetting.table.value" | translate }}
+            </nz-form-label>
+            <nz-form-control *ngFor="let item of paramsObj; let i = index" [nzSm]="3"  [nzOffset]='1'>
+              <input
+                type="text"
+                id="{{i}}"
+                nz-input
+                [value]="item"
+                (blur)="change(i,$event)"
+                [placeholder]="'reviewRiskList.riskSetting.table.value' | translate"
+              />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item class='c-formSec' *ngIf="hid">
+            <nz-form-label [nzSm]="7" nzRequired>
+              {{"reviewRiskList.riskSetting.table.value" | translate }}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <nz-select
+                nzMode="multiple"
+                formControlName="params"
+                [nzPlaceHolder] = '"reviewRiskList.riskSetting.table.value" | translate'
+                id="params"
+              >
+                <div *ngIf="keys">
+                  <nz-option *ngFor="let key of keys" [nzLabel]="userSocialIdentityCode[key]" [nzValue]="key"></nz-option>
+                </div>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>
+        </form>
+    </ng-template>
+    <ng-template #modalFooter>
+        <button nz-button nzType="primary" (click)='makeNew()'>
+        {{ "common.operate.sure" | translate }}
+        </button>
+        <button nz-button nzType="default" (click)='makeCancel()'>
+        {{ "common.operate.close" | translate }}
+        </button>
+    </ng-template>
+</nz-modal>

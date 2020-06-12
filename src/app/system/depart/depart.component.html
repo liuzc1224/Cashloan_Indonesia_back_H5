@@ -1,0 +1,99 @@
+<div class="c-content-wrap">
+  <button
+    nz-button
+    nzType="primary"
+    class="c-btn-width c-no-radius"
+    (click)="addParentNode()"
+  >
+    {{ "systemModule.depart.add" | translate }}
+  </button>
+  <div class="treeWrap">
+    <nz-tree
+      [(ngModel)]="treeInfo"
+      [nzShowLine]="true"
+      (nzContextMenu)="hideMenu()"
+      (nzClick)="showMenu($event)"
+      (nzExpandChange)="hideMenu()"
+      [nzDefaultExpandAll]="true"
+    >
+    </nz-tree>
+  </div>
+</div>
+
+<nz-modal
+  [(nzVisible)]="infoBoxShow"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="infoBoxShow = false"
+>
+  <ng-template #modalTitle>
+    <span *ngIf="!editMark">
+      {{ "systemModule.depart.makeNew" | translate }}
+    </span>
+    <span *ngIf="editMark"> {{ "systemModule.depart.edit" | translate }} </span>
+  </ng-template>
+
+  <ng-template #modalContent>
+    <form nz-form [nzLayout]="'inline'" [formGroup]="validateForm">
+      <nz-form-item class="c-formSec">
+        <nz-form-label [nzSm]="9" nzRequired nzFor="name">
+          {{ "systemModule.depart.form.name" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="14" [nzOffset]="1">
+          <input nz-input maxlength="50" formControlName="name" id="name" />
+          <nz-form-explain
+            *ngIf="
+              validateForm.get('name').dirty && validateForm.get('name').errors
+            "
+          >
+            <span> {{ "systemModule.depart.form.name" | translate }} </span>
+            <span> {{ "common.validator.notEmpty" | translate }} </span>
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item class="c-formSec">
+        <nz-form-label [nzSm]="9" nzRequired nzFor="description">
+          {{ "systemModule.depart.form.remark" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="14" [nzOffset]="1">
+          <input nz-input formControlName="description" id="description" />
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      nzType="primary"
+      *ngIf="!editMark"
+      [disabled]="!validateForm.valid"
+      (click)="makeNew()"
+    >
+      {{ "common.operate.sure" | translate }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      *ngIf="editMark"
+      [disabled]="!validateForm.valid"
+      (click)="save()"
+    >
+      {{ "common.operate.save" | translate }}
+    </button>
+    <button nz-button nzType="default" (click)="infoBoxShow = false">
+      {{ "common.operate.close" | translate }}
+    </button>
+  </ng-template>
+</nz-modal>
+
+<div class="menu">
+  <ul>
+    <li (click)="addItem()">{{ "common.operate.add" | translate }}</li>
+    <li (click)="editItem()">{{ "common.operate.edit" | translate }}</li>
+    <li (click)="removeItem()">{{ "common.operate.delete" | translate }}</li>
+    <li (click)="hideMenu()">{{ "common.operate.close" | translate }}</li>
+  </ul>
+</div>

@@ -1,0 +1,188 @@
+
+<div class="c-content-wrap">
+    <div class="half-block">
+      <!-- <div class="title">
+        {{ "financeModule.repaymentNotice.title" | translate }}
+      </div> -->
+      <div class="c-search-group" style="margin-top: 20px">
+        <div class="c-search-item">
+          <div class="c-search-itemLeft">
+            {{ "financeModule.repaymentNotice.submitTime" | translate}}:
+          </div>
+          <div class="c-search-itemRight">
+            <nz-date-picker [(ngModel)]="searchModel.startDate"></nz-date-picker>
+            <span style="color:#999"> ~ </span>
+            <nz-date-picker [(ngModel)]="searchModel.endDate"></nz-date-picker>
+          </div>
+        </div>
+        <div class="c-search-item">
+          <div class="c-search-itemLeft">
+            {{ "financeModule.repaymentNotice.state" | translate}}:
+          </div>
+          <div class="c-search-itemRight">
+            <nz-select style="padding-left: 10px;width: 150px"  [(ngModel)]="searchModel.status">
+              <nz-option *ngFor="let option of 'financeModule.repaymentNotice.solve' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+      </div>
+        <div class="c-search-group">
+          <div class="c-search-item">
+            <div class="c-search-itemLeft">
+              <nz-select
+                [(ngModel)]="selectModel"
+                style="width: 200px"
+                (nzOpenChange)="changeSelect()"
+              >
+                <div *ngFor='let item of searchEnum ,let idx = index'>
+                  <nz-option
+                    [nzValue]="item['value']"
+                    [nzLabel]="item['desc']"
+                  >
+                  </nz-option>
+                </div>
+              </nz-select>
+            </div>
+            <div class="c-search-itemRight">
+              <input nz-input [(ngModel)]="inputContent" [placeholder]=' "financeModule.list.center" | translate ' style="width: 200px" >
+            </div>
+          </div>
+
+      </div>
+      <div class="c-btn-group" style="margin-bottom: 20px">
+        <button nz-button  nzType="primary" (click) = 'search() '>
+          {{ "common.search" | translate}}
+        </button>
+        <button nz-button  style="margin-left: 20px;" (click) = 'reset() '>
+          {{ "channel.btn.reset" | translate}}
+        </button>
+      </div>
+    </div>
+    <c-table [tableData] = 'tableData' style="margin-top: 20px">
+    </c-table>
+    <div class="c-pag">
+      <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+      <ng-template #totalTemplate let-total>
+    <span>
+    {{ "common.total" | translate }}
+    </span>
+        <span>
+    {{ totalSize }}
+    </span>
+        <span>
+    {{ "common.pageUnit" | translate }}
+    </span>
+      </ng-template>
+    </div>
+
+    <nz-modal
+      [(nzVisible)]="isVisible"
+      [nzTitle]='"financeModule.repaymentNotice.inModal.showMore" | translate'
+      [nzCancelText]='"common.operate.cancel" | translate'
+      (nzOnOk)="handleOk()"
+      (nzOnCancel)="handleCancel()"
+      [nzOkLoading]="isOkLoading"
+      [nzWidth]="800"
+      [nzMaskClosable]="false"
+    >
+    <div class="formChannel">
+        <nz-layout>
+            <nz-sider style="background: #F2F2F2;text-align:center;">
+              <img [src]="validForm.value.userImg!==null ? validForm.value.userImg : '' " style="width:100px;height:100px;margin:50px 0px 20px 0px;">
+              <div style="margin:20px 0px;">{{ "financeModule.repaymentNotice.inModal.userAccount" | translate}}:{{validForm.value.userAccount}}</div>
+              <button nz-button style="margin:20px 0px;" (click)="toUserAccountMore(validForm.value.userId)">{{"financeModule.repaymentNotice.inModal.showUserAccountMore" | translate}}</button>
+            </nz-sider>
+            <nz-layout style="margin-left:50px;">
+                <form nz-form [nzLayout]="'block'" [formGroup]="validForm">
+
+                    <nz-form-item  class='formSec'>
+                        <nz-form-label [nzSm]="4" nzFor="orderNo">
+                          {{ "financeModule.repaymentNotice.inModal.orderNumber" | translate }}
+                        </nz-form-label>
+                        <nz-form-control [nzSm]="19" [nzOffset]='1'>
+                            <input
+                              type="text"
+                              nz-input
+                              formControlName="orderNo"
+                              id="orderNo"
+                              readonly
+                            >
+                          </nz-form-control>
+                      </nz-form-item>
+
+                    <nz-form-item  class='formSec'>
+                        <nz-form-label [nzSm]="4" nzFor="repayType">
+                          {{ "financeModule.repaymentNotice.inModal.repayMentType" | translate }}
+                        </nz-form-label>
+                        <nz-form-control [nzSm]="19" [nzOffset]='1'>
+                            <nz-select formControlName="repayType" nzDisabled>
+                                <nz-option *ngFor="let option of 'financeModule.repaymentNotice.inModal.repayMentTypes' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+                            </nz-select>
+                          </nz-form-control>
+                      </nz-form-item>
+                      
+                      <nz-form-item  class='formSec'>
+                          <nz-form-label [nzSm]="4" nzFor="repayMoney">
+                            {{ "financeModule.repaymentNotice.inModal.repayMentMoney" | translate }}
+                          </nz-form-label>
+                          <nz-form-control [nzSm]="19" [nzOffset]='1'>
+                              <nz-input-group  nzSuffix="RP">
+                                <input
+                                  type="text"
+                                  nz-input
+                                  formControlName="repayMoney"
+                                  id="repayMoney"
+                                  readonly
+                                >
+                              </nz-input-group>
+                            </nz-form-control>
+                        </nz-form-item>
+            
+                      <nz-form-item  class='formSec'>
+                          <nz-form-label [nzSm]="4" nzFor="images">
+                            {{ "financeModule.repaymentNotice.inModal.repayMentProof" | translate }}
+                          </nz-form-label>
+                          <nz-form-control [nzSm]="19" [nzOffset]='1'>
+                                <img [src]="validForm.value.repayProof!==null ? validForm.value.repayProof : '' "  
+                                style="width:110px;height:110px;padding:5px;"
+                                data-magnify="gallery" [attr.data-src]="validForm.value.repayProof!==null ? validForm.value.repayProof : '' " >
+                            </nz-form-control>
+                        </nz-form-item>
+                        
+                        <nz-form-item  class='formSec'>
+                            <nz-form-label [nzSm]="4" nzRequired nzFor="status">
+                              {{ "financeModule.repaymentNotice.inModal.state" | translate }}
+                            </nz-form-label>
+                            <nz-form-control [nzSm]="19" [nzOffset]='1'>
+                                <nz-select formControlName="status" nzAllowClear="false">
+                                  <nz-option *ngFor="let item of 'financeModule.repaymentNotice.inModal.solve' | translate" [nzLabel]="item.desc" [nzValue]="item.value"></nz-option>
+                                </nz-select>
+                            </nz-form-control>
+                          </nz-form-item>
+            
+                          <nz-form-item  class='formSec'>
+                              <nz-form-label [nzSm]="4" nzFor="remark">
+                                {{ "financeModule.repaymentNotice.inModal.resmark" | translate }}
+                              </nz-form-label>
+                              <nz-form-control [nzSm]="19" [nzOffset]='1'>
+                                  <textarea
+                                    nz-input
+                                    formControlName="remark"
+                                    id="remark"
+                                    style="resize: none;height: 200px;"
+                                    maxlength="500"
+                                  >
+                                  </textarea>
+                                  <div style="pointer-events: none" class="input-length">{{validForm['value']['remark'] && validForm['value']['remark']['length'] ? validForm['value']['remark']['length'] : 0}}/500</div>
+                                </nz-form-control>
+                            </nz-form-item>
+            
+                </form>
+            </nz-layout>
+          </nz-layout>
+
+    </div>
+      
+    </nz-modal>
+</div>
+  

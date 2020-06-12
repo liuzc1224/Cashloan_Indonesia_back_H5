@@ -1,0 +1,26 @@
+<div class="c-content-wrap" style="margin-bottom: 30px">
+  <nz-row>
+    <nz-col [nzSpan]="24">
+      {{"reportModule.platformCurrentData.time" | translate}} : {{nowTime}}
+    </nz-col>
+  </nz-row>
+  <nz-divider></nz-divider>
+  <nz-row [nzGutter]="16" style="padding-bottom: 30px">
+    <nz-col [nzSpan]="12">
+      <table>
+        <tr *ngFor="let item of 'reportModule.platformCurrentData.table' | translate">
+          <td>{{item['desc']}}</td>
+          <td>{{PlatformHistory[item['reflect'].toString()]==null ? 0 : PlatformHistory[item['reflect'].toString()]}}</td><!-- 如果为null则转为0 -->
+        </tr>
+      </table>
+    </nz-col>
+    <nz-col [nzSpan]="12">
+      <table>
+        <tr *ngFor="let item of 'reportModule.platformCurrentData.moneyData' | translate">
+          <td>{{item['desc']}}</td>
+          <td>{{PlatformHistory[item['reflect'].toString()]==null ? 0 : PlatformHistory[item['reflect'].toString()]}}</td><!-- 如果为null则转为0 -->
+        </tr>
+      </table>
+    </nz-col>
+  </nz-row>
+</div>

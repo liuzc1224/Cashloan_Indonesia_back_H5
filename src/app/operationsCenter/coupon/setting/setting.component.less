@@ -1,0 +1,97 @@
+@width: 420px;
+.coupon-setting{
+  width: 80%;
+  margin: 0 auto;
+  padding-bottom: 100px;
+}
+.c-item{
+  margin-right: 20px;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content:flex-start;
+  align-content: center;
+}
+.c-itemLeft{
+  width: 100px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  color: #000000;
+  margin-right: 10px;
+  text-align: right;
+
+}
+.c-itemRight{
+  input,
+  textarea,
+  .width{
+    width: @width;
+  }
+  textarea{
+    resize:none;
+    height:100px
+  }
+  nz-select{
+    width: @width;
+  }
+  nz-radio-group{
+    label{
+      width: 100%;
+    }
+    input{
+      width: 100px;
+      text-align: center;
+    }
+    nz-select{
+      width: 80px;
+      //margin-left: 10px;
+    }
+  }
+  .textCenter{
+    text-align: center;
+  }
+  .details{
+    margin-top: 10px;
+    width:@width ;
+    height: 50px;
+    white-space:normal;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    position: relative;
+    .detail{
+      border: 1px solid #cccccc;
+      border-radius: 5px;
+      padding: 5px;
+      margin-left: 5px;
+      position: relative;
+      top:13px;
+      span{
+        cursor:pointer
+      }
+    }
+  }
+}
+.c-itemLeft-topone{
+  margin-top: -130px;
+}
+.c-itemLeft-top{
+  margin-top: -50px;
+}
+.btn{
+  border-top:1px solid #cccccc;
+  margin-top: 50px;
+  button{
+    margin-top: 10px;
+    margin-bottom: 20px;
+    height: 50px;
+    p{
+      font-size: 20px;
+      padding-top: 8px;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+}
+

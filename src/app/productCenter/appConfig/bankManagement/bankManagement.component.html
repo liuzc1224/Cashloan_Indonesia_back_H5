@@ -1,0 +1,164 @@
+<div class="c-content-wrap">
+
+  <div class="title">
+    {{ "productCenter.appConfig.bank.title" | translate }}
+    <button nz-button nzType="primary" (click) = 'add()' class="addbtn">
+      {{ "productCenter.appConfig.bank.add" | translate }}
+    </button>
+  </div>
+
+  <div class="c-search-wrap">
+
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "productCenter.appConfig.bank.state" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 170px" [(ngModel)]="searchModel.status" [nzPlaceHolder]=' "productCenter.appConfig.bank.prompt.state" | translate ' nzAllowClear>
+            <nz-option *ngFor="let option of 'productCenter.appConfig.bank.status' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+            <!-- ""全部 "1"激活 "0"停用 -->
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "productCenter.appConfig.bank.name" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" [(ngModel)]="searchModel.bankName" [placeholder]="'productCenter.appConfig.bank.prompt.name' | translate" />
+        </div>
+      </div>
+    </div>
+
+    <div class="c-btn-group" style="margin-bottom: 20px">
+      <button nz-button  nzType="primary" (click) = 'search() '>
+        {{ "common.search" | translate}}
+      </button>
+      <button nz-button class="left" (click) = 'reset() '>
+        {{ "channel.btn.reset" | translate}}
+      </button>
+    </div>
+
+  </div>
+
+  <c-table [tableData] = 'tableData' style="margin-top: 20px">
+  </c-table>
+
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+  <span>
+  {{ "common.total" | translate }}
+  </span>
+      <span>
+  {{ totalSize }}
+  </span>
+      <span>
+  {{ "common.pageUnit" | translate }}
+  </span>
+    </ng-template>
+  </div>
+
+  <nz-modal [(nzVisible)]="isDelete" [nzTitle]="'productCenter.appConfig.bank.decideDelete' | translate" (nzOnCancel)="deleteCancel()" (nzOnOk)="deleteOk()" [nzOkLoading]="isDeleteLoading">
+    <p>{{"productCenter.appConfig.bank.decideDeleteTip"  | translate }}！</p>
+  </nz-modal>
+
+
+  <nz-modal
+    [(nzVisible)]="isVisible"
+    [nzTitle]='title'
+    [nzOkText]='"common.operate.save" | translate'
+    [nzCancelText]='"common.operate.cancel" | translate'
+    (nzOnOk)="handleOk()"
+    (nzOnCancel)="handleCancel()"
+    [nzOkLoading]="isOkLoading"
+    [nzWidth]="600"
+  >
+    <div class="formChannel">
+      <form nz-form [nzLayout]="'block'" [formGroup]="validForm">
+        
+        <nz-form-item  class='formSec'>
+            <nz-form-label [nzSm]="4" nzRequired nzFor="sort">
+              {{ "productCenter.appConfig.bank.sort" | translate }}
+            </nz-form-label>
+            <nz-form-control [nzSm]="19" [nzOffset]='1'>
+              <nz-select formControlName="sort" nzAllowClear="false">
+                <div *ngFor="let item of title==('productCenter.appConfig.bank.edit' | translate)?sortList.slice(0,-1):sortList"><!--判断“编辑进入”显示sort个数列表，“新增进入”则显示sort个数+1列表-->
+                  <nz-option [nzLabel]="item['value']" [nzValue]="item['value']"></nz-option>
+                </div>
+              </nz-select>
+            </nz-form-control>
+          </nz-form-item>  
+
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="4" nzRequired nzFor="bankName">
+            {{ "productCenter.appConfig.bank.name" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="19" [nzOffset]='1'>
+            <input
+              nz-input
+              formControlName="bankName"
+              [placeholder] = '"productCenter.appConfig.bank.prompt.name" | translate'
+              maxlength="100"
+            >
+            <nz-form-explain *ngIf="validForm.get('bankName').dirty && validForm.get('bankName').errors">
+              <span>
+                {{ "productCenter.appConfig.bank.name" | translate}}
+              </span>
+              <span>
+                {{ "common.validator.notEmpty" | translate }}
+              </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="4" nzRequired nzFor="file">
+            {{ "productCenter.appConfig.bank.logo" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="19" [nzOffset]='1'>
+            <nz-upload
+              nzName="avatar"
+              nzListType="picture-card"
+              [nzBeforeUpload]="beforeUpload"
+              [nzAccept]="'image/*'"
+            >
+              <ng-container *ngIf="!avatarUrl">
+                <i class="anticon anticon-plus" nz-icon type="plus"></i>
+                <div class="ant-upload-text">{{ "productCenter.appConfig.bank.uploadPhoto" | translate }}</div>
+              </ng-container>
+              <img *ngIf="avatarUrl" [src]="avatarUrl" class="avatar">
+            </nz-upload>
+            {{ "productCenter.appConfig.bank.recommendedSize" | translate }} 120px * 120px
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="4" nzRequired nzFor="status">
+            {{ "productCenter.appConfig.bank.state" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="19" [nzOffset]='1'>
+            <nz-select formControlName="status" [nzPlaceHolder]=' "productCenter.appConfig.bank.prompt.state" | translate '>
+              <nz-option *ngFor="let option of ('productCenter.appConfig.bank.status' | translate).slice(1)" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+            </nz-select>
+            <nz-form-explain *ngIf="validForm.get('status').dirty && validForm.get('status').errors">
+              <span>
+                {{ "productCenter.appConfig.bank.state" | translate}}
+              </span>
+              <span>
+                {{ "common.validator.notEmpty" | translate }}
+              </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+
+      </form>
+    </div>
+  </nz-modal>
+
+  <nz-modal [(nzVisible)]="isShow" nzWidth="548px" [nzTitle]="'productCenter.appConfig.bank.showBig' | translate" (nzOnCancel)="isShowCancel()" (nzOnOk)="isShowOk()">
+      <img [src]="showWitch" class="img">
+  </nz-modal>
+
+</div>

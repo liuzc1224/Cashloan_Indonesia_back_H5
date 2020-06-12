@@ -1,0 +1,675 @@
+<div class="c-content-wrap">
+  <div class="c-search-wrap">
+    <div class="c-search-group c-search-border">
+      <div class="c-search-itemRight">
+        <ul class="sectionList c-flex-row-start" style="flex-wrap:wrap;height: auto;">
+          <li
+            *ngFor = 'let item of managementType'
+            (click) = 'changeStatus(item["value"])'
+            [ngClass]='{"active-tag" : (item["value"] == chType)}'
+            style="white-space:nowrap;margin-bottom: 10px;">
+            {{ item['desc'] }}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="c-search-group" *ngIf="chType==1">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'letterReviewMember.searchModel.company' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 150px" [(ngModel)]="searchModel.firmId" [nzPlaceHolder]='"letterReviewMember.prompt.company" | translate ' >
+            <nz-option *ngFor="let option of allOverdueFirm" [nzLabel]="option['firmName']" [nzValue]="option['id']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'letterReviewMember.searchModel.companyType' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 150px" [(ngModel)]="searchModel.firmType" [nzPlaceHolder]=' "letterReviewMember.prompt.companyType" | translate ' >
+            <nz-option *ngFor="let option of 'letterReviewMember.companyType1' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'letterReviewMember.searchModel.group' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <nz-tree-select
+            [nzDropdownStyle]="{'maxHeight':'500px'}"
+            style="width: 200px"
+            [nzDefaultExpandAll]="true"
+            [nzNodes]="NzTreeNodes"
+            [nzPlaceHolder]='"letterReviewMember.prompt.group" | translate '
+            [(ngModel)]="searchModel.groupId"
+            >
+          </nz-tree-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'letterReviewMember.personnel.stage' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 150px" [(ngModel)]="searchModel.stageId" [nzPlaceHolder]=' "letterReviewMember.prompt.stage" | translate '>
+            <nz-option *ngFor="let option of allStage" [nzLabel]="option['flowName']" [nzValue]="option['id']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group" *ngIf="chType==1">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'letterReviewMember.searchModel.status' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 150px" [(ngModel)]="searchModel.status" [nzPlaceHolder]=' "letterReviewMember.prompt.status" | translate '>
+            <nz-option *ngFor="let option of 'letterReviewMember.accountType1' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'letterReviewMember.searchModel.personnelName' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input [placeholder] = '"letterReviewMember.prompt.personnelName" | translate' [(ngModel)] ='searchModel.staffName'>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'letterReviewMember.searchModel.phoneNumber' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input [placeholder] = '"letterReviewMember.prompt.phoneNumber" | translate' [(ngModel)] ='searchModel.phonenumber'>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group" *ngIf="chType==2">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'letterReviewMember.searchModel.company' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 150px" [(ngModel)]="searchModel.firmId" [nzPlaceHolder]='"letterReviewMember.prompt.company" | translate ' nzAllowClear>
+            <nz-option *ngFor="let option of allOverdueFirm" [nzLabel]="option['firmName']" [nzValue]="option['id']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'letterReviewMember.searchModel.group' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <nz-tree-select
+            [nzDropdownStyle]="{'maxHeight':'500px'}"
+            style="width: 200px"
+            [nzDefaultExpandAll]="true"
+            [nzNodes]="NzTreeNodes"
+            [nzPlaceHolder]='"letterReviewMember.prompt.group" | translate '
+            [(ngModel)]="searchModel.id"
+          >
+          </nz-tree-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'letterReviewMember.group.stage' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 150px" [(ngModel)]="searchModel.stageId" [nzPlaceHolder]=' "letterReviewMember.prompt.artificialReviewStage" | translate ' nzAllowClear>
+            <nz-option *ngFor="let option of allStage" [nzLabel]="option['flowName']" [nzValue]="option['id']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group" *ngIf="chType==2">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'letterReviewMember.searchModel.groupState' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 150px" [(ngModel)]="searchModel.status" [nzPlaceHolder]=' "letterReviewMember.prompt.groupState" | translate '>
+            <nz-option *ngFor="let option of 'letterReviewMember.statusAll' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'letterReviewMember.searchModel.reviewTeamName' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input [placeholder] = '"letterReviewMember.prompt.reviewTeamName" | translate' [(ngModel)] ='searchModel.groupName'>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group" *ngIf="chType==3">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'letterReviewMember.searchModel.companyType' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 150px" [(ngModel)]="searchModel.firmType" [nzPlaceHolder]=' "letterReviewMember.prompt.companyType" | translate '>
+            <nz-option *ngFor="let option of 'letterReviewMember.companyType1' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'letterReviewMember.searchModel.status' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 150px" [(ngModel)]="searchModel.status" [nzPlaceHolder]=' "letterReviewMember.prompt.status" | translate '>
+            <nz-option *ngFor="let option of 'letterReviewMember.statusAll1' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ 'letterReviewMember.searchModel.companyName' | translate}} :
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input [placeholder] = '"letterReviewMember.prompt.companyName" | translate' type="text" [(ngModel)] ='searchModel.firmName'>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <button nz-button nzType="primary"  (click) = 'search() '>
+          {{ "common.search" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button (click) = 'reset() '>
+          {{ "common.reset" | translate}}
+        </button>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item" *ngIf="chType==1">
+        <button nz-button nzType="primary"  (click) = personnel()>
+          {{ "letterReviewMember.personnelAdd" | translate}}
+        </button>
+      </div>
+      <div class="c-search-item" *ngIf="chType==2">
+        <button nz-button nzType="primary"  (click) = 'group()'>
+          {{ "letterReviewMember.groupAdd" | translate}}
+        </button>
+      </div>
+      <div class="c-search-item" *ngIf="chType==3">
+        <button nz-button nzType="primary"  (click) = 'company()'>
+          {{ "letterReviewMember.companyAdd" | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+  <c-table [tableData] = 'tableData' style="margin-top: 20px;">
+  </c-table>
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+      <span>
+        {{ "common.total" | translate }}
+      </span>
+      <span>
+        {{ totalSize }}
+      </span>
+      <span>
+        {{ "common.pageUnit" | translate }}
+      </span>
+    </ng-template>
+  </div>
+
+
+  <nz-modal
+    [(nzVisible)]="isPersonnel"
+    [nzTitle]="personnelTitle"
+    [nzOkText]='"common.operate.sure" | translate'
+    [nzCancelText]='"common.operate.cancel" | translate'
+    (nzOnOk)="personnelOk()"
+    (nzOnCancel)="personnelCancel()"
+    [nzOkLoading]="personnelLoading"
+    nzWidth="700"
+  >
+    <div class="formChannel">
+      <form nz-form [nzLayout]="'block'" [formGroup]="personnelForm">
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired nzFor="staffName">
+              {{ "letterReviewMember.model.actualName" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <input
+                type="text"
+                nz-input
+                formControlName="staffName"
+                id="staffName"
+                maxlength="100"
+                [placeholder] = '"letterReviewMember.prompt.actualName" | translate'
+              >
+              <nz-form-explain *ngIf="(personnelForm.get('staffName').dirty && personnelForm.get('staffName').errors)">
+                <span> {{ "letterReviewMember.model.actualName" | translate }} </span>
+                <span> {{ "common.validator.notEmpty" | translate }} </span>
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired nzFor="phonenumber">
+              {{ "letterReviewMember.searchModel.phoneNumber" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <input
+                type="text"
+                nz-input
+                formControlName="phonenumber"
+                id="phonenumber"
+                maxlength="30"
+                [placeholder] = '"letterReviewMember.prompt.phoneNumber" | translate'
+              >
+              <nz-form-explain *ngIf="(personnelForm.get('phonenumber').dirty && personnelForm.get('phonenumber').errors)">
+                <span> {{ "letterReviewMember.searchModel.phoneNumber" | translate }} </span>
+                <span> {{ "common.validator.notEmpty" | translate }} </span>
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired nzFor="groupId">
+              {{ "letterReviewMember.searchModel.group" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="11"  [nzOffset]='1'>
+              <nz-tree-select
+                [nzDropdownStyle]="{'maxHeight':'500px'}"
+                [nzNodes]="NzTreeNode"
+                [nzDefaultExpandAll]="false"
+                [nzPlaceHolder]='"letterReviewMember.prompt.group" | translate '
+                formControlName="groupId"
+                id="groupId"
+                style="width: 435px"
+                >
+              </nz-tree-select>
+              <!--<nz-select-->
+              <!--formControlName="groupId"-->
+              <!--nzAllowClear-->
+              <!--id="groupId"-->
+              <!---->
+              <!--(ngModelChange)="groupSelect()"-->
+              <!--&gt;-->
+              <!--<nz-option *ngFor="let option of allOverdueGroup" [nzLabel]="option['groupName']" [nzValue]="option['id']"></nz-option>-->
+              <!--</nz-select>-->
+              <nz-form-explain *ngIf="(personnelForm.get('groupId').dirty && personnelForm.get('groupId').errors)">
+                <span> {{ "letterReviewMember.searchModel.group" | translate }} </span>
+                <span> {{ "common.validator.notEmpty" | translate }} </span>
+              </nz-form-explain>
+            </nz-form-control>
+<!--            <nz-form-control [nzSm]="5">-->
+<!--              <p style="margin-left: 5px">{{ groupType }}</p>-->
+<!--            </nz-form-control>-->
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired nzFor="permission">
+              {{ "letterReviewMember.model.permission" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <nz-select
+                nzMode="multiple"
+                formControlName="authority"
+                [nzPlaceHolder] = '"letterReviewMember.prompt.permission" | translate'
+                id="authority"
+              >
+                <nz-option *ngFor="let item of 'letterReviewMember.permissions' | translate" [nzLabel]="item['desc']" [nzValue]="item['value']"></nz-option>
+              </nz-select>
+              <nz-form-explain *ngIf="(personnelForm.get('authority').dirty && personnelForm.get('authority').errors)">
+                <span> {{ "letterReviewMember.model.permission" | translate }} </span>
+                <span> {{ "common.validator.notEmpty" | translate }} </span>
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired nzFor="username">
+              {{ "letterReviewMember.model.accountName" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <input
+                type="text"
+                nz-input
+                formControlName="username"
+                id="username"
+                maxlength="30"
+                [placeholder] = '"letterReviewMember.prompt.accountName" | translate'
+              >
+              <nz-form-explain *ngIf="personnelForm.get('username').dirty && personnelForm.get('username').errors">
+                <span> {{ "letterReviewMember.model.accountName" | translate }} </span>
+                <span> {{ "common.validator.notEmpty" | translate }} </span>
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec' *ngIf="!personnelForm.get('id').value">
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired nzFor="password">
+              {{ "letterReviewMember.model.accountPassword" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <input
+                type="password"
+                nz-input
+                formControlName="password"
+                id="password"
+                maxlength="30"
+                [ngStyle]="{'border-color': passwordValue ? '#f5222d' : ''}"
+                [placeholder] = '"letterReviewMember.prompt.accountPassword" | translate'
+              >
+              <nz-form-explain *ngIf="passwordValue" style="color: #f5222d">
+                <span> {{ "letterReviewMember.model.accountPassword" | translate }} </span>
+                <span> {{ "common.validator.notEmpty" | translate }} </span>
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec' *ngIf="personnelForm.get('id').value">
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" *ngIf="personnelForm.get('id').value" >
+              {{ "letterReviewMember.model.accountPassword" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <input
+                type="password"
+                nz-input
+                formControlName="password"
+                maxlength="30"
+                [placeholder] = '"letterReviewMember.prompt.accountPassword" | translate'
+              >
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7"  nzFor="recallPhone">
+              {{ "letterReviewMember.personnel.recallPhone" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <input
+                type="text"
+                nz-input
+                formControlName="recallPhone"
+                maxlength="30"
+                [placeholder] = '"letterReviewMember.prompt.recallPhone" | translate'
+              >
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7"  nzFor="recallPhonePassword">
+              {{ "letterReviewMember.personnel.recallPhonePassword" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <input
+                type="password"
+                nz-input
+                formControlName="recallPhonePassword"
+                maxlength="30"
+                [placeholder] = '"letterReviewMember.prompt.recallPhonePassword" | translate'
+              >
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired nzFor="status">
+              {{ "letterReviewMember.searchModel.status" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <nz-select
+                formControlName="status"
+                nzAllowClear
+                id="status"
+                [nzPlaceHolder]=' "letterReviewMember.prompt.status" | translate '
+                (ngModelChange)="personnelStatus($event)"
+              >
+                <nz-option *ngFor="let option of 'letterReviewMember.status' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+              </nz-select>
+              <nz-form-explain *ngIf="personnelForm.get('status').dirty && personnelForm.get('status').errors">
+                <span> {{ "letterReviewMember.searchModel.status" | translate }} </span>
+                <span> {{ "common.validator.notEmpty" | translate }} </span>
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+  </nz-modal>
+
+  <nz-modal
+    [(nzVisible)]="isGroup"
+    [nzTitle]="groupTitle"
+    [nzOkText]='"common.operate.sure" | translate'
+    [nzCancelText]='"common.operate.cancel" | translate'
+    (nzOnOk)="groupOk()"
+    (nzOnCancel)="groupCancel()"
+    [nzOkLoading]="groupLoading"
+  >
+    <div class="formChannel">
+      <form nz-form [nzLayout]="'block'" [formGroup]="groupForm">
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired nzFor="stageId">
+              {{ "letterReviewMember.model.artificialReviewStage" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <nz-select
+                formControlName="stageId"
+                nzAllowClear
+                id="groupType"
+                [nzPlaceHolder]=' "letterReviewMember.prompt.artificialReviewStage" | translate '>
+                <nz-option *ngFor="let option of allStageEdit" [nzLabel]="option['flowName']" [nzValue]="option['id']"></nz-option>
+              </nz-select>
+              <nz-form-explain *ngIf="groupForm.get('stageId').dirty && groupForm.get('stageId').errors">
+                <span> {{ "letterReviewMember.model.artificialReviewStage" | translate }} </span>
+                <span> {{ "common.validator.notEmpty" | translate }} </span>
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired nzFor="productTypeList">
+              {{ "letterReviewMember.model.productType" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <nz-select
+                nzMode="multiple"
+                formControlName="productTypeList"
+                [nzPlaceHolder] = '"letterReviewMember.prompt.productType" | translate'
+                id="productType"
+              >
+                <nz-option *ngFor="let item of 'letterReviewMember.productTypes' | translate" [nzLabel]="item['desc']" [nzValue]="item['value']"></nz-option>
+              </nz-select>
+              <nz-form-explain *ngIf="(groupForm.get('productTypeList').dirty && groupForm.get('productTypeList').errors)">
+                <span> {{ "letterReviewMember.model.productType" | translate }} </span>
+                <span> {{ "common.validator.notEmpty" | translate }} </span>
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired nzFor="groupName">
+              {{ "letterReviewMember.searchModel.reviewTeamName" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <input
+                type="text"
+                nz-input
+                formControlName="groupName"
+                [placeholder] = '"letterReviewMember.prompt.groupName" | translate'
+              >
+              <nz-form-explain *ngIf="groupForm.get('groupName').dirty && groupForm.get('groupName').errors">
+                <span> {{ "letterReviewMember.searchModel.reviewTeamName" | translate }} </span>
+                <span> {{ "common.validator.notEmpty" | translate }} </span>
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7">
+              {{ "letterReviewMember.model.introduction" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <textarea nz-input formControlName="groupDescription" rows="2" maxlength="100" style="resize: none"
+                        [placeholder]='"letterReviewMember.prompt.introduction" | translate ' id="description"></textarea>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired nzFor="firmId">
+              {{ "letterReviewMember.searchModel.company" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <nz-select formControlName="firmId" [nzPlaceHolder]=' "letterReviewMember.prompt.company" | translate ' nzAllowClear>
+                <nz-option *ngFor="let option of allOverdueFirmEdit" [nzLabel]="option['firmName']" [nzValue]="option['id']"></nz-option>
+              </nz-select>
+              <nz-form-explain *ngIf="groupForm.get('firmId').dirty && groupForm.get('firmId').errors">
+                <span> {{ "letterReviewMember.searchModel.company" | translate }} </span>
+                <span> {{ "common.validator.notEmpty" | translate }} </span>
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired nzFor="status">
+              {{ "letterReviewMember.searchModel.status" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <nz-select
+                formControlName="status"
+                nzAllowClear
+                [nzPlaceHolder]=' "letterReviewMember.prompt.status" | translate '
+                (ngModelChange)="groupStatus($event)"
+              >
+                <nz-option *ngFor="let option of 'letterReviewMember.status' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+              </nz-select>
+              <nz-form-explain *ngIf="groupForm.get('status').dirty && groupForm.get('status').errors">
+                <span> {{ "letterReviewMember.searchModel.status" | translate }} </span>
+                <span> {{ "common.validator.notEmpty" | translate }} </span>
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+<!--        <nz-form-item class='formSec' *ngIf="groupForm.get('groupType').value==1">-->
+<!--          <nz-form-control>-->
+<!--            <nz-form-label [nzSm]="7" nzRequired>-->
+<!--              {{ "letterReviewMember.model.freed" | translate}}-->
+<!--            </nz-form-label>-->
+<!--            <nz-form-control [nzSm]="16"  [nzOffset]='1'>-->
+<!--              <nz-select-->
+<!--                formControlName="releaseCase"-->
+<!--                nzAllowClear-->
+<!--                [nzPlaceHolder]=' "letterReviewMember.prompt.freed" | translate '-->
+<!--                [nzDisabled]="groupDisabled"-->
+<!--              >-->
+<!--                <nz-option *ngFor="let option of 'letterReviewMember.freed' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>-->
+<!--              </nz-select>-->
+<!--            </nz-form-control>-->
+<!--          </nz-form-control>-->
+<!--        </nz-form-item>-->
+      </form>
+    </div>
+  </nz-modal>
+  <nz-modal
+    [(nzVisible)]="isCompany"
+    [nzTitle]="companyTitle"
+    [nzOkText]='"common.operate.sure" | translate'
+    [nzCancelText]='"common.operate.cancel" | translate'
+    (nzOnOk)="companyOk()"
+    (nzOnCancel)="companyCancel()"
+    [nzOkLoading]="companyLoading"
+  >
+    <div class="companyForm">
+      <form nz-form [nzLayout]="'block'" [formGroup]="companyForm">
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired nzFor="firmName">
+              {{ "letterReviewMember.searchModel.companyName" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <input
+                type="text"
+                nz-input
+                formControlName="firmName"
+                [placeholder] = '"letterReviewMember.prompt.companyName" | translate'
+              >
+              <nz-form-explain *ngIf="companyForm.get('firmName').dirty && companyForm.get('firmName').errors">
+                <span> {{ "letterReviewMember.searchModel.companyName" | translate }} </span>
+                <span> {{ "common.validator.notEmpty" | translate }} </span>
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7">
+              {{ "letterReviewMember.model.companyIntroduction" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <textarea nz-input formControlName="firmIntroduction" rows="2" maxlength="200" style="resize: none"
+                        [placeholder]='"letterReviewMember.prompt.companyIntroduction" | translate ' id="firmIntroduction"></textarea>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired nzFor="firmType">
+              {{ "letterReviewMember.searchModel.companyType" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <nz-select
+                formControlName="firmType"
+                nzAllowClear
+                [nzPlaceHolder]=' "letterReviewMember.prompt.companyType" | translate '>
+                <nz-option *ngFor="let option of 'letterReviewMember.companyType' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+              </nz-select>
+              <nz-form-explain *ngIf="companyForm.get('firmType').dirty && companyForm.get('firmType').errors">
+                <span> {{ "letterReviewMember.searchModel.companyType" | translate }} </span>
+                <span> {{ "common.validator.notEmpty" | translate }} </span>
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="7" nzRequired nzFor="status">
+              {{ "letterReviewMember.searchModel.status" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+              <nz-select
+                formControlName="status"
+                [nzPlaceHolder]=' "letterReviewMember.prompt.status" | translate '
+                (ngModelChange)="companyStatus($event)"
+              >
+                <nz-option *ngFor="let option of 'letterReviewMember.status' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+              </nz-select>
+              <nz-form-explain *ngIf="companyForm.get('status').dirty && companyForm.get('status').errors">
+                <span> {{ "letterReviewMember.searchModel.status" | translate }} </span>
+                <span> {{ "common.validator.notEmpty" | translate }} </span>
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+  </nz-modal>
+</div>

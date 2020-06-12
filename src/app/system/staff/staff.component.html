@@ -1,0 +1,261 @@
+<div class="c-content-wrap">
+  <div class="c-search-wrap">
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "systemModule.admin.table.userName" | translate }}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" [(ngModel)]="searchModel.username" />
+        </div>
+      </div>
+
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "systemModule.admin.table.realName" | translate }}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" [(ngModel)]="searchModel.description" />
+        </div>
+      </div>
+
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "systemModule.admin.table.mobile" | translate }}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" [(ngModel)]="searchModel.phoneNumber" />
+        </div>
+      </div>
+    </div>
+    <div class="c-search-btnGroup">
+      <button nz-button nzType="primary" (click)="search()">
+        {{ "common.search" | translate }}
+      </button>
+      <button style="margin-left: 20px;" nz-button (click)="reset()">
+        {{ "common.reset" | translate }}
+      </button>
+    </div>
+  </div>
+
+  <button
+    nz-button
+    nzType="primary"
+    class="c-btn-width c-no-radius"
+    (click)="addNewStuff()"
+  >
+    {{ "systemModule.admin.add" | translate }}
+  </button>
+  <c-table [tableData]="tableData"> </c-table>
+  <div class="c-pag">
+    <nz-pagination
+      [nzShowTotal]="totalTemplate"
+      (nzPageIndexChange)="pageChange($event, 'page')"
+      (nzPageSizeChange)="pageChange($event, 'size')"
+      [nzPageIndex]="searchModel.currentPage"
+      [nzTotal]="totalSize"
+      nzShowSizeChanger
+      nzShowQuickJumper
+    ></nz-pagination>
+    <ng-template #totalTemplate let-total>
+      <span> {{ "common.total" | translate }} </span>
+      <span> {{ totalSize }} </span>
+      <span> {{ "common.pageUnit" | translate }} </span>
+    </ng-template>
+  </div>
+</div>
+
+<nz-modal
+  [(nzVisible)]="infoBoxShow"
+  [nzTitle]="modalTitle"
+  [nzContent]="modalContent"
+  [nzFooter]="modalFooter"
+  (nzOnCancel)="infoBoxShow = false"
+>
+  <ng-template #modalTitle>
+    <span *ngIf="!editMark"> {{ "systemModule.admin.add" | translate }} </span>
+    <span *ngIf="editMark"> {{ "systemModule.admin.edit" | translate }} </span>
+  </ng-template>
+
+  <ng-template #modalContent>
+    <form nz-form [nzLayout]="'inline'" [formGroup]="validateForm">
+      <nz-form-item class="c-formSec">
+        <nz-form-label [nzSm]="11" nzRequired nzFor="s_user_name">
+          {{ "systemModule.admin.table.userName" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="12" [nzOffset]="1">
+          <input nz-input formControlName="username" id="username" />
+          <nz-form-explain
+            *ngIf="
+              validateForm.get('username').dirty &&
+              validateForm.get('username').errors
+            "
+          >
+            <span> {{ "systemModule.admin.table.userName" | translate }} </span>
+            <span> {{ "common.validator.notEmpty" | translate }} </span>
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item class="c-formSec" *ngIf="validateForm.get('id').value==null" id="password" >
+        <nz-form-label [nzSm]="11" nzRequired nzFor="password">
+          {{ "systemModule.admin.table.password" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="12" [nzOffset]="1">
+          <input nz-input formControlName="password"/>
+          <nz-form-explain
+            *ngIf="
+              validateForm.get('password').dirty &&
+              validateForm.get('password').errors
+            "
+          >
+            <span> {{ "systemModule.admin.table.password" | translate }} </span>
+            <span> {{ "common.validator.notEmpty" | translate }} </span>
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item class="c-formSec" *ngIf="validateForm.get('id').value!=null" id="password2">
+        <nz-form-label [nzSm]="11">
+          {{ "systemModule.admin.table.password" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="12" [nzOffset]="1">
+          <input nz-input formControlName="password" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item class="c-formSec">
+        <nz-form-label [nzSm]="11" nzRequired nzFor="description">
+          {{ "systemModule.admin.table.realName" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="12" [nzOffset]="1">
+          <input nz-input formControlName="description" id="description" />
+          <nz-form-explain
+            *ngIf="
+              validateForm.get('description').dirty &&
+              validateForm.get('description').errors
+            "
+          >
+            <span> {{ "systemModule.admin.table.realName" | translate }} </span>
+            <span> {{ "common.validator.notEmpty" | translate }} </span>
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item class="c-formSec">
+        <nz-form-label [nzSm]="11" nzFor="phoneNumber">
+          {{ "systemModule.admin.table.mobile" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="12" [nzOffset]="1">
+          <input nz-input formControlName="phoneNumber" id="phoneNumber" />
+<!--          <nz-form-explain-->
+<!--            *ngIf="-->
+<!--              validateForm.get('phoneNumber').dirty &&-->
+<!--              validateForm.get('phoneNumber').errors-->
+<!--            "-->
+<!--          >-->
+<!--            <span> {{ "systemModule.admin.table.mobile" | translate }} </span>-->
+<!--            <span> {{ "common.validator.notEmpty" | translate }} </span>-->
+<!--          </nz-form-explain>-->
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item class="c-formSec" *ngIf="roles">
+        <nz-form-label [nzSm]="11" nzRequired nzFor="roleIds">
+          {{ "systemModule.admin.table.role" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="12" [nzOffset]="1">
+          <nz-select
+            nzMode="multiple"
+            nzShowSearch
+            nzAllowClear
+            [nzPlaceHolder]="'systemModule.admin.choseRole' | translate"
+            formControlName="roleIds"
+            (nzOpenChange)="changeSelect()"
+            id="roleIds"
+          >
+            <nz-option
+              *ngFor="let item of roles"
+              [nzValue]="item['value']"
+              [nzLabel]="item['name']"
+            >
+            </nz-option>
+          </nz-select>
+          <nz-form-explain
+            *ngIf="
+              validateForm.get('roleIds').dirty &&
+              validateForm.get('roleIds').errors
+            "
+          >
+            <span> {{ "systemModule.admin.table.role" | translate }} </span>
+            <span> {{ "common.validator.notEmpty" | translate }} </span>
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+    <div class="c-required" style="color: #262626;margin-bottom: 10px">
+      {{ "systemModule.admin.choseDepartment" | translate }} :
+    </div>
+    <nz-tree
+      [(ngModel)]="departs"
+      [nzDefaultExpandAll]="true"
+      [nzMultiple]="true"
+      (nzClick)="mouseAction($event)"
+    >
+    </nz-tree>
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button
+      nz-button
+      nzType="primary"
+      *ngIf="!editMark"
+      [nzLoading]="loadingNew"
+      (click)="makeNew()"
+    >
+      {{ "common.operate.sure" | translate }}
+    </button>
+    <button
+      nz-button
+      nzType="primary"
+      *ngIf="editMark"
+      [nzLoading]="loadingSave"
+      (click)="save()"
+    >
+      {{ "common.operate.save" | translate }}
+    </button>
+    <button nz-button nzType="default" (click)="infoBoxShow = false">
+      {{ "common.operate.close" | translate }}
+    </button>
+  </ng-template>
+</nz-modal>
+<!-- [disabled]="!validateForm.valid"  -->
+
+<nz-modal
+  [(nzVisible)]="refuseModel"
+  [nzTitle]="refuseTitle"
+  [nzContent]="refuseContent"
+  [nzFooter]="refuseFotter"
+  (nzOnCancel)="refuseModel = false"
+>
+  <ng-template #refuseTitle>
+    {{ "common.deleteToast.title" | translate }}
+  </ng-template>
+
+  <ng-template #refuseContent>
+    <div class="c-flexStart">
+      <i class="anticon anticon-info-circle-o c-warnInfo"></i>
+      <div>
+        <h4>{{ "common.deleteToast.title" | translate }}</h4>
+        <p>{{ "common.deleteToast.tip" | translate }}</p>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #refuseFotter>
+    <button nz-button nzType="default" (click)="refuseModel = false">
+      {{ "common.operate.cancel" | translate }}
+    </button>
+    <button nz-button nzType="primary" (click)="delete()">
+      {{ "common.operate.delete" | translate }}
+    </button>
+  </ng-template>
+</nz-modal>

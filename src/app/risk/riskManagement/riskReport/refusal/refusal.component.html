@@ -1,0 +1,59 @@
+<div class="c-content-wrap">
+  <div class="c-search-wrap">
+    <div class="c-search-group">
+      <!-- 时间范围 -->
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "riskReport.rejection.time" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-date-picker [(ngModel)]="searchModel.createTimeStart"></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker [(ngModel)]="searchModel.createTimeEnd"></nz-date-picker>
+        </div>
+      </div>
+      <!-- 是否复借 -->
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "riskReport.rejection.borrow" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="padding-left: 10px;width: 150px" [(ngModel)]="searchModel.firstLoan">
+            <nz-option *ngFor="let option of 'riskReport.rejection.borrowData' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <button nz-button nzType="primary"  (click) = 'search() '>
+          {{ "common.search" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button (click) = 'reset()'>
+          {{ "common.reset" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button [disabled]="totalSize===0" (click) = 'downloadData()'>
+          {{ "common.ex" | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <c-table [tableData] = 'tableData'>
+  </c-table>
+
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+      <span>
+      {{ "common.total" | translate }}
+      </span>
+      <span>
+      {{ totalSize }}
+      </span>
+      <span>
+      {{ "common.pageUnit" | translate }}
+      </span>
+    </ng-template>
+  </div>
+</div>

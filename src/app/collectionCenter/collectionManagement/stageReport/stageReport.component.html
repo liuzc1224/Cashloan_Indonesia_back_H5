@@ -1,0 +1,80 @@
+<div class="c-content-wrap" style="padding-bottom: 50px">
+  <div class="half-block">
+    <div class="c-search-group c-search-border">
+      <div class="c-search-itemRight">
+        <ul class="sectionList c-flex-row-start" style="flex-wrap:wrap;height: auto;">
+          <li
+            *ngFor = 'let item of reportType'
+            (click) = 'changeStatus(item["value"])'
+            [ngClass]='{"active-tag" : (item["value"] == chType)}'
+            style="white-space:nowrap;margin-bottom: 10px;">
+            {{ item['desc'] }}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "collectionManagement.stageReport.date" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-date-picker
+            style="width: 150px"
+            [nzShowToday]="'false'"
+            [nzDisabledDate]=""
+            [(ngModel)]="searchModel.startDay"
+            [nzFormat]="'dd-MM-yyyy'"
+          ></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker
+            style="width: 150px"
+            [nzShowToday]="'false'"
+            [nzDisabledDate]=""
+            [(ngModel)]="searchModel.endDay"
+            [nzFormat]="'dd-MM-yyyy'"
+          ></nz-date-picker>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "collectionManagement.stageReport.reBorrow" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="padding-left: 10px;width: 200px" [(ngModel)]="searchModel.firstLoan">
+            <nz-option *ngFor="let option of 'collectionManagement.report.borrowData' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <button nz-button nzType="primary"  (click) = 'search() '>
+          {{ "common.search" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button (click) = 'reset() '>
+          {{ "common.reset" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button *ngIf="chType==2" [disabled]="totalSize===0" (click) = 'export() '>
+          {{ "common.ex" | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+  <c-table [tableData] = 'tableData' style="margin-top: 20px">
+  </c-table>
+  <div class="c-pag" *ngIf="chType==2">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+        <span>
+          {{ "common.total" | translate }}
+        </span>
+      <span>
+          {{ totalSize }}
+        </span>
+      <span>
+          {{ "common.pageUnit" | translate }}
+        </span>
+    </ng-template>
+  </div>
+</div>

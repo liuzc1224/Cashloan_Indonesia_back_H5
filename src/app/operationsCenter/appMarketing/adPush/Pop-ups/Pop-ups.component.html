@@ -1,0 +1,191 @@
+<div class="c-content-wrap">
+  <div class="half-block">
+    <div class="title">
+      {{ "appMarketing.popUps.title" | translate }}
+    </div>
+    <div class="c-search-btnGroup">
+      <button nz-button [nzType]="'primary'" (click) = 'add()' [disabled]="disabled">
+        {{ "appMarketing.popUps.add" | translate}}
+      </button>
+    </div>
+    <div class="c-search-group" style="margin-top: 10px">
+      {{"appMarketing.popUps.tip" | translate}}
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "appMarketing.popUps.pushMethod" | translate }}
+        </div>
+        <div class="c-search-itemRight" style="margin-right: 20px">
+          <button nz-button [nzType]="'primary'" (click) = 'setPushWay()'>
+            {{ pushWayTitle }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <c-table [tableData] = 'tableData' style="margin-top: 20px" [hidden]="hidden">
+  </c-table>
+  <nz-modal [(nzVisible)]="isDelete" [nzTitle]="'common.deleteToast.title' | translate" (nzOnCancel)="deleteCancel()" (nzOnOk)="deleteOk()" [nzOkLoading]="isDeleteLoading">
+    <p>{{"common.deleteToast.tip"  | translate }}！</p>
+  </nz-modal>
+  <nz-modal
+    [(nzVisible)]="isPushWay"
+    [nzTitle]="'appMarketing.popUps.pushMethod' | translate"
+    (nzOnCancel)="pushWayCancel()" (nzOnOk)="pushWayOk()"
+    [nzOkLoading]="isPushWayLoading">
+    <div class="formChannel">
+      <form nz-form [nzLayout]="'block'" [formGroup]="pushWayForm">
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="6" nzRequired>
+            {{ "appMarketing.popUps.pushMethod" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <nz-select
+              nzAllowClear
+              [nzPlaceHolder]="'appMarketing.popUps.prompt.pushMethod' | translate"
+              formControlName="pushWay"
+              id="pushWay"
+            >
+              <div *ngFor='let item of popUpsPushWay'>
+                <nz-option
+                  [nzValue]="item['value']"
+                  [nzLabel]="item['desc']"
+                >
+                </nz-option>
+              </div>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+  </nz-modal>
+  <nz-modal
+    [(nzVisible)]="isVisible"
+    [nzTitle]='title'
+    [nzOkText]='"common.operate.save" | translate'
+    [nzCancelText]='"common.operate.cancel" | translate'
+    (nzOnOk)="handleOk()"
+    (nzOnCancel)="handleCancel()"
+    [nzOkLoading]="isOkLoading"
+    [nzWidth]="800"
+  >
+    <div class="formChannel">
+      <form nz-form [nzLayout]="'block'" [formGroup]="validForm">
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="6" nzRequired nzFor="name">
+            {{ "appMarketing.popUps.table.name" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <input
+              type="text"
+              nz-input
+              maxlength="50"
+              formControlName="name"
+              id="name"
+              [placeholder] = '"appMarketing.popUps.prompt.name" | translate'
+            >
+            <nz-form-explain *ngIf="validForm.get('name').dirty && validForm.get('name').errors">
+              <span>
+                {{ "appMarketing.popUps.prompt.name" | translate}}
+              </span>
+              <span>
+                {{ "common.validator.notEmpty" | translate }}
+              </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="6" nzRequired>
+            {{ "appMarketing.popUps.table.shelfPeriod" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <nz-date-picker
+              style="width: 150px"
+              [nzShowToday]="'false'"
+              [nzDisabledDate]="disabledStartDate"
+              formControlName="putawayBeginTime"
+              [nzFormat]="'yyyy-MM-dd'"
+            ></nz-date-picker>
+            <span style="color:#999"> ~ </span>
+            <nz-date-picker
+              style="width: 150px"
+              [nzShowToday]="'false'"
+              [nzDisabledDate]="disabledEndDate"
+              formControlName="putawayEndTime"
+              [nzFormat]="'yyyy-MM-dd'"
+            ></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="6" nzRequired nzFor="type">
+            {{ "appMarketing.popUps.table.img" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <nz-upload
+              nzName="avatar"
+              nzListType="picture-card"
+              [nzBeforeUpload]="beforeUpload"
+              [nzAccept]="'image/*'"
+            >
+              <ng-container *ngIf="!avatarUrl">
+                <i class="anticon anticon-plus" nz-icon type="plus"></i>
+                <!--<i nz-icon class="upload-icon" type="plus" theme="outline"></i>-->
+                <div class="ant-upload-text">Upload</div>
+              </ng-container>
+              <img *ngIf="avatarUrl" [src]="avatarUrl" class="avatar">
+            </nz-upload>
+            {{ "appMarketing.recommend.recommendedSize" | translate }} 600px * 800px
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item  class='formSec'>
+          <nz-form-label [nzSm]="6" nzRequired nzFor="jump">
+            {{ "appMarketing.popUps.table.jump" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="17" [nzOffset]='1'>
+            <nz-select
+              nzAllowClear
+              formControlName="jump"
+              id="jump"
+              [nzPlaceHolder] = '"appMarketing.popUps.prompt.jump" | translate'
+            >
+              <div *ngFor='let item of popUpsjump'>
+                <nz-option
+                  [nzValue]="item['value']"
+                  [nzLabel]="item['desc']"
+                >
+                </nz-option>
+              </div>
+            </nz-select>
+            <nz-form-explain *ngIf="validForm.get('jump').dirty && validForm.get('jump').errors">
+              <span>
+                {{ "appMarketing.popUps.prompt.jump" | translate}}
+              </span>
+              <span>
+                {{ "common.validator.notEmpty" | translate }}
+              </span>
+            </nz-form-explain>
+          </nz-form-control>
+          <nz-form-control [nzSm]="17" [nzOffset]='7' *ngIf="validForm.get('jump').value===true">
+            <input
+              nz-input
+              formControlName="jumpLink"
+              id="jumpLink"
+              type="url"
+              [placeholder] = '"appMarketing.popUps.prompt.jumpLink" | translate'
+            >
+            <nz-form-explain *ngIf="validForm.get('jumpLink').dirty && validForm.get('jumpLink').errors">
+              <span>
+                {{ "appMarketing.popUps.prompt.jumpLink" | translate}}
+              </span>
+              <span>
+                {{ "common.validator.notEmpty" | translate }}
+              </span>
+            </nz-form-explain>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+  </nz-modal>
+</div>

@@ -1,0 +1,376 @@
+<div class="c-content-wrap">
+    <div class="c-search-wrap">
+      <div class="c-search-group c-search-border">
+          <div class="c-search-itemLeft" style="padding-top: 5px">
+              {{ "financeModule.list.classify" | translate}}:
+          </div>
+          <div class="c-search-itemRight">
+              <ul class="sectionList c-flex-row-start" style="flex-wrap:wrap;height: auto;">
+                  <li
+                      *ngFor = 'let item of statusEnum'
+                      (click) = 'changeStatus(item["value"])'
+                      [ngClass]='{"active-tag" : (item["value"] == state)}'
+                      style="white-space:nowrap;margin-bottom: 10px;">
+                      {{ item['desc'] }}
+                  </li>
+              </ul>
+          </div>
+      </div>
+      <div class="c-search-group">
+          <div class="c-search-item">
+            <div class="c-search-itemLeft">
+              {{ "financeModule.list.createDate" | translate}}:
+            </div>
+            <div class="c-search-itemRight">
+              <nz-date-picker
+                [nzShowToday]="false"
+                [nzDisabledDate]=""
+                [(ngModel)]="searchModel.createTimeStart"
+                [nzFormat]="'dd-MM-yyyy'"
+              ></nz-date-picker>
+              <span style="color:#999"> ~ </span>
+              <nz-date-picker
+                [nzShowToday]="false"
+                [nzDisabledDate]=""
+                [(ngModel)]="searchModel.createTimeEnd"
+                [nzFormat]="'dd-MM-yyyy'"
+              ></nz-date-picker>
+            </div>
+          </div>
+          <div class="c-search-item">
+            <div class="c-search-itemLeft">
+              {{ "financeModule.list.reviewDate" | translate}}:
+            </div>
+            <div class="c-search-itemRight">
+              <nz-date-picker
+                [nzShowToday]="false"
+                [nzDisabledDate]=""
+                [(ngModel)]="searchModel.auditTimeStart"
+                [nzFormat]="'dd-MM-yyyy'"
+              ></nz-date-picker>
+              <span style="color:#999"> ~ </span>
+              <nz-date-picker
+                [nzShowToday]="false"
+                [nzDisabledDate]=""
+                [(ngModel)]="searchModel.auditTimeEnd"
+                [nzFormat]="'dd-MM-yyyy'"
+              ></nz-date-picker>
+            </div>
+          </div>
+        </div>
+      <div class="c-search-group">
+        <div class="c-search-item">
+          <div class="c-search-itemLeft">
+            {{ "financeModule.list.productType" | translate}}:
+          </div>
+          <div class="c-search-itemRight">
+            <nz-select style="padding-left: 10px;width: 230px" [(ngModel)]="searchModel.productType" [nzPlaceHolder]=' "financeModule.list.loanType" | translate '>
+              <nz-option *ngFor="let option of inputData" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <div class="c-search-item" *ngIf="state!==3">
+          <div class="c-search-itemLeft">
+            {{ "financeModule.list.paymentStatus" | translate}}:
+          </div>
+          <div class="c-search-itemRight">
+            <nz-select style="padding-left: 10px;width: 200px" [(ngModel)]="searchModel.status" [nzPlaceHolder]=' "financeModule.list.loanType" | translate '>
+              <nz-option *ngFor="let option of paymentStatus" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <div class="c-search-item">
+          <div class="c-search-itemLeft">
+            <nz-select [(ngModel)]="selectModel">
+              <nz-option *ngFor = 'let item of searchEnum'
+                [nzValue]="item['value']"
+                [nzLabel]="item['name']"
+              ></nz-option>
+            </nz-select>
+          </div>
+          <div class="c-search-itemRight">
+            <input nz-input [(ngModel)]="inputContent" [placeholder]=' "financeModule.list.center" | translate ' style="width: 200px;" />
+          </div>
+        </div>
+      </div>
+      <div class="c-search-btnGroup">
+        <button nz-button nzType="primary"  (click) = 'search() '>
+            {{ "common.search" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button (click) = 'reset() '>
+            {{ "common.reset" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button [disabled]="totalSize===0" (click) = 'export() '>
+            {{ "common.ex" | translate}}
+        </button>
+      </div>
+    </div>
+
+    <c-table [tableData] = 'tableData'>
+    </c-table>
+    <div class="c-pag">
+        <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+        <ng-template #totalTemplate let-total>
+            <span>
+                {{ "common.total" | translate }}
+            </span>
+            <span>
+                {{ totalSize }}
+            </span>
+            <span>
+                {{ "common.pageUnit" | translate }}
+            </span>
+        </ng-template>
+    </div>
+</div>
+
+<nz-modal [(nzVisible)]="makeLoanMark" [nzTitle]="modalTitle" [nzFooter]="modalFooter" [nzContent]="modalContent" (nzOnCancel)="makeLoanMark = false">
+
+    <ng-template #modalTitle>
+        <span>
+            {{ "financeModule.list.model.title" | translate}}?
+        </span>
+    </ng-template>
+
+    <ng-template #modalContent>
+        <form nz-form [nzLayout]="'block'" [formGroup]="validateForm">
+            <nz-form-item class='formSec'>
+              <nz-form-control>
+                <nz-form-label [nzSm]="7" nzRequired nzFor="paymentResult">
+                    {{ "financeModule.list.model.status" | translate }}
+                </nz-form-label>
+                <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+                    <nz-select
+                      nzAllowClear
+                      [nzPlaceHolder] = '"financeModule.list.model.choseStatus" | translate '
+                      formControlName="paymentResult"
+                      id="paymentResult"
+                      (ngModelChange)="change()"
+                    >
+                        <div *ngFor = 'let item of tradingStatus'>
+                            <nz-option
+                                [nzValue]="item['value']"
+                                [nzLabel]="item['desc']"
+                            >
+                            </nz-option>
+                        </div>
+                    </nz-select>
+                    <nz-form-explain *ngIf="validateForm.get('paymentResult').dirty && validateForm.get('paymentResult').errors">
+                        <span>
+                            {{ "financeModule.list.model.choseStatus" | translate }}
+                        </span>
+                        <span>
+                            {{ "common.validator.notEmpty" | translate }}
+                        </span>
+                    </nz-form-explain>
+                </nz-form-control>
+              </nz-form-control>
+            </nz-form-item>
+            <!-- 放款渠道 -->
+            <nz-form-item class='formSec' [hidden]="hidden">
+              <nz-form-label nzRequired [nzSm]="7"  nzFor="paymentChannel">
+                {{ "financeModule.list.channel" | translate }}
+              </nz-form-label>
+              <nz-form-control [nzSm]="16" [nzOffset]='1'>
+                <nz-select
+                  nzAllowClear
+                  [nzPlaceHolder] = '"financeModule.list.prompt.channel" | translate'
+                  formControlName="paymentChannel"
+                  id="paymentChannel"
+                >
+                  <div *ngFor = 'let item of paymentChannel'>
+                    <nz-option
+                      [nzValue]="item['value']"
+                      [nzLabel]="item['desc']"
+                    >
+                    </nz-option>
+                  </div>
+                </nz-select>
+                <nz-form-explain *ngIf="validateForm.get('paymentChannel').dirty && validateForm.get('paymentChannel').errors">
+                          <span>
+                              {{ "financeModule.list.model.paymentChannel" | translate}}
+                          </span>
+                  <span>
+                              {{ "common.validator.notEmpty" | translate }}
+                          </span>
+                </nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+          <!-- 放款账户 -->
+          <nz-form-item class='formSec' [hidden]="hidden">
+            <nz-form-label nzRequired [nzSm]="7"  nzFor="ourAccount">
+              {{ "financeModule.list.paymentAccoun" | translate }}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16" [nzOffset]='1'>
+              <input nz-input [placeholder]='"financeModule.list.prompt.paymentAccoun" | translate' formControlName="ourAccount" id="ourAccount" />
+              <nz-form-explain *ngIf="validateForm.get('ourAccount').dirty && validateForm.get('ourAccount').errors">
+                        <span>
+                            {{ "financeModule.list.paymentAccoun" | translate}}
+                        </span>
+                <span>
+                            {{ "common.validator.notEmpty" | translate }}
+                        </span>
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+          <!--流水号-->
+          <nz-form-item class='formSec' [hidden]="hidden">
+            <nz-form-label nzRequired [nzSm]="7"  nzFor="ourAccount">
+              {{ "financeModule.list.serialNumber" | translate }}
+            </nz-form-label>
+            <nz-form-control [nzSm]="16" [nzOffset]='1'>
+              <input nz-input [placeholder]='"financeModule.list.prompt.serialNumber" | translate' formControlName="serialNumber" id="serialNumber" />
+              <nz-form-explain *ngIf="validateForm.get('serialNumber').dirty && validateForm.get('serialNumber').errors">
+                        <span>
+                            {{ "financeModule.list.serialNumber" | translate}}
+                        </span>
+                <span>
+                            {{ "common.validator.notEmpty" | translate }}
+                        </span>
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-item>
+            <!-- 成功放款时间 -->
+            <nz-form-item class='formSec' [hidden]="hidden">
+                <nz-form-label nzRequired [nzSm]="7"  nzFor="payDate">
+                    {{ "financeModule.list.model.payDate" | translate }}
+                </nz-form-label>
+                <nz-form-control [nzSm]="16" [nzOffset]='1'>
+                    <nz-date-picker [nzFormat]="'yyyy-MM-dd'" style="width: 100%" formControlName="payDate" id="payDate"></nz-date-picker>
+                    <nz-form-explain *ngIf="validateForm.get('payDate').dirty && validateForm.get('payDate').errors">
+                        <span>
+                            {{ "financeModule.list.model.payDate" | translate}}
+                        </span>
+                        <span>
+                            {{ "common.validator.notEmpty" | translate }}
+                        </span>
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+            <!-- 放款金额 -->
+            <nz-form-item class='formSec' [hidden]="hidden">
+                <nz-form-label nzRequired [nzSm]="7"  nzFor="payMoney">
+                    {{ "financeModule.list.model.payMoney" | translate }}
+                </nz-form-label>
+                <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+                    <input nz-input formControlName="payMoney" id="payMoney" [placeholder] = ' "financeModule.list.model.inputPayMoney" | translate ' [readOnly]="true">
+                    <nz-form-explain *ngIf="validateForm.get('payMoney').dirty && validateForm.get('payMoney').errors">
+                        <span>
+                            {{ "financeModule.list.model.payMoney" | translate}}
+                        </span>
+                        <span>
+                            {{ "common.validator.notEmpty" | translate }}
+                        </span>
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+
+            <!-- 备注 -->
+            <nz-form-item class='formSec'>
+                <nz-form-label *ngIf="hidden==true" nzRequired [nzSm]="7"  nzFor="option">
+                    {{ "financeModule.list.model.remark" | translate }}
+                </nz-form-label>
+                <nz-form-label *ngIf="hidden==false" [nzSm]="7"  nzFor="option">
+                  {{ "financeModule.list.model.remark" | translate }}
+                </nz-form-label>
+                <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+                    <textarea nz-input formControlName="option" cols = '6' rows="4" style="resize:none" maxlength="200" [placeholder] = ' "financeModule.list.model.remarkPrompt" | translate ' id="option"></textarea>
+                    <nz-form-explain *ngIf="validateForm.get('option').dirty && validateForm.get('option').errors">
+                        <span>
+                            {{ "financeModule.list.model.remark" | translate}}
+                        </span>
+                        <span>
+                            {{ "common.validator.notEmpty" | translate }}
+                        </span>
+                    </nz-form-explain>
+                </nz-form-control>
+            </nz-form-item>
+
+        </form>
+    </ng-template>
+    <ng-template #modalFooter>
+      <button nz-button nzType="primary" [nzLoading]="loadingLoan" (click)='makeNew($event)'>
+        {{ "common.operate.sure" | translate }}
+      </button>
+      <button nz-button nzType="default" (click)='makeLoanMark = false'>
+        {{ "common.operate.close" | translate }}
+      </button>
+    </ng-template>
+</nz-modal>
+
+
+
+<nz-modal [(nzVisible)]="reviewMark" [nzTitle]="reviewTitle" [nzFooter]="reviewFooter" [nzContent]="reviewContent" (nzOnCancel)="reviewCancel()">
+
+  <ng-template #reviewTitle>
+        <span>
+            {{ "financeModule.list.model.title" | translate}}?
+        </span>
+  </ng-template>
+
+  <ng-template #reviewContent>
+    <form nz-form [nzLayout]="'block'" [formGroup]="validateReviewForm">
+      <nz-form-item class='formSec'>
+<!--        放款失败理由-->
+        <nz-form-control>
+          <nz-form-label [nzSm]="7" nzFor="reason">
+            {{ "financeModule.list.model.reason" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+            <textarea nz-input formControlName="option" cols = '2' rows="3" style="resize:none" [readOnly]="'readOnly'" ></textarea>
+
+<!--            <input nz-input  formControlName="option" id="reason" />-->
+          </nz-form-control>
+        </nz-form-control>
+      </nz-form-item>
+      <!-- 订单状态修改为 -->
+      <nz-form-item class='formSec'>
+        <nz-form-label nzRequired [nzSm]="7"  nzFor="type">
+          {{ "financeModule.list.model.stateModification" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="16" [nzOffset]='1'>
+          <nz-select
+            nzAllowClear
+            [nzPlaceHolder] = '"financeModule.list.prompt.orderStatus" | translate'
+            formControlName="type"
+            id="type"
+          >
+            <div *ngFor = 'let item of stateModificationData'>
+              <nz-option
+                [nzValue]="item['value']"
+                [nzLabel]="item['desc']"
+              >
+              </nz-option>
+            </div>
+          </nz-select>
+          <nz-form-explain *ngIf="validateReviewForm.get('type').dirty && validateReviewForm.get('type').errors">
+            <span>
+                {{ "financeModule.list.prompt.orderStatus" | translate}}
+            </span>
+            <span>
+                {{ "common.validator.notEmpty" | translate }}
+            </span>
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <!-- 备注 -->
+<!--      <nz-form-item class='formSec'>-->
+<!--        <nz-form-label [nzSm]="7"  nzFor="option">-->
+<!--          {{ "financeModule.list.model.remark" | translate }}-->
+<!--        </nz-form-label>-->
+<!--        <nz-form-control [nzSm]="16"  [nzOffset]='1'>-->
+<!--          <textarea nz-input formControlName="option" cols = '6' rows="4" style="resize:none" maxlength="500" [placeholder] = ' "financeModule.list.model.remarkPrompt" | translate '></textarea>-->
+<!--        </nz-form-control>-->
+<!--      </nz-form-item>-->
+
+    </form>
+  </ng-template>
+  <ng-template #reviewFooter>
+    <button nz-button nzType="primary"  [nzLoading]="loadingReview" (click)='makeReview()'>
+      {{ "common.operate.sure" | translate }}
+    </button>
+    <button nz-button nzType="default" (click)='reviewCancel()'>
+      {{ "common.operate.close" | translate }}
+    </button>
+  </ng-template>
+</nz-modal>

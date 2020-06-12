@@ -1,0 +1,136 @@
+<div class="c-content-wrap">
+  <div class="half-block">
+    <div class="title">
+      {{ "collectionBusiness.title" | translate }}
+    </div>
+    <div class="c-search-selectGroup">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "collectionBusiness.tabData.state" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select [(ngModel)]="searchModel.businessConfigState" [nzPlaceHolder] = '"collectionBusiness.prompt.state" | translate' >
+            <nz-option *ngFor="let option of status" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <button nz-button nzType="primary"  (click) = 'search() '>
+          {{ "common.search" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button (click) = 'reset() '>
+          {{ "common.reset" | translate}}
+        </button>
+      </div>
+    </div>
+    <div class="c-search-btnGroup">
+      <button nz-button nzType="primary"  (click) = 'add() '>
+        {{ "collectionBusiness.add" | translate}}
+      </button>
+    </div>
+  </div>
+  <c-table [tableData] = 'tableData' style="margin-top: 20px">
+  </c-table>
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+      <span>
+        {{ "common.total" | translate }}
+      </span>
+      <span>
+        {{ totalSize }}
+      </span>
+      <span>
+        {{ "common.pageUnit" | translate }}
+      </span>
+    </ng-template>
+  </div>
+  <nz-modal [(nzVisible)]="makeLoanMark" [nzOkLoading]="isOkLoading" [nzTitle]="modalTitle" [nzFooter]="modalFooter" [nzContent]="modalContent" (nzOnCancel)="makeLoanMark = false">
+
+    <ng-template #modalTitle>
+        <span>
+            {{ title }}
+        </span>
+    </ng-template>
+    <ng-template #modalContent>
+      <form nz-form [nzLayout]="'inline'" [formGroup]="validateForm">
+        <nz-form-item class='c-formSec'>
+          <nz-form-label [nzSm]="8" nzRequired nzFor="phaseName">
+            {{ "collectionBusiness.tabData.name" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="15"  [nzOffset]='1'>
+            <input nz-input formControlName="phaseName" id="phaseName" [placeholder] = ' "collectionBusiness.prompt.name" | translate '>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='c-formSec'>
+          <nz-form-label [nzSm]="8" nzRequired nzFor="startOverdueTime">
+            {{ "collectionBusiness.tabData.fromTime" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="15"  [nzOffset]='1'>
+            <input nz-input type="number" formControlName="startOverdueTime" id="startOverdueTime" [placeholder] = ' "collectionBusiness.prompt.fromTime" | translate '>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='c-formSec'>
+          <nz-form-label [nzSm]="8" nzRequired nzFor="endOverdueTime">
+            {{ "collectionBusiness.tabData.toTime" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="15"  [nzOffset]='1'>
+            <input nz-input type="number" formControlName="endOverdueTime" id="endOverdueTime" [placeholder] = ' "collectionBusiness.prompt.toTime" | translate '>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='c-formSec'>
+          <nz-form-label [nzSm]="8" nzRequired nzFor="flowPattern">
+            {{ "collectionBusiness.tabData.flowMode" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="15"  [nzOffset]='1'>
+            <nz-select formControlName="flowPattern" id="flowPattern" [nzPlaceHolder] = "'collectionBusiness.prompt.flowMode' | translate ">
+              <nz-option *ngFor="let option of 'collectionBusiness.flowMode' | translate " [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='c-formSec'>
+          <nz-form-label [nzSm]="8" nzFor="retainedDays">
+            <div nz-checkbox [(nzChecked)]="dayModel" style="color: #1e1e1e">
+              {{ "collectionBusiness.tabData.days" | translate }}
+            </div>
+          </nz-form-label>
+          <nz-form-control [nzSm]="15"  [nzOffset]='1'>
+            <input nz-input type="number" formControlName="retainedDays" id="retainedDays" [placeholder] = ' "collectionBusiness.prompt.days" | translate ' [readonly]="!dayModel">
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='c-formSec'>
+          <nz-form-label [nzSm]="8" nzFor="loanTermWithoutReminder">
+            <div nz-checkbox [(nzChecked)]="freeModel" style="color: #1e1e1e">
+              {{ "collectionBusiness.tabData.freeLoanTerm" | translate }}
+            </div>
+          </nz-form-label>
+          <nz-form-control [nzSm]="15"  [nzOffset]='1'>
+            <nz-select formControlName="select" style="width: 40%;float: left" [nzPlaceHolder] = "'collectionBusiness.prompt.select' | translate " [nzDisabled]="!freeModel">
+              <nz-option *ngFor="let option of 'collectionBusiness.operator' | translate " [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+            </nz-select>
+            <input nz-input style="width: 56%;margin-left: 2%;float: left" type="number" formControlName="loanTermWithoutReminder" id="loanTermWithoutReminder" [placeholder] = ' "collectionBusiness.prompt.freeLoanTerm" | translate ' [readonly]="!freeModel">
+            <div style="width: 2%;float: left;padding-left: 5px">{{"collectionBusiness.day" | translate}}</div>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='c-formSec'>
+          <nz-form-label [nzSm]="8" nzRequired nzFor="state">
+            {{ "collectionBusiness.tabData.state" | translate }}
+          </nz-form-label>
+          <nz-form-control [nzSm]="15"  [nzOffset]='1'>
+            <nz-select formControlName="state" id="state" [nzPlaceHolder] = "'collectionBusiness.prompt.state' | translate ">
+              <nz-option *ngFor="let option of status" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </ng-template>
+    <ng-template #modalFooter>
+      <button nz-button nzType="primary" [disabled]="!validateForm.valid" (click)='makeNew($event)'>
+        {{ "common.operate.sure" | translate }}
+      </button>
+      <button nz-button nzType="default" (click)='makeLoanMark = false'>
+        {{ "common.operate.close" | translate }}
+      </button>
+    </ng-template>
+  </nz-modal>
+</div>

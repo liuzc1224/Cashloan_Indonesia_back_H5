@@ -1,0 +1,476 @@
+<div class="c-content-wrap" style="margin-bottom: 30px">
+  <div class="c-search-wrap">
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "letterReviewOrder.orderCreateTime" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-date-picker
+            [nzShowToday]="'false'"
+            [nzDisabledDate]=""
+            [(ngModel)]="searchModel.applyDateBegin"
+            [nzFormat]="'dd-MM-yyyy'"
+          ></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker
+            [nzShowToday]="'false'"
+            [nzDisabledDate]=""
+            [(ngModel)]="searchModel.applyDateEnd"
+            [nzFormat]="'dd-MM-yyyy'"
+          ></nz-date-picker>
+        </div>
+      </div>
+<!--      <div class="c-search-item">-->
+<!--        <div class="c-search-itemLeft">-->
+<!--          {{ "letterReviewOrder.userLevel" | translate}}:-->
+<!--        </div>-->
+<!--        <div class="c-search-itemRight">-->
+<!--          <nz-select style="padding-left: 10px;width: 150px" [(ngModel)]="searchModel.userGrade" [nzPlaceHolder]=' "letterReviewOrder.prompt.userLevel" | translate ' [nzAllowClear]="true">-->
+<!--            <nz-option *ngFor="let option of userLevel" [nzLabel]="option['userLevelName']" [nzValue]="option['userLevelName']"></nz-option>-->
+<!--          </nz-select>-->
+<!--        </div>-->
+<!--      </div>-->
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "letterReviewOrder.productType" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-tree-select
+            [nzDropdownStyle]="{'maxHeight':'500px'}"
+            style="padding-left: 10px;width: 200px;max-height: 100px;overflow: auto"
+            [nzNodes]="productTypeNodes"
+            [nzShowSearch]="true"
+            [nzDefaultExpandAll]="true"
+            [nzCheckable]="true"
+            [(ngModel)]="searchModel.loanProductType"
+            [nzPlaceHolder]=' "letterReviewOrder.prompt.productType" | translate '
+            >
+          </nz-tree-select>
+<!--          <nz-select style="padding-left: 10px;width: 400px" nzMode="multiple" [(ngModel)]="searchModel.loanProductType" [nzPlaceHolder]=' "letterReviewOrder.prompt.productType" | translate '>-->
+<!--            <nz-option *ngFor="let option of 'letterReviewOrder.productTypes' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>-->
+<!--          </nz-select>-->
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "financeModule.list.limit" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="padding-left: 10px;width: 150px" [(ngModel)]="searchModel.loanDaysFlag">
+            <nz-option *ngFor="let option of ('financeModule.list.operatorData' | translate)" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+          <input nz-input style="width: 100px;left: 5px" type="number" [(ngModel)]="searchModel.loanDays" [placeholder] = '"financeModule.list.days" | translate'>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "financeModule.list.reBorrow" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 200px;" [(ngModel)]="searchModel.firstLoan">
+            <nz-option *ngFor="let item of ('financeModule.list.borrowData' | translate)" [nzValue]="item['value']" [nzLabel]="item['desc']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "letterReviewOrder.orderStatus" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-tree-select
+            [nzDropdownStyle]="{'maxHeight':'500px'}"
+            style="padding-left: 10px;width: 200px;max-height: 100px;overflow: auto"
+            [nzNodes]="statusDataNodes"
+            [nzDefaultExpandAll]="true"
+            [nzShowSearch]="true"
+            [nzCheckable]="true"
+            [(ngModel)]="searchModel.creditOrderStatus"
+            [nzPlaceHolder]=' "letterReviewOrder.prompt.orderStatus" | translate '
+            >
+          </nz-tree-select>
+<!--          <nz-select style="padding-left: 10px;width: 200px" [(ngModel)]="searchModel.creditOrderStatus" [nzPlaceHolder]=' "letterReviewOrder.prompt.orderStatus" | translate '>-->
+<!--            <nz-option *ngFor="let option of statusData" [nzLabel]="option['flowName']" [nzValue]="option['id']"></nz-option>-->
+<!--          </nz-select>-->
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "letterReviewOrder.reviewRejectionStage" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-tree-select
+            [nzDropdownStyle]="{'maxHeight':'500px'}"
+            style="padding-left: 10px;width: 200px;max-height: 100px;overflow: auto"
+            [nzNodes]="reviewDataNodes"
+            [nzDefaultExpandAll]="true"
+            [nzShowSearch]="true"
+            [nzCheckable]="true"
+            [(ngModel)]="searchModel.auditRejectStageId"
+            [nzPlaceHolder]=' "letterReviewOrder.prompt.reviewRejectionStage" | translate '
+          >
+          </nz-tree-select>
+
+          <!--          <nz-select style="padding-left: 10px;width: 180px" [(ngModel)]="searchModel.auditRejectStageId" [nzPlaceHolder]=' "letterReviewOrder.prompt.reviewRejectionStage" | translate '>-->
+          <!--            <nz-option *ngFor="let option of reviewData" [nzLabel]="option['flowName']" [nzValue]="option['id']"></nz-option>-->
+          <!--          </nz-select>-->
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "letterReviewOrder.reviewRejectionStageReason" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-tree-select
+            [nzDropdownStyle]="{'maxHeight':'500px'}"
+            style="padding-left: 10px;width: 200px;max-height: 100px;overflow: auto"
+            [nzNodes]="listAuditRejectDescData"
+            [nzDefaultExpandAll]="true"
+            [nzShowSearch]="true"
+            [nzCheckable]="true"
+            [(ngModel)]="searchModel.rejectId"
+            [nzPlaceHolder]=' "letterReviewOrder.prompt.reviewRejectionStageReason" | translate '
+          >
+          </nz-tree-select>
+
+          <!--          <nz-select style="width: 180px" [(ngModel)]="searchModel.rejectId" [nzPlaceHolder]=' "letterReviewOrder.prompt.reviewRejectionStageReason" | translate '>-->
+          <!--            <nz-option *ngFor="let option of listAuditRejectDescData" [nzLabel]="option['rejectDesc']" [nzValue]="option['rejectId']"></nz-option>-->
+          <!--          </nz-select>-->
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "letterReviewOrder.reviewOrderNo" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input [placeholder] = '"letterReviewOrder.prompt.reviewOrderNo" | translate' type="text" [(ngModel)] ='searchModel.creditOrderNo'>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "letterReviewOrder.phoneNumber" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="tel" [placeholder] = '"letterReviewOrder.prompt.phoneNumber" | translate' [(ngModel)] ='searchModel.userPhone' (keyup)="num('userPhone')">
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "letterReviewOrder.letterReviewer" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input [placeholder] = '"letterReviewOrder.prompt.letterReviewer" | translate' [(ngModel)] ='searchModel.currentAuditStaffName'>
+        </div>
+      </div>
+      </div>
+    <div class="c-search-group">
+      <!--          渠道来源-->
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "riskReport.phaseData.channelSource" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select [(ngModel)]="searchModel.channel" (ngModelChange)="setSource()" style="width: 174px">
+            <nz-option *ngFor="let option of ('riskReport.phaseData.source' | translate)" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <!--            推广方式-->
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "riskReport.phaseData.promotionMethod" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-tree-select
+            style="padding-left: 10px;width: 200px;;max-height: 100px;overflow: auto"
+            [nzNodes]="promotionData"
+            [nzShowSearch]="true"
+            [nzDefaultExpandAll]="true"
+            [nzCheckable]="true"
+            [nzDropdownStyle]="{'maxHeight':'500px'}"
+            [(ngModel)]="searchModel.promotionTypeStr"
+            [nzPlaceHolder]=' "usrModule.list.prompt.promotionMethod" | translate '
+          >
+          </nz-tree-select>
+          <!--            <nz-select [(ngModel)]="searchModel.promotionType" [nzPlaceHolder]=' "usrModule.list.prompt.promotionMethod" | translate ' [nzAllowClear]="true" style="width: 174px">-->
+          <!--              <nz-option *ngFor="let option of promotionData" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>-->
+          <!--            </nz-select>-->
+        </div>
+      </div>
+      <!-- 推荐人 -->
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "riskReport.phaseData.referrer" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" [(ngModel)] = 'searchModel.referrerName' [placeholder]='"common.please" | translate'>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-btnGroup">
+      <div class="c-search-item">
+        <button nz-button nzType="primary"  (click) = 'search() '>
+          {{ "common.search" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button (click) = 'reset() '>
+          {{ "common.reset" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button [disabled]="totalSize===0" (click) = 'export() '>
+          {{ "common.ex" | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div  style="margin-bottom: 20px">
+    <button nz-button nzType="primary" (click)="allocation()" [disabled]="disabledButton">
+      {{ "letterReviewOrder.distribution" | translate}}<span *ngIf="checkedNumber">（{{checkedNumber}}）</span>
+    </button>
+    <button style="margin-left: 20px;" nz-button nzType="primary" (click)="operating(1)" [disabled]="disabledButton">
+      {{ "letterReviewOrder.shutDown" | translate}}<span *ngIf="checkedNumber">（{{checkedNumber}}）</span>
+    </button>
+    <button style="margin-left: 20px;" nz-button nzType="primary" (click)="operating(0)" [disabled]="disabledButton">
+      {{ "letterReviewOrder.refuse" | translate}}<span *ngIf="checkedNumber">（{{checkedNumber}}）</span>
+    </button>
+    <button style="margin-left: 20px;" nz-button nzType="primary" (click)="operating(2)" [disabled]="disabledButton">
+      {{ "letterReviewOrder.goBack" | translate}}<span *ngIf="checkedNumber">（{{checkedNumber}}）</span>
+    </button>
+  </div>
+  <nz-table #nzTable [nzData]="tableData" [nzScroll]="{x:'2000px'}" style="width: 100%;text-align: center;" [nzLoading]="loading" [nzShowPagination]="false">
+    <thead>
+    <tr>
+      <th class="th" nzWidth="100px" nzLeft="0px" nzShowCheckbox [nzDisabled]="allDisabled" [(nzChecked)]="allChecked" [nzIndeterminate]="indeterminate" (nzCheckedChange)="checkAll($event)"></th>
+      <th class="th" nzWidth="150px" nzLeft="100px">{{'letterReviewOrder.reviewOrderNo' | translate}}</th>
+      <th class="th" nzWidth="150px" nzLeft="250px">{{'letterReviewOrder.orderCreateTime' | translate}}</th>
+      <th class="th">{{'letterReviewOrder.phoneNumber' | translate}}</th>
+      <th class="th">{{'letterReviewOrder.userLevel' | translate}}</th>
+
+      <th class="th">{{'riskReport.phaseData.channelSource' | translate}}</th>
+      <th class="th">{{'riskReport.phaseData.promotionMethod' | translate}}</th>
+      <th class="th">{{'riskReport.phaseData.referrer' | translate}}</th>
+
+      <th class="th">{{'letterReviewOrder.productType' | translate}}</th>
+      <th class="th">{{'letterReviewOrder.periodsNumber' | translate}}</th>
+      <th class="th">{{'letterReviewOrder.loanAmount' | translate}}</th>
+      <th class="th">{{'letterReviewOrder.loanPeriod' | translate}}</th>
+      <th class="th">{{'letterReviewOrder.loanOpinion' | translate}}</th>
+
+      <th class="th">{{'letterReviewOrder.reviewRejectionStage' | translate}}</th>
+      <th class="th">{{'letterReviewOrder.reviewRejectionStageReason' | translate}}</th>
+      <th class="th">{{'letterReviewOrder.letterReviewer' | translate}}</th>
+      <th class="th">{{'letterReviewOrder.orderStatus' | translate}}</th>
+      <th class="th" nzWidth="200px" nzRight="0px" style="text-align: center">{{'common.operate.name' | translate}}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let data of tableData, let idx = index">
+      <td nzWidth="100px" nzLeft="0px" nzShowCheckbox [(nzChecked)]="data['checked']" (nzCheckedChange)="checkData(data,idx)" [nzDisabled]="data['status']==9 ? 'false' : 'true'"></td>
+      <td nzWidth="150px" nzLeft="100px" style="color:rgb(128, 172, 207);cursor:pointer" (click)="toDetail(data)">{{data['creditOrderNo']}}</td>
+      <td nzWidth="150px" nzLeft="250px">{{dateToString(data['createTimeStr'])}}</td>
+      <td>{{data['userPhone']}}</td>
+      <td>{{data['userGrade']}}</td>
+      <td>{{data['channelStr']}}</td>
+      <td>{{data['promotionTypeStr']}}</td>
+      <td>{{data['referrerName']}}</td>
+      <td>{{viewType(data['loanProductType'])}}</td>
+      <td>{{data['applyMonth']}}</td>
+      <td>{{data['applyMoney']}}</td>
+      <td>{{(data['loanDays'] && data['applyMonth']) ? (data['loanDays']*data['applyMonth']) : ""}}</td>
+<!--      <td>{{data['loanDays']}}</td>-->
+      <td>{{data['creditIdea']}}</td>
+      <td>{{data['rejectStageName']}}</td>
+      <td>
+        <span [nzTitle]="titleTemplate" nzPlacement="bottom" nz-tooltip>
+          {{data['auditRejectDsec'] ? setDsec(data['auditRejectDsec']) : ""}}
+        </span>
+        <ng-template #titleTemplate>
+          <span [innerHTML]="text(data['auditRejectDsec'])"></span>
+        </ng-template>
+        <!--        <button-->
+<!--          nz-button-->
+<!--          nz-popover-->
+<!--          nzPopoverTitle="Title"-->
+<!--          nzPopoverTrigger="click"-->
+<!--          [nzPopoverContent]="'contentTemplate'"-->
+<!--          nzPopoverPlacement="bottom"-->
+<!--        >-->
+<!--          Bottom-->
+<!--        </button>-->
+<!--        <button nzTooltipTitle="prompt text" nzTooltipPlacement="bottom" nz-button nz-tooltip>-->
+
+<!--        </button>-->
+      </td>
+      <td>{{data['currentAuditStaffName']}}</td>
+      <td>{{data['currentStageName']}}</td>
+      <td nzWidth="200px" nzRight="0px" style="color: #0000ff;text-align: center">
+        <p>
+          <a (click)="initLetterRecordData(data['id'])">{{'letterReviewOrder.letterRecord' | translate}}</a>
+          <a style="margin-left: 20px" (click)="initCirculationRecordData(data['id'])">{{'letterReviewOrder.circulationRecord' | translate}}</a>
+        </p>
+      </td>
+    </tr>
+    </tbody>
+  </nz-table>
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageSizeOptions]="[10,20,30,40,50,60,70,80,90,100]" [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+      <span>
+        {{ "common.total" | translate }}
+      </span>
+      <span>
+        {{ totalSize }}
+      </span>
+      <span>
+        {{ "common.pageUnit" | translate }}
+      </span>
+    </ng-template>
+  </div>
+  <nz-modal
+    [(nzVisible)]="isVisible"
+    [nzTitle]='"letterReviewOrder.distribution" | translate'
+    [nzOkText]='"common.operate.sure" | translate'
+    [nzCancelText]='"common.operate.cancel" | translate'
+    (nzOnOk)="handleOk()"
+    (nzOnCancel)="handleCancel()"
+    [nzOkLoading]="isOkLoading"
+  >
+    <div class="formChannel">
+      <form nz-form [nzLayout]="'block'" [formGroup]="validForm">
+        <nz-form-item class='formSec'>
+          <nz-form-control>
+            <nz-form-label [nzSm]="6" nzRequired nzFor="fromTime">
+              {{ "letterReviewOrder.commissioner" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="17"  [nzOffset]='1'>
+              <nz-tree-select
+                [nzDropdownStyle]="{'maxHeight':'500px'}"
+                [nzNodes]="NzTreeNode"
+                [nzPlaceHolder]='"letterReviewOrder.prompt.commissioner" | translate '
+                formControlName="employeeId"
+                id="employeeId">
+              </nz-tree-select>
+              <nz-form-explain *ngIf="validForm.get('employeeId').dirty && validForm.get('employeeId').errors">
+                <span>
+                  {{ "letterReviewOrder.prompt.commissioner" | translate }}
+                </span>
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+  </nz-modal>
+
+
+  <nz-modal
+    [(nzVisible)]="isLetterRecord"
+    [nzTitle]='"letterReviewOrder.letterRecord" | translate'
+    [nzOkText]='"common.operate.sure" | translate'
+    [nzCancelText]='"common.operate.cancel" | translate'
+    (nzOnOk)="isLetterRecord=false"
+    (nzOnCancel)="isLetterRecord=false"
+    [nzWidth]="800"
+  >
+    <div class="formChannel">
+      <table class="tab">
+        <tr>
+          <td>
+            {{'letterReviewOrder.reviewOrderNo' | translate}}
+          </td>
+          <td>
+            {{letterReviewData && letterReviewData['creditOrderNO'] ? letterReviewData['creditOrderNO'] : ""}}
+          </td>
+        </tr>
+      </table>
+      <c-table [tableData] = 'letterRecordData'>
+      </c-table>
+    </div>
+  </nz-modal>
+
+
+  <nz-modal
+    [(nzVisible)]="isCirculationRecord"
+    [nzTitle]='"letterReviewOrder.circulationRecord" | translate'
+    [nzOkText]='"common.operate.sure" | translate'
+    [nzCancelText]='"common.operate.cancel" | translate'
+    (nzOnOk)="isCirculationRecord=false"
+    (nzOnCancel)="isCirculationRecord=false"
+    [nzWidth]="800"
+  >
+    <div class="formChannel">
+      <c-table [tableData] = 'circulationRecordData'>
+      </c-table>
+    </div>
+  </nz-modal>
+
+  <nz-modal
+    [(nzVisible)]="isOperating"
+    [nzTitle]='operatingTitle'
+    [nzOkText]='"common.operate.sure" | translate'
+    [nzCancelText]='"common.operate.cancel" | translate'
+    (nzOnOk)="operatingOk()"
+    [nzOkLoading]="operatingLoading"
+    (nzOnCancel)="operatingCancel()"
+    [nzWidth]="500"
+  >
+    <div class="formChannel">
+      <form nz-form [nzLayout]="'block'" [formGroup]="operatingForm">
+        <p style="color: #1e1e1e">
+          {{operatingTip}}
+        </p>
+        <nz-form-item class='formSec'>
+          <nz-form-control *ngIf="operationType == 1">
+            <nz-form-label [nzSm]="6" style="text-align: left" nzRequired nzFor="fromTime">
+              {{ "letterReviewOrder.reviewRejectionStageReason" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="17"  [nzOffset]='1'>
+              <nz-select
+                nzAllowClear
+                formControlName="auditRejectId"
+                id="auditRejectId"
+                [nzPlaceHolder] = '"common.select" | translate'
+              >
+                <div *ngFor='let item of rejectDescData'>
+                  <nz-option
+                    [nzValue]="item['rejectId']"
+                    [nzLabel]="item['rejectDescribe']"
+                  >
+                  </nz-option>
+                </div>
+              </nz-select>
+              <nz-form-explain *ngIf="operatingForm.get('creditIdeaRemark').dirty && operatingForm.get('creditIdeaRemark').errors">
+                <span>
+                  {{ "common.please" | translate }}
+                </span>
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-control>
+          <nz-form-control>
+            <nz-form-label [nzSm]="6" style="text-align: left" nzRequired nzFor="fromTime">
+              {{ "letterReviewOrder.loanOpinion" | translate}}
+            </nz-form-label>
+            <nz-form-control [nzSm]="17"  [nzOffset]='1'>
+              <textarea
+                nz-input
+                formControlName="creditIdeaRemark"
+                id="creditIdeaRemark"
+                [placeholder] = '"common.please" | translate'
+                style="resize: none;height: 150px;"
+                maxlength="500"
+              >
+              </textarea>
+              <nz-form-explain *ngIf="operatingForm.get('creditIdeaRemark').dirty && operatingForm.get('creditIdeaRemark').errors">
+                <span>
+                  {{ "common.please" | translate }}
+                </span>
+              </nz-form-explain>
+            </nz-form-control>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+  </nz-modal>
+</div>

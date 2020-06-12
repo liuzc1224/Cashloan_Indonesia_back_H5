@@ -1,0 +1,240 @@
+<div class="infoWrap">
+  <auth #auth> </auth>
+  <div class="c-flex-row-center btnGroupWrap" style="margin-top: 20px;margin-bottom: 100px">
+    <div *ngIf="para['from'] == 'riskList' && InfoData && InfoData['status'] == 9 && InfoData['currentStageId']==stageId">
+      <button
+        (click)="passModal()"
+        class="c-btn-width operBtns"
+        nz-button
+        nzType="primary"
+        style="margin-right: 30px"
+      >
+        {{ "orderList.allList.opera.pass" | translate }}
+      </button>
+    </div>
+
+    <div *ngIf="para['from'] == 'riskList' && InfoData && InfoData['status'] == 9 && InfoData['currentStageId']==stageId">
+      <button
+        (click)="refuseModal()"
+        class="c-btn-width operBtns"
+        nz-button
+        nzType="primary"
+        style="margin-right: 30px"
+      >
+        {{ "orderList.allList.opera.refuse" | translate }}
+      </button>
+    </div>
+    <div *ngIf="para['from'] == 'riskList' && InfoData && InfoData['status'] == 9">
+      <button
+        (click)="close()"
+        class="c-btn-width operBtns"
+        nz-button
+        nzType="primary"
+        style="margin-right: 30px"
+      >
+        {{ "orderList.allList.opera.close" | translate }}
+      </button>
+    </div>
+    <!--    <div>-->
+    <!--      <button-->
+    <!--        (click)="return()"-->
+    <!--        class="c-btn-width operBtns"-->
+    <!--        nz-button-->
+    <!--        nzType="primary"-->
+    <!--        style="margin-right: 30px"-->
+    <!--      >-->
+    <!--        {{ "orderList.allList.opera.return" | translate }}-->
+    <!--      </button>-->
+    <!--    </div>-->
+    <div *ngIf="blacklist==true && userInfo && userInfo['creditStatus']!==2">
+      <button
+        (click)="addBlacklist()"
+        class="c-btn-width operBtns"
+        nz-button
+        nzType="primary"
+        style="margin-right: 30px"
+      >
+        {{ "orderList.allList.opera.addBlacklist" | translate }}
+      </button>
+    </div>
+    <div *ngIf="blacklist==true && userInfo && userInfo['creditStatus']==2">
+      <button
+        (click)="removeBlacklist()"
+        class="c-btn-width operBtns"
+        nz-button
+        nzType="primary"
+        style="margin-right: 30px"
+      >
+        {{ "orderList.allList.opera.removeBlacklist" | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<nz-modal
+  [(nzVisible)]="isPass"
+  [nzTitle]="riskTitle"
+  [nzContent]="riskContent"
+  [nzFooter]="riskFooter"
+  (nzOnCancel)="passCancel()"
+>
+  <ng-template #riskTitle>
+    <span> {{ "orderList.allList.opera.passTitle" | translate }} </span>
+  </ng-template>
+
+  <ng-template #riskContent>
+    <form nz-form [nzLayout]="'block'" [formGroup]="passForm" >
+      <nz-form-item class="formSec">
+        <nz-form-control [nzSm]="16" [nzOffset]="8">
+          {{ "orderList.allList.opera.passTip" | translate }}
+        </nz-form-control>
+      </nz-form-item>
+      <!-- 备注 -->
+      <nz-form-item class="formSec">
+        <nz-form-label [nzSm]="7">
+          {{ "orderList.allList.opera.remarks" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="16" [nzOffset]="1">
+          <textarea
+            nz-input
+            formControlName="creditIdeaRemark"
+            cols="6"
+            rows="4"
+            id="risk"
+            [placeholder]="'orderList.allList.opera.inputRemarks' | translate"
+            maxlength="100"
+          ></textarea>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-template>
+
+  <ng-template #riskFooter>
+    <button nz-button nzType="primary" [nzLoading]="isPassLoading" (click)="makePass($event)">
+      {{ "common.operate.sure" | translate }}
+    </button>
+
+    <button nz-button nzType="default" (click)="passCancel()">
+      {{ "common.operate.close" | translate }}
+    </button>
+  </ng-template>
+</nz-modal>
+
+<nz-modal
+  [(nzVisible)]="isRefuse"
+  [nzTitle]="refuseTitle"
+  [nzContent]="refuseContent"
+  [nzFooter]="refuseFooter"
+  (nzOnCancel)="refuseCancel()"
+>
+  <ng-template #refuseTitle>
+    <span> {{ "orderList.allList.opera.refuseTitle" | translate }} </span>
+  </ng-template>
+  <ng-template #refuseContent>
+    <form nz-form [nzLayout]="'block'" [formGroup]="refuseForm">
+      <nz-form-item class="formSec" >
+        <nz-form-label [nzSm]="7" nzRequired nzFor="auditRejectId">
+          {{ "orderList.allList.opera.refuseReason" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="16" [nzOffset]="1">
+          <nz-select
+            [nzPlaceHolder]="'orderList.allList.opera.refuseReasonTip' | translate"
+            formControlName="auditRejectId"
+            id="status"
+          >
+            <div *ngFor="let item of rejectDescData">
+              <nz-option [nzValue]="item['rejectId']" [nzLabel]="item['rejectDescribe']">
+              </nz-option>
+            </div>
+          </nz-select>
+          <nz-form-explain
+            *ngIf="
+            refuseForm.get('auditRejectId').dirty &&
+            refuseForm.get('auditRejectId').errors
+          "
+          >
+          <span>
+            {{ "orderList.allList.opera.refuseReason" | translate }}
+          </span>
+            <span> {{ "common.validator.notEmpty" | translate }} </span>
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <!-- 备注 -->
+      <nz-form-item class="formSec">
+        <nz-form-label [nzSm]="7">
+          {{ "orderList.allList.opera.remarks" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="16" [nzOffset]="1">
+        <textarea
+          nz-input
+          formControlName="creditIdeaRemark"
+          cols="6"
+          rows="4"
+          [placeholder]="'orderList.allList.opera.inputRemarks' | translate"
+          maxlength="100"
+        ></textarea>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-template>
+
+  <ng-template #refuseFooter>
+    <button nz-button nzType="primary" [nzLoading]="isRefuseLoading" (click)="makeRefuse($event)">
+      {{ "common.operate.sure" | translate }}
+    </button>
+
+    <button nz-button nzType="default" (click)="refuseCancel()">
+      {{ "common.operate.close" | translate }}
+    </button>
+  </ng-template>
+</nz-modal>
+
+
+<nz-modal
+  [(nzVisible)]="isClose"
+  [nzTitle]="closeTitle"
+  [nzContent]="closeContent"
+  [nzFooter]="closeFooter"
+  (nzOnCancel)="closeCancel()"
+>
+  <ng-template #closeTitle>
+    <span> {{ "orderList.allList.opera.closeTitle" | translate }} </span>
+  </ng-template>
+  <ng-template #closeContent>
+    <form nz-form [nzLayout]="'block'" [formGroup]="closeForm">
+      <nz-form-item class="formSec">
+        <nz-form-control [nzSm]="16" [nzOffset]="8">
+          {{"orderList.allList.opera.closeTip" | translate}}
+        </nz-form-control>
+      </nz-form-item>
+      <!-- 备注 -->
+      <nz-form-item class="formSec">
+        <nz-form-label [nzSm]="7">
+          {{ "orderList.allList.opera.remarks" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="16" [nzOffset]="1">
+        <textarea
+          nz-input
+          formControlName="creditIdeaRemark"
+          cols="6"
+          rows="4"
+          [placeholder]="'orderList.allList.opera.inputRemarks' | translate"
+          maxlength="100"
+          id="creditIdeaRemark"
+        ></textarea>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-template>
+
+  <ng-template #closeFooter>
+    <button nz-button nzType="primary" [nzLoading]="closeLoading" (click)="makeClose($event)">
+      {{ "common.operate.sure" | translate }}
+    </button>
+
+    <button nz-button nzType="default" (click)="closeCancel()">
+      {{ "common.operate.close" | translate }}
+    </button>
+  </ng-template>
+</nz-modal>

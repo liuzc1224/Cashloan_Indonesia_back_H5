@@ -1,0 +1,112 @@
+<div class="c-content-wrap">
+  <div class="half-block">
+    <div class="c-title">
+      {{ "collectBench.teamData" | translate}}
+    </div>
+    <div class="c-search-group" style="margin-top: 10px">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "collectionManagement.report.data.time" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-date-picker
+            style="width: 150px"
+            [nzShowToday]="'false'"
+            [nzDisabledDate]=""
+            [(ngModel)]="searchModel.queryStartTime"
+            [nzFormat]="'dd-MM-yyyy'"
+          ></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker
+            style="width: 150px"
+            [nzShowToday]="'false'"
+            [nzDisabledDate]=""
+            [(ngModel)]="searchModel.queryEndTime"
+            [nzFormat]="'dd-MM-yyyy'"
+          ></nz-date-picker>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "collectionManagement.report.data.group" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-tree-select
+            [nzDropdownStyle]="{'maxHeight':'500px'}"
+            style="width: 150px"
+            [nzNodes]="groupNzTreeNode"
+            [nzPlaceHolder]='"collectionManagement.management.prompt.group" | translate '
+            [(ngModel)]="searchModel.groupId">
+          </nz-tree-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "collectionManagement.report.data.commissioner" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-tree-select
+            [nzDropdownStyle]="{'maxHeight':'500px'}"
+            style="width: 150px"
+            [nzNodes]="NzTreeNode"
+            [nzPlaceHolder]='"collectionManagement.report.prompt.commissioner" | translate '
+            [(ngModel)]="searchModel.staffId">
+          </nz-tree-select>
+          <!--<nz-select style="padding-left: 10px;width: 150px" [(ngModel)]="searchModel.staffId" [nzPlaceHolder]=' "collectionManagement.report.prompt.commissioner" | translate ' [nzAllowClear]="true">-->
+            <!--<nz-option *ngFor="let option of 'collectionBusiness.operator' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>-->
+          <!--</nz-select>-->
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <button nz-button nzType="primary"  (click) = 'search() '>
+          {{ "common.search" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button (click) = 'reset() '>
+          {{ "common.reset" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button [disabled]="totalSize===0" (click) = 'export() '>
+          {{ "common.ex" | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+    <table class="auth-table-wrap statement1" style="width: 100%;float: left">
+      <tr>
+        <td>{{groupStatement['finishCaseCount']}}</td>
+        <td>{{groupStatementData && groupStatementData['finishCaseCount'] ? groupStatementData['finishCaseCount'] : 0 }}</td>
+        <td>{{groupStatement['finishCaseAmount']}}</td>
+        <td>{{groupStatementData && groupStatementData['finishCaseAmount'] ? groupStatementData['finishCaseAmount'] : 0 }}</td>
+      </tr>
+      <tr>
+        <td>{{groupStatement['todayFinishCaseCount']}}</td>
+        <td>{{groupStatementData && groupStatementData['todayFinishCaseCount'] ? groupStatementData['todayFinishCaseCount'] : 0 }}</td>
+        <td>{{groupStatement['todayFinishCaseAmount']}}</td>
+        <td>{{groupStatementData && groupStatementData['todayFinishCaseAmount'] ? groupStatementData['todayFinishCaseAmount'] : 0 }}</td>
+      </tr>
+      <tr>
+        <td>{{groupStatement['currentAllocationCaseCount']}}</td>
+        <td>{{groupStatementData && groupStatementData['currentAllocationCaseCount'] ? groupStatementData['currentAllocationCaseCount'] : 0 }}</td>
+        <td>{{groupStatement['currentAllocationCaseAmount']}}</td>
+        <td>{{groupStatementData && groupStatementData['currentAllocationCaseAmount'] ? groupStatementData['currentAllocationCaseAmount'] : 0 }}</td>
+      </tr>
+    </table>
+
+    <c-table [tableData] = 'tableData' style="margin-top: 20px">
+    </c-table>
+    <div class="c-pag">
+      <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+      <ng-template #totalTemplate let-total>
+        <span>
+          {{ "common.total" | translate }}
+        </span>
+        <span>
+          {{ totalSize }}
+        </span>
+        <span>
+          {{ "common.pageUnit" | translate }}
+        </span>
+      </ng-template>
+    </div>
+  </div>

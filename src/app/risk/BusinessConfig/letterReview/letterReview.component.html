@@ -1,0 +1,207 @@
+<div class="c-content-wrap">
+  <nz-table
+    #borderedTable
+    nzBordered
+    [nzData]="creditTimeData"
+    [nzShowPagination]="false"
+    [nzLoading]="timeLoading"
+  >
+    <thead>
+    <tr>
+      <th class="textCenter">{{"BusinessConfig.letterReview.configurationContent" | translate}}</th>
+      <th class="textCenter">{{"BusinessConfig.letterReview.morningStartTime" | translate}}</th>
+      <th class="textCenter">{{"BusinessConfig.letterReview.morningEndTime" | translate}}</th>
+      <th class="textCenter">{{"BusinessConfig.letterReview.afternoonStartTime" | translate}}</th>
+      <th class="textCenter">{{"BusinessConfig.letterReview.afternoonEndTime" | translate}}</th>
+      <th class="textCenter">{{"BusinessConfig.letterReview.updater" | translate}}</th>
+      <th class="textCenter">{{"BusinessConfig.letterReview.updateTime" | translate}}</th>
+      <!--      <th class="textCenter" style="width: 100px">{{"common.operate.name" | translate}}</th>-->
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngIf="creditTimeData">
+      <td>{{"BusinessConfig.letterReview.timeSetting" | translate}}</td>
+      <td>{{creditTimeData[1]['morningStart'] ? timeToString(creditTimeData[1]['morningStart']) : ""}}</td>
+      <td>{{creditTimeData[1]['morningEnd'] ? timeToString(creditTimeData[1]['morningEnd']) : ""}}</td>
+      <td>{{creditTimeData[1]['afternoonStart'] ? timeToString(creditTimeData[1]['afternoonStart']) : ""}}</td>
+      <td>{{creditTimeData[1]['afternoonEnd'] ? timeToString(creditTimeData[1]['afternoonEnd']) :""}}</td>
+      <td>{{creditTimeData[1]['employeeName']}}</td>
+      <td>{{creditTimeData[1]['modifyTime'] ? date(creditTimeData[1]['modifyTime']) : ""}}</td>
+      <!--      <td><a (click)="setTime(creditTimeData[1])">{{"common.operate.edit" | translate}}</a></td>-->
+    </tr>
+    </tbody>
+  </nz-table>
+  <br/>
+  <br/>
+  <nz-table
+    #borderedTable
+    nzBordered
+    [nzData]="creditContentData"
+    [nzShowPagination]="false"
+    [nzLoading]="numberLoading"
+  >
+    <thead>
+    <tr>
+      <th class="textCenter">{{"BusinessConfig.letterReview.configurationContent" | translate}}</th>
+      <th class="textCenter">{{"BusinessConfig.letterReview.number" | translate}}</th>
+      <th class="textCenter">{{"BusinessConfig.letterReview.updater" | translate}}</th>
+      <th class="textCenter">{{"BusinessConfig.letterReview.updateTime" | translate}}</th>
+      <th class="textCenter" style="width: 100px">{{"common.operate.name" | translate}}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngIf="creditContentData">
+      <td>{{creditContentData[0]['content']}}</td>
+      <td>{{creditContentData[0]['count']}}</td>
+      <td>{{creditContentData[0]['employeeName']}}</td>
+      <td>{{creditContentData[0]['modifyTime'] ? date(creditContentData[0]['modifyTime']) : ""}}</td>
+      <td><a (click)="setNumber(creditContentData[0])">{{"common.operate.edit" | translate}}</a></td>
+    </tr>
+    </tbody>
+  </nz-table>
+</div>
+
+
+
+<nz-modal id="timeModal" [(nzVisible)]="timeModal" [nzTitle]="modalTitleTime" [nzFooter]="modalFooterTime" [nzContent]="modalContentTime" (nzOnCancel)="timeModal = false" [nzWidth]="600">
+
+  <ng-template #modalTitleTime>
+        <span>
+            {{"BusinessConfig.letterReview.timeSetting" | translate }}
+        </span>
+  </ng-template>
+
+  <ng-template #modalContentTime>
+    <form nz-form [nzLayout]="'block'" [formGroup]="validateForm">
+      <nz-form-item  class='formSec'>
+        <nz-form-label [nzSm]="7" nzRequired nzFor="morningStart">
+          {{ "BusinessConfig.letterReview.morningStartTime" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="16" [nzOffset]='1'>
+          <nz-time-picker
+            style="width: 100%"
+            formControlName="morningStart"
+          ></nz-time-picker>
+          <nz-form-explain *ngIf="validateForm.get('morningStart').dirty && validateForm.get('morningStart').errors">
+              <span>
+                {{ "BusinessConfig.letterReview.prompt.morningStartTime" | translate}}
+              </span>
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item  class='formSec'>
+        <nz-form-label [nzSm]="7" nzRequired nzFor="morningEnd">
+          {{ "BusinessConfig.letterReview.morningEndTime" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="16" [nzOffset]='1'>
+          <nz-time-picker
+            style="width: 100%"
+            formControlName="morningEnd"
+          ></nz-time-picker>
+          <nz-form-explain *ngIf="validateForm.get('morningEnd').dirty && validateForm.get('morningEnd').errors">
+              <span>
+                {{ "BusinessConfig.letterReview.prompt.morningEndTime" | translate}}
+              </span>
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item  class='formSec'>
+        <nz-form-label [nzSm]="7" nzRequired nzFor="afternoonStart">
+          {{ "BusinessConfig.letterReview.afternoonStartTime" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="16" [nzOffset]='1'>
+          <nz-time-picker
+            style="width: 100%"
+            formControlName="afternoonStart"
+          ></nz-time-picker>
+          <nz-form-explain *ngIf="validateForm.get('afternoonStart').dirty && validateForm.get('afternoonStart').errors">
+              <span>
+                {{ "BusinessConfig.letterReview.prompt.afternoonStartTime" | translate}}
+              </span>
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item  class='formSec'>
+        <nz-form-label [nzSm]="7" nzRequired nzFor="afternoonEnd">
+          {{ "BusinessConfig.letterReview.afternoonEndTime" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="16" [nzOffset]='1'>
+          <nz-time-picker
+            style="width: 100%"
+            formControlName="afternoonEnd"
+          ></nz-time-picker>
+          <nz-form-explain *ngIf="validateForm.get('afternoonEnd').dirty && validateForm.get('afternoonEnd').errors">
+              <span>
+                {{ "BusinessConfig.letterReview.prompt.afternoonEndTime" | translate}}
+              </span>
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item  class='formSec'>
+        <p style="color: black;padding-left: 30px">
+          {{ "BusinessConfig.letterReview.tip" | translate }}
+        </p>
+      </nz-form-item>
+    </form>
+  </ng-template>
+  <ng-template #modalFooterTime>
+    <button nz-button nzType="primary" [nzLoading]="isOkLoading" (click)='makeNew()'>
+      {{ "common.operate.sure" | translate }}
+    </button>
+    <button nz-button nzType="default" (click)='timeModal = false'>
+      {{ "common.operate.close" | translate }}
+    </button>
+  </ng-template>
+</nz-modal>
+
+
+
+
+
+
+<nz-modal id="numberModal" [(nzVisible)]="numberModal" [nzTitle]="modalTitle" [nzFooter]="modalFooter" [nzContent]="modalContent" (nzOnCancel)="numberModal = false" [nzWidth]="600">
+
+  <ng-template #modalTitle>
+        <span>
+            {{"BusinessConfig.letterReview.limit" | translate }}
+        </span>
+  </ng-template>
+
+  <ng-template #modalContent>
+    <form nz-form [nzLayout]="'block'" [formGroup]="validForm">
+      <nz-form-item  class='formSec'>
+        <nz-form-label [nzSm]="11" nzRequired nzFor="count">
+          {{ "BusinessConfig.letterReview.number" | translate }}
+        </nz-form-label>
+        <nz-form-control [nzSm]="12" [nzOffset]='1'>
+          <nz-input-number
+            formControlName="count"
+            [nzMin]="1"
+            [nzMax]="1000000"
+            [nzStep]="1"
+            [nzPlaceHolder]="'BusinessConfig.letterReview.prompt.number' | translate"
+            style="width: 100%"
+          ></nz-input-number>
+          <nz-form-explain *ngIf="validForm.get('count').dirty && validForm.get('count').errors">
+              <span>
+                {{ "BusinessConfig.letterReview.prompt.number" | translate}}
+              </span>
+          </nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item  class='formSec'>
+        <p style="color: black;padding-left: 30px">
+          {{ "BusinessConfig.letterReview.tip" | translate }}
+        </p>
+      </nz-form-item>
+    </form>
+  </ng-template>
+  <ng-template #modalFooter>
+    <button nz-button nzType="primary" [nzLoading]="numberOkLoading" (click)='makeNumber()'>
+      {{ "common.operate.sure" | translate }}
+    </button>
+    <button nz-button nzType="default" (click)='numberModal = false'>
+      {{ "common.operate.close" | translate }}
+    </button>
+  </ng-template>
+</nz-modal>

@@ -1,0 +1,188 @@
+<div class="c-content-wrap">
+  <div class="c-search-wrap">
+    <div class="c-search-group c-search-border">
+      <div class="c-search-itemLeft">
+        {{ "financeModule.list.classify" | translate}}:
+      </div>
+      <div class="c-search-itemRight">
+        <ul class="sectionList c-flex-row-start" *ngIf="roleShowPage">
+          <li (click)='changeStatus( "" )' [ngClass]='{"active-tag" : "" == searchModel.status}'>
+            {{ "reviewRiskList.searchModule.reviewListAll" | translate}}
+          </li>
+          <li *ngFor='let item of statusEnum' (click)='changeStatus(item.value)' [ngClass]='{"active-tag" : item.value == searchModel.status}'>
+            {{ item.name }}
+          </li>
+        </ul>
+        <ul class="sectionList c-flex-row-start" *ngIf="!roleShowPage">
+          <li (click)='changeStatus( "1" )' [ngClass]='{"active-tag" : "1" == searchModel.status}'>
+            {{ ("common.reviewOrderStatus" | translate)[0]['name'] }}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="c-search-group" style="flex-wrap:wrap;">
+      <!-- <nz-month-picker nzShowTime></<nz-month-picker> -->
+      <!-- 申请日期 -->
+      <div class="c-search-item" style="margin-bottom:15px;">
+        <div class="c-search-itemLeft">
+          {{ "financeModule.list.table.askTime" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-date-picker [(ngModel)]="searchModel.applyDateBegin"></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker [(ngModel)]="searchModel.applyDateEnd"></nz-date-picker>
+        </div>
+      </div>
+      <!-- 信审生效日期 -->
+      <div class="c-search-item" style="margin-bottom:20px;">
+        <div class="c-search-itemLeft">
+          {{ "reviewRiskList.searchModule.effectTime" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-date-picker [(ngModel)]="searchModel.approveEffectDayBegin"></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker [(ngModel)]="searchModel.approveEffectDayEnd"></nz-date-picker>
+        </div>
+      </div>
+      <!-- 手机号 -->
+      <div class="c-search-item" style="margin-bottom:20px;">
+        <div class="c-search-itemLeft">
+          {{ "financeModule.list.table.mobile" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" [(ngModel)]='searchModel.userPhone'>
+        </div>
+      </div>
+      <!-- 信审订单号 -->
+      <div class="c-search-item" style="margin-bottom:20px;">
+        <div class="c-search-itemLeft">
+          {{ "reviewRiskList.searchModule.orderNo" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" [(ngModel)]='searchModel.creditOrderNo'>
+        </div>
+      </div>
+      <!-- 用户等级 -->
+<!--      <div class="c-search-item" style="margin-bottom:20px;">-->
+<!--        <div class="c-search-itemLeft">-->
+<!--          {{ "reviewRiskList.searchModule.lv" | translate}}:-->
+<!--        </div>-->
+<!--        <div class="c-search-itemRight">-->
+<!--          <input nz-input type="text" [(ngModel)]='searchModel.userGrade'>-->
+<!--        </div>-->
+<!--      </div>-->
+
+    </div>
+    <div class="c-search-btnGroup">
+      <button nz-button nzType="primary" (click)='search() '>
+        {{ "common.search" | translate}}
+      </button>
+      <button style="margin:0 20px;" nz-button (click)='reset() '>
+        {{ "common.reset" | translate}}
+      </button>
+      <button nz-button (click)='exportRisk() ' style="margin-bottom: 10px">
+        {{ "channel.channelBranch.btn.export" | translate}}
+      </button>
+    </div>
+  </div>
+
+  <c-table [tableData]='tableData'>
+  </c-table>
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange)='pageChange($event , "size")'
+      [nzPageIndex]="searchModel.currentPage" [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+      <span>
+        {{ "common.total" | translate }}
+      </span>
+      <span>
+        {{ totalSize }}
+      </span>
+      <span>
+        {{ "common.pageUnit" | translate }}
+      </span>
+    </ng-template>
+  </div>
+</div>
+
+<nz-modal
+    [(nzVisible)]="makeLoanMark"
+    [nzTitle]="modalTitle"
+    [nzContent]="modalContent"
+    [nzFooter]="modalFooter"
+    [nzWidth]="900"
+    (nzOnCancel)="makeLoanMark = false"
+    >
+  <ng-template #modalTitle>
+    <span>
+      {{ "common.btnGroup.reviewRecord" | translate}}
+    </span>
+  </ng-template>
+
+  <ng-template #modalContent>
+        <div class="recordOrderNo">
+            <span>{{"reviewRiskList.tableModule.creditOrderNo" | translate }}</span>
+            <span>{{creditOrderNo}}</span>
+        </div>
+        <div class="totleLook">
+            <nz-table
+                #smallTable
+                nzSize="small"
+                [nzData]="recordData"
+                [nzShowPagination] = "false"
+                >
+                <thead>
+                <tr>
+                    <th>{{"reviewRiskList.recordModule.operationType" | translate }}</th>
+                    <th>{{"reviewRiskList.recordModule.operationResult" | translate }}</th>
+                    <th>{{"reviewRiskList.recordModule.stringOperationTime" | translate }}</th>
+                    <th>{{"reviewRiskList.recordModule.operationRemark" | translate }}</th>
+                    <th>{{"reviewRiskList.recordModule.operationEmployeeName" | translate }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let data of smallTable.data">
+                    <td>{{data.operationType}}</td>
+                    <td>{{data.operationResult}}</td>
+                    <td>{{data.stringOperationTime}}</td>
+                    <td>{{data.operationRemark}}</td>
+                    <td>{{data.createUserName}}</td>
+                </tr>
+                </tbody>
+            </nz-table>
+        </div> 
+  </ng-template>
+
+  <ng-template #modalFooter>
+    <button nz-button nzType="primary" (click)='makeLoanMark = false'>
+      {{ "common.operate.sure" | translate }}
+    </button>
+    <button nz-button nzType="default" (click)='makeLoanMark = false'>
+      {{ "common.operate.close" | translate }}
+    </button>
+  </ng-template>
+
+</nz-modal>
+
+
+
+<nz-modal [(nzVisible)]="noteMark" [nzTitle]="noteTitle" [nzContent]="noteContent" [nzFooter]="noteFooter" (nzOnCancel)="noteMark = false">
+
+  <ng-template #noteTitle>
+    <span>
+      {{ 'common.btnGroup.b' | translate}}
+    </span>
+  </ng-template>
+
+  <ng-template #noteContent>
+    <p>
+      {{ remark }}
+    </p>
+  </ng-template>
+
+  <ng-template #noteFooter>
+    <button nz-button nzType="default" (click)='makeLoanMark = false'>
+      {{ "common.operate.close" | translate }}
+    </button>
+  </ng-template>
+</nz-modal>

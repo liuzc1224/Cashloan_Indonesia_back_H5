@@ -1,0 +1,126 @@
+<div class="c-content-wrap">
+  <div class="title">
+    {{ "financeModule.repaymentCode.title" | translate }}
+    <div class="c-btnGroup">
+        <button nz-button  (click) = 'add()'>
+            {{ "financeModule.repaymentCode.add" | translate }}
+        </button>
+    </div>
+  </div>
+    <div class="c-search-wrap">
+        <div class="c-search-group">
+
+          <div class="c-search-item">
+              <div class="c-search-itemLeft">
+                  {{ "financeModule.repaymentCode.createType" | translate}}:
+              </div>
+              <div class="c-search-itemRight">
+                  <nz-select style="width: 150px;" [(ngModel)]="searchModel.type">
+                      <nz-option *ngFor="let item of ('financeModule.repaymentCode.createTypes' | translate)" [nzValue]="item.value" [nzLabel]="item.desc"></nz-option>
+                  </nz-select>
+              </div>
+          </div>
+          <div class="c-search-item">
+              <div class="c-search-itemLeft">
+                  {{ "financeModule.repaymentCode.tradeStatus" | translate}}:
+              </div>
+              <div class="c-search-itemRight">
+                  <nz-select style="width: 150px;" [(ngModel)]="searchModel.status">
+                      <nz-option *ngFor="let item of ('financeModule.repaymentCode.tradeStatuss' | translate)" [nzValue]="item.value" [nzLabel]="item.desc"></nz-option>
+                  </nz-select>
+              </div>
+          </div>
+        </div>
+
+      <div class="c-search-btnGroup">
+            <button nz-button nzType="primary"  (click) = 'search() '>
+                {{ "common.search" | translate}}
+            </button>
+            <button style="margin-left: 20px;" nz-button (click) = 'reset() '>
+                {{ "common.reset" | translate}}
+            </button>
+      </div>
+    </div>
+
+    <c-table [tableData] = 'tableData'>
+    </c-table>
+    <div class="c-pag">
+        <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+        <ng-template #totalTemplate let-total>
+            <span>
+                {{ "common.total" | translate }}
+            </span>
+            <span>
+                {{ totalSize }}
+            </span>
+            <span>
+                {{ "common.pageUnit" | translate }}
+            </span>
+        </ng-template>
+    </div>
+
+    <nz-modal
+    [(nzVisible)]="isVisible"
+    [nzTitle]='"financeModule.repaymentCode.add" | translate'
+    [nzOkText]='"common.setting" | translate'
+    [nzCancelText]='"common.operate.cancel" | translate'
+    (nzOnOk)="handleOk()"
+    (nzOnCancel)="handleCancel()"
+    [nzOkLoading]="isOkLoading"
+  >
+    <div class="formChannel">
+      <form nz-form [nzLayout]="'inline'" [formGroup]="validForm">
+        <nz-form-item class='formSec'>
+          <nz-form-label [nzSm]="7" nzRequired>
+            {{ "financeModule.repaymentCode.inadd.loanOrder" | translate}}
+          </nz-form-label>
+          <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+            <input
+              type="text"
+              nz-input
+              formControlName="orderNo"
+              id="orderNo"
+              class="left"
+              disabled
+            >
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-label [nzSm]="7" nzRequired>
+            {{ "financeModule.repaymentCode.inadd.residue" | translate}}
+          </nz-form-label>
+          <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+                <nz-input-group  nzSuffix="RP">
+                    <input
+                    type="text"
+                    nz-input
+                    formControlName="leftAmount"
+                    id="leftAmount"
+                    class="left"
+                    disabled
+                    >
+                </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item class='formSec'>
+          <nz-form-label [nzSm]="7" nzRequired>
+            {{ "financeModule.repaymentCode.inadd.transactionAmount" | translate}}
+          </nz-form-label>
+          <nz-form-control [nzSm]="16"  [nzOffset]='1'>
+                <nz-input-group  nzSuffix="RP">
+                    <input
+                    type="number"
+                    nz-input
+                    formControlName="dealMoney"
+                    id="dealMoney"
+                    [placeholder] = '"financeModule.repaymentCode.moreThanTenThousand" | translate'
+                    class="left"
+                    >
+                </nz-input-group>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+  </nz-modal>
+
+</div>

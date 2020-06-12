@@ -1,0 +1,77 @@
+<div class="c-content-wrap" style="margin-bottom: 50px">
+  <div class="c-search-wrap">
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "reportModule.conversionData.data" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-date-picker [(ngModel)]="searchModel.startTime" [nzAllowClear]="false"></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker [(ngModel)]="searchModel.endTime" [nzAllowClear]="false"></nz-date-picker>
+        </div>
+      </div>
+      <div class="c-btn-group" style="margin-bottom: 20px">
+        <button nz-button  nzType="primary" (click) = 'search() '>
+          {{ "common.search" | translate}}
+        </button>
+        <button nz-button class="left" (click) = 'reset() '>
+          {{ "common.reset" | translate}}
+        </button>
+      </div>
+    </div>
+    <div class="c-btn-group" style="margin-bottom: 20px">
+      <button nz-button  [nzType]="dayType==1 ? 'primary' : ''" (click) = 'setDay() '>
+        {{ "reportModule.conversionData.sevenDay" | translate}}
+      </button>
+      <button nz-button class="left" [nzType]="dayType==2 ? 'primary' : ''" (click) = 'setMonth() '>
+        {{ "reportModule.conversionData.month" | translate}}
+      </button>
+    </div>
+  </div>
+  <div class="half-block">
+    <div class="c-title">
+      {{ "reportModule.conversionData.lineChart" | translate}}
+    </div>
+  </div>
+  <nz-row [nzGutter]="16" style="padding-bottom: 20px;margin-top: 10px">
+    <nz-col [nzSpan]="12">
+      <table>
+        <tr *ngFor="let item of 'reportModule.conversionData.tableData' | translate" (click)="changeShow(item['name'],item['reflect'])" [class]="(item['name']==whitchClick)?'bluebackground':'defaultbackground'">
+          <td>{{item['name']}}</td>
+          <td>
+            <span *ngIf="item['reflect']=='firstDueRate' || item['reflect']=='amountFirstDueRate'">{{TopList[item['reflect']] ? (TopList[item['reflect']]*100).toFixed(2)+"%" : 0}}</span>
+            <span *ngIf="item['reflect']!='firstDueRate' && item['reflect']!='amountFirstDueRate'">{{TopList[item['reflect']] ? TopList[item['reflect']] : 0}}</span>
+          </td>
+        </tr>
+      </table>
+    </nz-col>
+    <nz-col [nzSpan]="12">
+        <div echarts [options]="obj"></div>
+    </nz-col>
+  </nz-row>
+  <div class="half-block">
+    <div class="c-title">
+      {{ "reportModule.conversionData.dailyForm" | translate}}
+      <button nz-button style="margin-left: 30px" nzType="primary" (click) = 'downloandBottomList() '>
+        {{ "common.ex" | translate}}
+      </button>
+    </div>
+  </div>
+  <c-table [tableData] = 'tableData' style="margin-top: 20px;">
+  </c-table>
+  <!-- <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+  <span>
+  {{ "common.total" | translate }}
+  </span>
+      <span>
+  {{ totalSize }}
+  </span>
+      <span>
+  {{ "common.pageUnit" | translate }}
+  </span>
+    </ng-template>
+  </div> -->
+</div>

@@ -1,0 +1,112 @@
+<div class="c-content-wrap">
+  <div class="c-search-wrap">
+    <div class="c-search-group">
+      <!-- 信审订单阶段 -->
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "riskReport.letterRecord.stage" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-tree-select
+            style="padding-left: 10px;width: 200px;max-height: 100px;overflow: auto"
+            [nzNodes]="statusData"
+            [nzShowSearch]="true"
+            [nzDefaultExpandAll]="true"
+            [nzCheckable]="true"
+            [(ngModel)]="searchModel.stageIdList"
+            [nzDropdownStyle]="{'maxHeight':'500px'}"
+          >
+          </nz-tree-select>
+<!--          <nz-select style="padding-left: 10px;width: 150px" >-->
+<!--            <nz-option *ngFor="let option of statusData" [nzLabel]="option['flowName']" [nzValue]="option['id']"></nz-option>-->
+<!--          </nz-select>-->
+        </div>
+      </div>
+      <!-- 操作 -->
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "riskReport.letterRecord.operate" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="padding-left: 10px;width: 150px" [(ngModel)]="searchModel.operationStatus">
+            <nz-option *ngFor="let option of 'riskReport.letterRecord.operateData' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <!-- 审核拒绝理由 -->
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "riskReport.letterRecord.reason" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-tree-select
+            style="padding-left: 10px;width: 300px;max-height: 100px;overflow: auto"
+            [nzNodes]="listAuditRejectDescData"
+            [nzShowSearch]="true"
+            [nzDefaultExpandAll]="true"
+            [nzCheckable]="true"
+            [nzDropdownStyle]="{'maxHeight':'500px'}"
+            [(ngModel)]="searchModel.reject"
+          >
+          </nz-tree-select>
+<!--          <nz-select style="padding-left: 10px;width: 150px" [(ngModel)]="searchModel.operationType">-->
+<!--            <nz-option *ngFor="let option of 'riskReport.letterRecord.operateData' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>-->
+<!--          </nz-select>-->
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <!-- 操作时间 -->
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "riskReport.letterRecord.operateTime" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-date-picker [(ngModel)]="searchModel.timeStart"></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker [(ngModel)]="searchModel.timeEnd"></nz-date-picker>
+        </div>
+      </div>
+      <!-- 信审订单编号 -->
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "riskReport.letterRecord.letterOrderNo" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <input nz-input type="text" [placeholder]="'common.please' | translate" [(ngModel)]='searchModel.creditOrderNo'>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+    <div class="c-search-item">
+      <button nz-button nzType="primary"  (click) = 'search() '>
+        {{ "common.search" | translate}}
+      </button>
+      <button style="margin-left: 20px;" nz-button (click) = 'reset()'>
+        {{ "common.reset" | translate}}
+      </button>
+      <button style="margin-left: 20px;" nz-button [disabled]="totalSize===0" (click) = 'downloadData()'>
+        {{ "common.ex" | translate}}
+      </button>
+    </div>
+  </div>
+  </div>
+
+  <c-table [tableData] = 'tableData'>
+  </c-table>
+
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+      <span>
+      {{ "common.total" | translate }}
+      </span>
+      <span>
+      {{ totalSize }}
+      </span>
+      <span>
+      {{ "common.pageUnit" | translate }}
+      </span>
+    </ng-template>
+  </div>
+</div>

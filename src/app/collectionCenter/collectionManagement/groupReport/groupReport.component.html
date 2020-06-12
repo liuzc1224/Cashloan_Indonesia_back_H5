@@ -1,0 +1,147 @@
+<div class="c-content-wrap">
+  <div class="c-search-wrap">
+    <div class="c-search-group c-search-border">
+      <div class="c-search-itemRight">
+        <ul class="sectionList c-flex-row-start" style="flex-wrap:wrap;height: auto;">
+          <li
+            *ngFor = 'let item of groupType'
+            (click) = 'changeStatus(item["value"])'
+            [ngClass]='{"active-tag" : (item["value"] == chType)}'
+            style="white-space:nowrap;margin-bottom: 10px;padding: 0 20px">
+            {{ item['desc'] }}
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "collectionManagement.report.data.time" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-date-picker
+            style="width: 150px"
+            [nzShowToday]="'false'"
+            [nzDisabledDate]=""
+            [(ngModel)]="searchModel.queryStartTime"
+            [nzFormat]="'dd-MM-yyyy'"
+          ></nz-date-picker>
+          <span style="color:#999"> ~ </span>
+          <nz-date-picker
+            style="width: 150px"
+            [nzShowToday]="'false'"
+            [nzDisabledDate]=""
+            [(ngModel)]="searchModel.queryEndTime"
+            [nzFormat]="'dd-MM-yyyy'"
+          ></nz-date-picker>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "collectionManagement.report.data.stage" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="padding-left: 10px;width: 200px" [(ngModel)]="searchModel.stageId" [nzPlaceHolder]=' "collectionManagement.report.prompt.stage" | translate ' (ngModelChange)="type($event)">
+            <nz-option *ngFor="let option of allStage" [nzLabel]="option['phaseName']" [nzValue]="option['id']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "collectionManagement.report.data.reBorrow" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="padding-left: 10px;width: 200px" [(ngModel)]="searchModel.firstLoan" [nzPlaceHolder]=' "collectionManagement.report.prompt.select" | translate '>
+            <nz-option *ngFor="let option of 'collectionManagement.report.borrowData' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "collectionManagement.report.data.company" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 150px" [(ngModel)]="searchModel.firmId" [nzPlaceHolder]='"collectionManagement.report.prompt.company" | translate ' nzAllowClear>
+            <nz-option *ngFor="let option of allOverdueFirm" [nzLabel]="option['firmName']" [nzValue]="option['id']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "collectionManagement.report.data.group" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-tree-select
+            [nzDropdownStyle]="{'maxHeight':'500px'}"
+            style="width: 200px"
+            [nzDefaultExpandAll]="true"
+            [nzNodes]="groupNzTreeNode"
+            [nzPlaceHolder]='"collectionManagement.management.prompt.group" | translate '
+            [(ngModel)]="searchModel.groupId">
+          </nz-tree-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "collectionManagement.report.data.commissioner" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-tree-select
+            [nzDropdownStyle]="{'maxHeight':'500px'}"
+            style="width: 200px"
+            [nzDefaultExpandAll]="true"
+            [nzNodes]="NzTreeNode"
+            [nzPlaceHolder]='"collectionManagement.report.prompt.commissioner" | translate '
+            [(ngModel)]="searchModel.staffId">
+          </nz-tree-select>
+          <!--<nz-select style="padding-left: 10px;width: 150px" [(ngModel)]="searchModel.staffId" [nzPlaceHolder]=' "collectionManagement.report.prompt.commissioner" | translate ' [nzAllowClear]="true">-->
+            <!--<nz-option *ngFor="let option of 'collectionBusiness.operator' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>-->
+          <!--</nz-select>-->
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "collectionManagement.report.data.productType" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="width: 200px" [(ngModel)]="searchModel.loanProductType" [nzPlaceHolder]='"collectionManagement.report.prompt.productType" | translate ' nzAllowClear>
+            <nz-option *ngFor="let option of productType" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <button nz-button nzType="primary"  (click) = 'search() '>
+          {{ "common.search" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button (click) = 'reset() '>
+          {{ "common.reset" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button [disabled]="totalSize===0" (click) = 'export() '>
+          {{ "common.ex" | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+  <c-table [tableData] = 'tableData' style="margin-top: 20px">
+  </c-table>
+  <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+        <span>
+          {{ "common.total" | translate }}
+        </span>
+      <span>
+          {{ totalSize }}
+        </span>
+      <span>
+          {{ "common.pageUnit" | translate }}
+        </span>
+    </ng-template>
+  </div>
+</div>

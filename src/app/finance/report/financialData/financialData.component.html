@@ -1,0 +1,76 @@
+<div class="c-content-wrap">
+  <div nz-row>
+    <div nz-col nzSpan="24" style="background-color: #f2f2f2;color: black;font-weight: bolder;padding-left: 10px;height: 40px;line-height: 40px">
+      <h3>{{ "reportModule.financialdata.today" | translate}}</h3>
+    </div>
+  </div>
+  <div nz-row style="padding-top: 10px;text-align: center">
+    <div nz-col nzSpan="11" >
+      <table>
+        <tr *ngFor="let item of 'reportModule.financialdata.table1' | translate">
+          <td>{{item["name"]}}</td>
+          <td><span *ngIf="item['reflect']">{{financeCurrent && financeCurrent[item["reflect"]] ? financeCurrent[item["reflect"]] : 0}}</span></td>
+        </tr>
+      </table>
+    </div>
+    <div nz-col nzSpan="11" nzOffset="2">
+      <table>
+        <tr *ngFor="let item of 'reportModule.financialdata.table2' | translate">
+          <td>{{item["name"]}}</td>
+          <td>{{financeCurrent && financeCurrent[item["reflect"]] ? financeCurrent[item["reflect"]] : 0}}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <div nz-row style="margin-top: 10px;padding-bottom: 10px">
+    <div nz-col nzSpan="24" style="background-color: #f2f2f2;color: black;font-weight: bolder;padding-left: 10px;height: 40px;line-height: 40px">
+      <h3>{{ "reportModule.financialdata.history" | translate}}</h3>
+    </div>
+  </div>
+  <div class="c-search-wrap">
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "reportModule.financialdata.startTime" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <!-- <nz-date-picker [(ngModel)]="searchModel.start" [nzPlaceHolder] = '"reportModule.financialdata.prompt" | translate'></nz-date-picker> -->
+          <nz-month-picker [(ngModel)]="searchModel.start" [nzPlaceHolder] = '"reportModule.financialdata.prompt" | translate' [nzAllowClear]="false"></nz-month-picker>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "reportModule.financialdata.endTime" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <!-- <nz-date-picker [(ngModel)]="searchModel.end" [nzPlaceHolder] = '"reportModule.financialdata.prompt" | translate' ></nz-date-picker> -->
+          <nz-month-picker [(ngModel)]="searchModel.end" [nzPlaceHolder] = '"reportModule.financialdata.prompt" | translate' [nzAllowClear]="false"></nz-month-picker>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-btnGroup">
+      <button nz-button nzType="primary" (click)='search() '>
+        {{ "common.search" | translate}}
+      </button>
+      <button style="margin-left: 20px;" nz-button (click)='reset() '>
+        {{ "common.reset" | translate}}
+      </button>
+    </div>
+  </div>
+  <c-table [tableData] = 'tableData'>
+  </c-table>
+  <!-- <div class="c-pag">
+    <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+    <ng-template #totalTemplate let-total>
+      <span>
+      {{ "common.total" | translate }}
+      </span>
+      <span>
+      {{ totalSize }}
+      </span>
+      <span>
+      {{ "common.pageUnit" | translate }}
+      </span>
+    </ng-template>
+  </div> -->
+</div>

@@ -1,0 +1,318 @@
+<div class="c-content-wrap">
+  <div class="title">
+    {{ "financeModule.list.title" | translate }}
+  </div>
+    <div class="c-search-wrap">
+        <div class="c-search-group">
+          <div class="c-search-item">
+              <div class="c-search-itemLeft">
+                  {{ "financeModule.list.createDate" | translate}}:
+              </div>
+              <div class="c-search-itemRight">
+                  <nz-range-picker [(ngModel)]="searchModel.rangeDate"></nz-range-picker>
+              </div>
+          </div>
+          <div class="c-search-item">
+            <div class="c-search-itemLeft">
+              {{ "financeModule.list.repayTime" | translate}}:
+            </div>
+            <div class="c-search-itemRight">
+              <nz-range-picker [(ngModel)]="searchModel.payDate"></nz-range-picker>
+            </div>
+          </div>
+<!--          <div class="c-search-item">-->
+<!--            <div class="c-search-itemLeft">-->
+<!--              {{ "financeModule.list.shouldRepayTime" | translate}}:-->
+<!--            </div>-->
+<!--            <div class="c-search-itemRight">-->
+<!--              <nz-range-picker [(ngModel)]="searchModel.rangeDate"></nz-range-picker>-->
+<!--            </div>-->
+<!--          </div>-->
+        </div>
+
+      <div class="c-search-group">
+        <div class="c-search-item">
+          <div class="c-search-itemLeft">
+            {{ "financeModule.list.userGrade" | translate}}:
+          </div>
+          <div class="c-search-itemRight">
+            <nz-tree-select
+              style="padding-left: 10px;width: 200px;;max-height: 100px;overflow: auto"
+              [nzNodes]="userGrade"
+              [nzShowSearch]="true"
+              [nzDefaultExpandAll]="true"
+              [nzCheckable]="true"
+              [nzDropdownStyle]="{'maxHeight':'500px'}"
+              [(ngModel)]="searchModel.userGrade"
+            >
+            </nz-tree-select>
+<!--            <nz-select style="width: 200px;" [(ngModel)]="searchModel.userGrade" nzAllowClear [nzPlaceHolder]="'financeModule.list.prompt.userGrade' | translate">-->
+<!--              <nz-option *ngFor="let item of userGrade" [nzValue]="item['userLevelName']" [nzLabel]="item['userLevelName']"></nz-option>-->
+<!--            </nz-select>-->
+          </div>
+        </div>
+        <div class="c-search-item">
+          <div class="c-search-itemLeft">
+            {{ "financeModule.list.packageName" | translate}}:
+          </div>
+          <div class="c-search-itemRight">
+            <nz-tree-select
+              style="padding-left: 10px;width: 200px;;max-height: 100px;overflow: auto"
+              [nzNodes]="packageName"
+              [nzShowSearch]="true"
+              [nzDefaultExpandAll]="true"
+              [nzCheckable]="true"
+              [nzDropdownStyle]="{'maxHeight':'500px'}"
+              [(ngModel)]="searchModel.packageName"
+            >
+            </nz-tree-select>
+<!--            <nz-select style="width: 200px;" [(ngModel)]="searchModel.packageName" [nzPlaceHolder]="'financeModule.list.prompt.packageName' | translate">-->
+<!--              <nz-option *ngFor="let item of packageName" [nzValue]="item['id']" [nzLabel]="item['desc']"></nz-option>-->
+<!--            </nz-select>-->
+          </div>
+        </div>
+        <div class="c-search-item">
+          <div class="c-search-itemLeft">
+            {{ "financeModule.list.limit" | translate}}:
+          </div>
+          <div class="c-search-itemRight">
+            <nz-select style="padding-left: 10px;width: 150px" [(ngModel)]="searchModel.loanDaysFlag">
+              <nz-option *ngFor="let option of 'financeModule.list.operatorData' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+            </nz-select>
+            <input nz-input style="width: 100px;left: 5px" type="number" [(ngModel)]="searchModel.loanDays" [placeholder] = '"financeModule.list.days" | translate'>
+          </div>
+        </div>
+
+      </div>
+      <div class="c-search-group">
+        <div class="c-search-item">
+          <div class="c-search-itemLeft">
+            {{ "financeModule.list.reBorrow" | translate}}:
+          </div>
+          <div class="c-search-itemRight">
+            <nz-select style="width: 200px;" [(ngModel)]="searchModel.firstLoan">
+              <nz-option *ngFor="let item of 'financeModule.list.borrowData' | translate" [nzValue]="item['value']" [nzLabel]="item['desc']"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+        <!--          产品类型-->
+        <div class="c-search-item">
+          <div class="c-search-itemLeft">
+            {{ "financeModule.list.orderType" | translate}}:
+          </div>
+          <div class="c-search-itemRight">
+            <nz-tree-select
+              style="padding-left: 10px;width: 200px;;max-height: 100px;overflow: auto"
+              [nzNodes]="orderTypeData"
+              [nzShowSearch]="true"
+              [nzDefaultExpandAll]="true"
+              [nzCheckable]="true"
+              [nzDropdownStyle]="{'maxHeight':'500px'}"
+              [(ngModel)]="searchModel.orderType"
+            >
+            </nz-tree-select>
+
+<!--            <nz-select style="width: 200px;" [(ngModel)]="searchModel.orderType" [nzPlaceHolder]="'financeModule.list.prompt.orderType' | translate">-->
+<!--              <nz-option *ngFor="let item of ('financeModule.list.ordertypeList' | translate)" [nzValue]="item['value']" [nzLabel]="item['desc']"></nz-option>-->
+<!--            </nz-select>-->
+          </div>
+        </div>
+        <!--          渠道来源-->
+        <div class="c-search-item">
+          <div class="c-search-itemLeft">
+            {{ "financeModule.list.channelSource" | translate}}:
+          </div>
+          <div class="c-search-itemRight">
+            <nz-select [(ngModel)]="searchModel.channel" [nzAllowClear]="true" (ngModelChange)="setSource()" style="width: 174px">
+              <nz-option *ngFor="let option of ('financeModule.list.source' | translate)" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+            </nz-select>
+          </div>
+        </div>
+      </div>
+      <div class="c-search-group">
+        <!--            推广方式-->
+        <div class="c-search-item">
+          <div class="c-search-itemLeft">
+            {{ "financeModule.list.promotionMethod" | translate}}:
+          </div>
+          <div class="c-search-itemRight">
+            <nz-tree-select
+              style="padding-left: 10px;width: 200px;;max-height: 100px;overflow: auto"
+              [nzNodes]="promotionData"
+              [nzShowSearch]="true"
+              [nzDefaultExpandAll]="true"
+              [nzCheckable]="true"
+              [nzDropdownStyle]="{'maxHeight':'500px'}"
+              [(ngModel)]="searchModel.promotionType"
+              [nzPlaceHolder]=' "usrModule.list.prompt.promotionMethod" | translate '
+            >
+            </nz-tree-select>
+            <!--            <nz-select [(ngModel)]="searchModel.promotionType" [nzPlaceHolder]=' "usrModule.list.prompt.promotionMethod" | translate ' [nzAllowClear]="true" style="width: 174px">-->
+            <!--              <nz-option *ngFor="let option of promotionData" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>-->
+            <!--            </nz-select>-->
+          </div>
+        </div>
+        <!-- 推荐人 -->
+        <div class="c-search-item">
+          <div class="c-search-itemLeft">
+            {{ "financeModule.list.referrer" | translate}}:
+          </div>
+          <div class="c-search-itemRight">
+            <input nz-input type="text" [(ngModel)] = 'searchModel.referrerName' [placeholder]='"common.please" | translate'>
+          </div>
+        </div>
+        <!--        订单状态-->
+        <div class="c-search-item">
+          <div class="c-search-itemLeft">
+            {{ "financeModule.list.detail.orderStatus" | translate}}:
+          </div>
+          <div class="c-search-itemRight">
+            <nz-tree-select
+              style="padding-left: 10px;width: 200px;;max-height: 100px;overflow: auto"
+              [nzNodes]="orderStatusData"
+              [nzShowSearch]="true"
+              [nzDefaultExpandAll]="true"
+              [nzCheckable]="true"
+              [nzDropdownStyle]="{'maxHeight':'500px'}"
+              [(ngModel)]="orderStatus"
+            >
+            </nz-tree-select>
+
+<!--              <nz-select style="width: 166px;" [(ngModel)]="orderStatus" [nzPlaceHolder]="'financeModule.list.prompt.orderStatus' | translate">-->
+<!--                <nz-option *ngFor="let item of ('financeModule.list.orderStatusList' | translate)" [nzValue]="item['value']" [nzLabel]="item['name']"></nz-option>-->
+<!--              </nz-select>-->
+          </div>
+        </div>
+      </div>
+      <div class="c-search-group">
+        <!--          待还款状态:-->
+        <div class="c-search-item">
+          <div class="c-search-itemLeft">
+            {{ "financeModule.list.detail.PayPendStatus" | translate}}:
+          </div>
+          <div class="c-search-itemRight">
+            <nz-tree-select
+              style="padding-left: 10px;width: 200px;;max-height: 100px;overflow: auto"
+              [nzNodes]="PayPendStatusData"
+              [nzShowSearch]="true"
+              [nzDefaultExpandAll]="true"
+              [nzCheckable]="true"
+              [nzDropdownStyle]="{'maxHeight':'500px'}"
+              [(ngModel)]="PayPendStatus"
+              [nzPlaceHolder]="'financeModule.list.prompt.PayPendStatus' | translate"
+            ></nz-tree-select>
+            <!--                  </nz-tree-select>-->
+            <!--                    <nz-select style="width: 166px;" [(ngModel)]="PayPendStatus" nzAllowClear [nzPlaceHolder]="'financeModule.list.prompt.PayPendStatus' | translate">-->
+            <!--                        <nz-option *ngFor="let item of ('financeModule.list.PayPendStatusList' | translate)" [nzValue]="item['value']" [nzLabel]="item['name']"></nz-option>-->
+            <!--                    </nz-select>-->
+          </div>
+        </div>
+        <!--          订单结清类型:-->
+        <div class="c-search-item">
+          <div class="c-search-itemLeft">
+            {{ "financeModule.list.detail.orderSettlementType" | translate}}:
+          </div>
+          <div class="c-search-itemRight">
+            <nz-tree-select
+              style="padding-left: 10px;width: 200px;;max-height: 100px;overflow: auto"
+              [nzNodes]="orderSettlementTypeData"
+              [nzShowSearch]="true"
+              [nzDefaultExpandAll]="true"
+              [nzCheckable]="true"
+              [nzDropdownStyle]="{'maxHeight':'500px'}"
+              [(ngModel)]="orderSettlementType"
+              [nzPlaceHolder]="'financeModule.list.prompt.orderSettlementType' | translate"
+            ></nz-tree-select>
+            <!--              <nz-select style="width: 166px;" [(ngModel)]="orderSettlementType" nzAllowClear [nzPlaceHolder]="'financeModule.list.prompt.orderSettlementType' | translate">-->
+            <!--                <nz-option *ngFor="let item of ('financeModule.list.orderSettlementTypeList' | translate)" [nzValue]="item['value']" [nzLabel]="item['name']"></nz-option>-->
+            <!--              </nz-select>-->
+          </div>
+        </div>
+        <!--          订单关闭类型:-->
+        <div class="c-search-item">
+          <div class="c-search-itemLeft">
+            {{ "financeModule.list.detail.orderCloseType" | translate}}:
+          </div>
+          <div class="c-search-itemRight">
+            <nz-tree-select
+              style="padding-left: 10px;width: 200px;;max-height: 100px;overflow: auto"
+              [nzNodes]="orderCloseTypeData"
+              [nzShowSearch]="true"
+              [nzDefaultExpandAll]="true"
+              [nzCheckable]="true"
+              [nzDropdownStyle]="{'maxHeight':'500px'}"
+              [(ngModel)]="orderCloseType"
+              [nzPlaceHolder]="'financeModule.list.prompt.orderCloseType' | translate"
+            ></nz-tree-select>
+            <!--              <nz-select style="width: 166px;" [(ngModel)]="orderCloseType" nzAllowClear [nzPlaceHolder]="'financeModule.list.prompt.orderCloseType' | translate">-->
+            <!--                <nz-option *ngFor="let item of ('financeModule.list.orderCloseTypeList' | translate)" [nzValue]="item['value']" [nzLabel]="item['name']"></nz-option>-->
+            <!--              </nz-select>-->
+          </div>
+        </div>
+
+      </div>
+      <div class="c-search-group">
+        <div class="c-search-item">
+          <div class="c-search-itemLeft">
+            {{ "financeModule.list.detail.orderNo" | translate}}:
+          </div>
+          <div class="c-search-itemRight">
+            <input nz-input [placeholder] = '"financeModule.list.prompt.orderNo" | translate' type="text" [(ngModel)] ='searchModel.orderNo'>
+          </div>
+        </div>
+        <div class="c-search-item">
+          <div class="c-search-itemLeft">
+            {{ "financeModule.list.detail.letterReview" | translate}}:
+          </div>
+          <div class="c-search-itemRight">
+            <input nz-input [placeholder] = '"financeModule.list.prompt.letterReview" | translate' type="text" [(ngModel)] = 'searchModel.creditOrderNo'>
+          </div>
+        </div>
+        <div class="c-search-item">
+          <div class="c-search-itemLeft">
+            {{ "financeModule.list.detail.mobile" | translate}}:
+          </div>
+          <div class="c-search-itemRight">
+            <input nz-input type="text" [placeholder] = '"financeModule.list.prompt.mobile" | translate' [(ngModel)] = 'searchModel.phoneNumber'>
+          </div>
+        </div>
+
+        <div class="c-search-item">
+          <div class="c-search-itemLeft">
+            {{ "financeModule.list.detail.userName" | translate}}:
+          </div>
+          <div class="c-search-itemRight">
+            <input nz-input type="text" [placeholder] = '"financeModule.list.prompt.userName" | translate' [(ngModel)] = 'searchModel.userName'>
+          </div>
+        </div>
+      </div>
+      <div class="c-search-btnGroup">
+            <button nz-button nzType="primary"  (click) = 'search() '>
+                {{ "common.search" | translate}}
+            </button>
+            <button style="margin-left: 20px;" nz-button (click) = 'reset() '>
+                {{ "common.reset" | translate}}
+            </button>
+            <button style="margin-left: 20px;" nz-button [disabled]="totalSize===0" (click)='downloadPageNameList() '>
+                {{ "common.ex" | translate}}
+            </button>
+      </div>
+    </div>
+
+    <c-table [tableData] = 'tableData'>
+    </c-table>
+    <div class="c-pag">
+        <nz-pagination [nzShowTotal]="totalTemplate" (nzPageIndexChange)='pageChange($event , "page")' (nzPageSizeChange) = 'pageChange($event , "size")' [nzPageIndex]="searchModel.currentPage"  [nzTotal]="totalSize" nzShowSizeChanger nzShowQuickJumper></nz-pagination>
+        <ng-template #totalTemplate let-total>
+            <span>
+                {{ "common.total" | translate }}
+            </span>
+            <span>
+                {{ totalSize }}
+            </span>
+            <span>
+                {{ "common.pageUnit" | translate }}
+            </span>
+        </ng-template>
+    </div>
+</div>

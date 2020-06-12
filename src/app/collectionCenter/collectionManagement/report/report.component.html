@@ -1,0 +1,180 @@
+<div class="c-content-wrap">
+  <div class="c-search-wrap">
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "collectionManagement.report.data.productType" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="padding-left: 10px;width: 200px" [(ngModel)]="searchModel.orderType" [nzPlaceHolder]=' "collectionManagement.report.prompt.select" | translate ' [nzAllowClear]="true">
+            <nz-option *ngFor="let option of 'collectionManagement.report.type' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+        </div>
+      </div>
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "collectionManagement.report.data.LoanAmount" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="padding-left: 10px;width: 150px" [(ngModel)]="searchModel.loanAmountJudgeFlag" [nzPlaceHolder]=' "collectionManagement.report.prompt.select" | translate ' [nzAllowClear]="true">
+            <nz-option *ngFor="let option of 'collectionManagement.report.operator' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+          <input nz-input style="width: 80px;left: 5px" type="number" [(ngModel)]="searchModel.loanAmount" [placeholder] = '"collectionManagement.report.data.unit" | translate'>
+        </div>
+      </div>
+    </div>
+    <div class="c-search-group">
+
+      <div class="c-search-item">
+        <div class="c-search-itemLeft">
+          {{ "collectionManagement.report.data.loanTerm" | translate}}:
+        </div>
+        <div class="c-search-itemRight">
+          <nz-select style="padding-left: 10px;width: 150px" [(ngModel)]="searchModel.loanTermsJudgeFlag" [nzPlaceHolder]=' "collectionManagement.report.prompt.select" | translate ' [nzAllowClear]="true">
+            <nz-option *ngFor="let option of 'collectionManagement.report.operator' | translate" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>
+          </nz-select>
+          <input nz-input style="width: 80px;left: 5px" type="number" [(ngModel)]="searchModel.loanTerms" [placeholder] = '"collectionManagement.report.data.day" | translate'>
+        </div>
+      </div>
+<!--      <div class="c-search-item">-->
+<!--        <div class="c-search-itemLeft">-->
+<!--          {{ "collectionManagement.report.data.userLevel" | translate}}:-->
+<!--        </div>-->
+<!--        <div class="c-search-itemRight">-->
+<!--          <nz-select style="padding-left: 10px;width: 150px" [(ngModel)]="searchModel.userGrade" [nzPlaceHolder]=' "collectionManagement.report.prompt.userLevel" | translate ' [nzAllowClear]="true">-->
+<!--            <nz-option *ngFor="let option of userLevel" [nzLabel]="option['desc']" [nzValue]="option['value']"></nz-option>-->
+<!--          </nz-select>-->
+<!--        </div>-->
+<!--      </div>-->
+    </div>
+    <div class="c-search-group">
+      <div class="c-search-item">
+        <button nz-button nzType="primary"  (click) = 'search() '>
+          {{ "common.search" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button (click) = 'reset() '>
+          {{ "common.reset" | translate}}
+        </button>
+        <button style="margin-left: 20px;" nz-button (click) = 'export() '>
+          {{ "common.ex" | translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+  <nz-spin [nzSpinning]="isSpinning" style="margin-bottom: 30px">
+    <table class="auth-table-wrap statement">
+      <tr>
+        <td>{{ statement['currentOughtRepayCount'] }}</td>
+        <td>{{ statementData && statementData['currentOughtRepayCount'] ? statementData['currentOughtRepayCount'] : 0}}</td>
+        <td>{{statement['currentOughtRepayAmount']}}</td>
+        <td>{{ statementData && statementData['currentOughtRepayAmount'] ? statementData['currentOughtRepayAmount'] : 0}}</td>
+        <td>{{statement['currentPayMoneyAmount']}}</td>
+        <td>{{ statementData && statementData['currentPayMoneyAmount'] ? statementData['currentPayMoneyAmount'] : 0}}</td>
+      </tr>
+      <tr>
+        <td>{{statement['currentOverdueCount']}}</td>
+        <td>{{ statementData && statementData['currentOverdueCount'] ? statementData['currentOverdueCount'] : 0}}</td>
+        <td>{{statement['currentOverdueRepayAmount']}}</td>
+        <td>{{ statementData && statementData['currentOverdueRepayAmount'] ? statementData['currentOverdueRepayAmount'] : 0}}</td>
+        <td>{{statement['currentOverduePaymentAmount']}}</td>
+        <td>{{ statementData && statementData['currentOverduePaymentAmount'] ? statementData['currentOverduePaymentAmount'] : 0}}</td>
+      </tr>
+      <tr>
+        <td>{{statement['currentOverdueBetween0To3Count']}}</td>
+        <td>{{ statementData && statementData['currentOverdueBetween0To3Count'] ? statementData['currentOverdueBetween0To3Count'] : 0}}</td>
+        <td>{{statement['currentOverdueBetween0To3Amount']}}</td>
+        <td>{{ statementData && statementData['currentOverdueBetween0To3Amount'] ? statementData['currentOverdueBetween0To3Amount'] : 0}}</td>
+        <td>{{statement['currentOverdueBetween0To3principal']}}</td>
+        <td>{{ statementData && statementData['currentOverdueBetween0To3principal'] ? statementData['currentOverdueBetween0To3principal'] : 0}}</td>
+      </tr>
+      <tr>
+        <td>{{statement['currentOverdueBetween4To10Count']}}</td>
+        <td>{{ statementData && statementData['currentOverdueBetween4To10Count'] ? statementData['currentOverdueBetween4To10Count'] : 0}}</td>
+        <td>{{statement['currentOverdueBetween4To10Amount']}}</td>
+        <td>{{ statementData && statementData['currentOverdueBetween4To10Amount'] ? statementData['currentOverdueBetween4To10Amount'] : 0}}</td>
+        <td>{{statement['currentOverdueBetween4To10principal']}}</td>
+        <td>{{ statementData && statementData['currentOverdueBetween4To10principal'] ? statementData['currentOverdueBetween4To10principal'] : 0}}</td>
+      </tr>
+      <tr>
+        <td>{{statement['currentOverdueBetween11To30Count']}}</td>
+        <td>{{ statementData && statementData['currentOverdueBetween11To30Count'] ? statementData['currentOverdueBetween11To30Count'] : 0}}</td>
+        <td>{{statement['currentOverdueBetween11To30Amount']}}</td>
+        <td>{{ statementData && statementData['currentOverdueBetween11To30Amount'] ? statementData['currentOverdueBetween11To30Amount'] : 0}}</td>
+        <td>{{statement['currentOverdueBetween11To30principal']}}</td>
+        <td>{{ statementData && statementData['currentOverdueBetween11To30principal'] ? statementData['currentOverdueBetween11To30principal'] : 0}}</td>
+      </tr>
+      <tr>
+        <td>{{statement['currentOverdueBetween31To90Count']}}</td>
+        <td>{{ statementData && statementData['currentOverdueBetween31To90Count'] ? statementData['currentOverdueBetween31To90Count'] : 0}}</td>
+        <td>{{statement['currentOverdueBetween31To90Amount']}}</td>
+        <td>{{ statementData && statementData['currentOverdueBetween31To90Amount'] ? statementData['currentOverdueBetween31To90Amount'] : 0}}</td>
+        <td>{{statement['currentOverdueBetween31To90principal']}}</td>
+        <td>{{ statementData && statementData['currentOverdueBetween31To90principal'] ? statementData['currentOverdueBetween31To90principal'] : 0}}</td>
+      </tr>
+      <tr>
+        <td>{{statement['currentOverdueBetween91ToMaxCount']}}</td>
+        <td>{{ statementData && statementData['currentOverdueBetween91ToMaxCount'] ? statementData['currentOverdueBetween91ToMaxCount'] : 0 }}</td>
+        <td>{{statement['currentOverdueBetween91ToMaxAmount']}}</td>
+        <td>{{ statementData && statementData['currentOverdueBetween91ToMaxAmount'] ? statementData['currentOverdueBetween91ToMaxAmount'] : 0}}</td>
+        <td>{{statement['currentOverdueBetween91ToMaxprincipal']}}</td>
+        <td>{{ statementData && statementData['currentOverdueBetween91ToMaxprincipal'] ? statementData['currentOverdueBetween91ToMaxprincipal'] : 0 }}</td>
+      </tr>
+    </table>
+    <table class="auth-table-wrap statement1">
+        <tr>
+          <td>{{statement['currentMonthFinishedCount']}}</td>
+          <td>{{ statementData && statementData['currentMonthFinishedCount'] ? statementData['currentMonthFinishedCount'] : 0}}</td>
+          <td>{{statement['currentMonthFinishedAmount']}}</td>
+          <td>{{ statementData && statementData['currentMonthFinishedAmount'] ? statementData['currentMonthFinishedAmount'] : 0}}</td>
+        </tr>
+        <tr>
+          <td>{{statement['oughtRepayFinishedCount']}}</td>
+          <td>{{ statementData && statementData['oughtRepayFinishedCount'] ? statementData['oughtRepayFinishedCount'] : 0}}</td>
+          <td>{{statement['oughtRepayFinishedAmont']}}</td>
+          <td>{{ statementData && statementData['oughtRepayFinishedAmont'] ? statementData['oughtRepayFinishedAmont'] : 0}}</td>
+        </tr>
+        <tr>
+          <td>{{statement['overdueRepayFinishedCount']}}</td>
+          <td>{{ statementData && statementData['overdueRepayFinishedCount'] ? statementData['overdueRepayFinishedCount'] : 0}}</td>
+          <td>{{statement['overdueRepayFinishedAmont']}}</td>
+          <td>{{ statementData && statementData['overdueRepayFinishedAmont'] ? statementData['overdueRepayFinishedAmont'] : 0}}</td>
+        </tr>
+        <tr>
+          <td>{{statement['overdueRepayFinishedIn0To3Count']}}</td>
+          <td>{{ statementData && statementData['overdueRepayFinishedIn0To3Count'] ? statementData['overdueRepayFinishedIn0To3Count'] : 0}}</td>
+          <td>{{statement['overdueRepayFinishedIn0To3Amont']}}</td>
+          <td>{{ statementData && statementData['overdueRepayFinishedIn0To3Amont'] ? statementData['overdueRepayFinishedIn0To3Amont'] : 0}}</td>
+        </tr>
+        <tr>
+          <td>{{statement['overdueRepayFinishedIn4To10Count']}}</td>
+          <td>{{ statementData && statementData['overdueRepayFinishedIn4To10Count'] ? statementData['overdueRepayFinishedIn4To10Count'] : 0}}</td>
+          <td>{{statement['overdueRepayFinishedIn4To10Amont']}}</td>
+          <td>{{ statementData && statementData['overdueRepayFinishedIn4To10Amont'] ? statementData['overdueRepayFinishedIn4To10Amont'] : 0}}</td>
+        </tr>
+        <tr>
+          <td>{{statement['overdueRepayFinishedIn11To30Count']}}</td>
+          <td>{{ statementData && statementData['overdueRepayFinishedIn11To30Count'] ? statementData['overdueRepayFinishedIn11To30Count'] : 0}}</td>
+          <td>{{statement['overdueRepayFinishedIn11To30Amont']}}</td>
+          <td>{{ statementData && statementData['overdueRepayFinishedIn11To30Amont'] ? statementData['overdueRepayFinishedIn11To30Amont'] : 0}}</td>
+        </tr>
+        <tr>
+          <td>{{statement['overdueRepayFinishedIn31To90Count']}}</td>
+          <td>{{ statementData && statementData['overdueRepayFinishedIn31To90Count'] ? statementData['overdueRepayFinishedIn31To90Count'] : 0}}</td>
+          <td>{{statement['overdueRepayFinishedIn31To90Amont']}}</td>
+          <td>{{ statementData && statementData['overdueRepayFinishedIn31To90Amont'] ? statementData['overdueRepayFinishedIn31To90Amont'] : 0}}</td>
+        </tr>
+        <tr>
+          <td>{{statement['overdueRepayFinishedIn91ToMaxCount']}}</td>
+          <td>{{ statementData && statementData['overdueRepayFinishedIn91ToMaxCount'] ? statementData['overdueRepayFinishedIn91ToMaxCount'] : 0}}</td>
+          <td>{{statement['overdueRepayFinishedIn91ToMaxAmont']}}</td>
+          <td>{{ statementData && statementData['overdueRepayFinishedIn91ToMaxAmont'] ? statementData['overdueRepayFinishedIn91ToMaxAmont'] : 0}}</td>
+        </tr>
+        <tr>
+          <td>{{statement['currentDayFinishedCount']}}</td>
+          <td>{{ statementData && statementData['currentDayFinishedCount'] ? statementData['currentDayFinishedCount'] : 0}}</td>
+          <td>{{statement['currentDayFinishedAmount']}}</td>
+          <td>{{ statementData && statementData['currentDayFinishedAmount'] ? statementData['currentDayFinishedAmount'] : 0}}</td>
+        </tr>
+      </table>
+  </nz-spin>
+</div>
